@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "341437966385",
+    "project_id": "wrg-auto-2c95d",
+    "storage_bucket": "wrg-auto-2c95d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341437966385:android:0ce7c4f13a34033a82cd10",
+        "android_client_info": {
+          "package_name": "com.example.wrg2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "341437966385-0jrpjd3549okgcske9h8rfptfg0fr5q7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2GqiW_9wRKs8XIVcYYXssJbo3_oMKaWk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "341437966385-0jrpjd3549okgcske9h8rfptfg0fr5q7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "341437966385-ce7nc2m6sathu8gv34t7karc274hnrld.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wrg2.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341437966385:android:c4320e4d2505d1c682cd10",
+        "android_client_info": {
+          "package_name": "com.fortech.wrg2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "341437966385-8a5f0t5re0fis816ct3fi0td5qknsa18.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fortech.wrg2",
+            "certificate_hash": "0a53f3447ea8e284020360e33979ca6e784e5121"
+          }
+        },
+        {
+          "client_id": "341437966385-0jrpjd3549okgcske9h8rfptfg0fr5q7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2GqiW_9wRKs8XIVcYYXssJbo3_oMKaWk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "341437966385-0jrpjd3549okgcske9h8rfptfg0fr5q7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "341437966385-ce7nc2m6sathu8gv34t7karc274hnrld.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.wrg2.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
