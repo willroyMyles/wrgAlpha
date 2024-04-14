@@ -91,7 +91,7 @@ class PostModel {
       userPhotoUrl: (map['userPhotoUrl'] ?? '') as String,
       status: Status.values[(map['status'] ?? 0) as int],
       offers: List<OfferModel>.from(
-        (map['offers'] as List<int>).map<OfferModel>(
+        (map['offers']).map<OfferModel>(
           (x) => OfferModel.fromMap(x as Map<String, dynamic>),
         ),
       ),

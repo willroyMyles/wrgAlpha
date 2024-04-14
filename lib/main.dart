@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: tw.getLightTheme(),
       darkTheme: tw.getDarkTheme(),
-      home: const HomeView(),
+      home: HomeView(),
     );
   }
 }

@@ -37,4 +37,33 @@ mixin UserExecutor {
       return null;
     }
   }
+
+  Future<bool> user_modifyWatching(String id, {bool add = true}) async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      if (user == null) return false;
+
+      var userDoc = _fstore.collection(_col).doc(user.email);
+      var postDoc = _fstore.collection("posts").doc(id);
+      var res = await _fstore.runTransaction((transaction) async {
+        if (add) {
+          transaction.update(userDoc, {
+            "watching": FieldValue.arrayUnion([id])
+          });
+
+          transaction.update(postDoc, {"watching": FieldValue.increment(1)});
+        } else {
+          transaction.update(userDoc, {
+            "watching": FieldValue.arrayRemove([id])
+          });
+
+          transaction.update(postDoc, {"watching": FieldValue.increment(-1)});
+        }
+      });
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

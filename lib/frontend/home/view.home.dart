@@ -4,12 +4,15 @@ import 'package:get/get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/frontend/atoms/atom.offer.dart';
 import 'package:wrg2/frontend/atoms/atom.watchingAtom.dart';
+import 'package:wrg2/frontend/post/state.posts.dart';
 import 'package:wrg2/frontend/post/view.createPost.dart';
+import 'package:wrg2/frontend/post/view.postList.dart';
 import 'package:wrg2/frontend/profile/state.profile.dart';
 import 'package:wrg2/frontend/profile/view.profile.dart';
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  HomeView({super.key});
+  final postState = Get.put(PostState());
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +23,7 @@ class HomeView extends StatelessWidget {
         },
         child: const Text("Add"),
       ),
-      drawer: Drawer(
+      drawer: const Drawer(
         child: ProfileView(),
       ),
       body: SafeArea(
@@ -30,6 +33,7 @@ class HomeView extends StatelessWidget {
           },
           builder: (controller) {
             return Container(
+              padding: Constants.ePadding,
               child: Column(children: [
                 Container(
                     alignment: Alignment.center,
@@ -68,12 +72,16 @@ class HomeView extends StatelessWidget {
                       }
                     })),
                 const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    WatchingAtom(),
-                    OffersAtom(),
+                    Expanded(child: WatchingAtom()),
+                    SizedBox(width: 10),
+                    Expanded(child: OffersAtom()),
                   ],
                 ),
+                Expanded(
+                    child: Obx(() =>
+                        PostList(items: postState.posts.values.toList()))),
               ]),
             );
           },

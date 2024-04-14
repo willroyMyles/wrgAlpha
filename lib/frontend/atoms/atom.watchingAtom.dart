@@ -9,7 +9,7 @@ class WatchingAtom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 100,
-      width: Get.width / 2.4,
+      width: Get.width / 2.6,
       alignment: Alignment.center,
       child: const Text("You're not watching any posts"),
     ).card;

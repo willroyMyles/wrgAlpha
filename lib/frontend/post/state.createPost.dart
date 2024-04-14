@@ -4,6 +4,7 @@ import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/store/sotre.data.dart';
 import 'package:wrg2/frontend/atoms/stom.clickList.dart';
+import 'package:wrg2/frontend/post/state.posts.dart';
 import 'package:wrg2/frontend/profile/state.profile.dart';
 
 class CreatePostState extends GetxController {
@@ -179,6 +180,7 @@ class CreatePostState extends GetxController {
     var res = await Get.find<GE>().posts_createPost(pm);
     if (res) {
       // show success
+      Get.find<PostState>().setup();
       Get.back();
     } else {
       //show error
