@@ -1,8 +1,8 @@
 import 'package:automatic_animated_list/automatic_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wrg2/frontend/post/state.posts.dart';
-import 'package:wrg2/frontend/post/view.postItem.dart';
+import 'package:wrg2/frontend/pages/post/state.posts.dart';
+import 'package:wrg2/frontend/pages/post/view.postItem.dart';
 
 class PostList extends StatelessWidget {
   final List<dynamic> items;

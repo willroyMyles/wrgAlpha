@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:wrg2/frontend/profile/state.profile.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class AuthWorker {
   Rx<User>? user;
@@ -11,6 +11,7 @@ class AuthWorker {
     FirebaseAuth.instance.authStateChanges().listen((User? u) {
       if (u == null) {
         print('User is currently signed out!');
+        Get.find<ProfileState>().remove();
       } else {
         print('User is signed in!');
         user = u.obs;

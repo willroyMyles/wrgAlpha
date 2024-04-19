@@ -9,9 +9,14 @@ class HeaderText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Text(title), if (!sub.isNull) Text(sub!)]),
+      padding: const EdgeInsets.only(left: 10),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 25),
+        ),
+        if (!sub.isNull) Text(sub!)
+      ]),
     );
   }
 }

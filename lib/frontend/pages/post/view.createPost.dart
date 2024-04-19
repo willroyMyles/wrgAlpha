@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
-import 'package:wrg2/frontend/post/state.createPost.dart';
+import 'package:wrg2/frontend/pages/post/state.createPost.dart';
 
 class CreatePost extends StatelessWidget {
   CreatePost({super.key});

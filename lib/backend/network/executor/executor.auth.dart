@@ -4,6 +4,15 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 
 mixin AuthExecutor {
+  Future user_logout() async {
+    try {
+      GoogleSignIn().signOut();
+      FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future signInWithGoogle() async {
     try {
       await GoogleSignIn().signOut();

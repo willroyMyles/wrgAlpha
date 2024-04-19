@@ -6,7 +6,7 @@ import 'package:wrg2/backend/worker/worker.auth.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/firebase_options.dart';
 import 'package:wrg2/frontend/home/view.home.dart';
-import 'package:wrg2/frontend/profile/state.profile.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: tw.getLightTheme(),
-      darkTheme: tw.getDarkTheme(),
+      // darkTheme: tw.getDarkTheme(),
       home: HomeView(),
     );
   }

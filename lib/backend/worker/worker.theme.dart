@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.colorGenerator.dart';
+
+ThemeData get toc => Get.context == null ? ThemeData() : Theme.of(Get.context!);
+
+extension TextColor on ThemeData {
+  Color get textColor => textTheme.bodyLarge!.color!;
+}
 
 Color primaryOrg = const Color.fromRGBO(234, 97, 94, 1);
 MaterialColor primarySwatch = generateMaterialColor(color: primaryOrg);
@@ -20,13 +27,13 @@ MaterialStateProperty<T> mst<T>(T value) {
 
 class ThemeWorker {
   final ThemeData _theme = ThemeData(
-      primaryColor: Colors.blue, // Change to your desired primary color
+      primaryColor: primaryOrg, // Change to your desired primary color
       scaffoldBackgroundColor: Colors.white,
       fontFamily: 'Roboto', // Change to your desired font family
-      appBarTheme: const AppBarTheme(
-        color: Colors.blue, // Change to your desired app bar color
+      appBarTheme: AppBarTheme(
+        color: primaryOrg, // Change to your desired app bar color
         elevation: 0, // Change elevation as needed
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: Colors.white, // Change to your desired app bar icon color
         ),
       ),

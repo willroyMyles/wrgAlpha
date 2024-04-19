@@ -4,6 +4,7 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 
 class ProfileState extends GetxController {
   Rx<UserInfoModel>? userModel;
+  RxBool isSignedIn = false.obs;
 
   @override
   void onInit() async {
@@ -16,8 +17,15 @@ class ProfileState extends GetxController {
     if (res != null) {
       userModel = res.obs;
       userModel!.refresh();
+      isSignedIn.value = true;
     }
 
+    refresh();
+  }
+
+  remove() async {
+    userModel = null;
+    isSignedIn.value = false;
     refresh();
   }
 }

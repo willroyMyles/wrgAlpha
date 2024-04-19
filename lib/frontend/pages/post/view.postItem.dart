@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
-import 'package:wrg2/frontend/post/details/view.postDetails.dart';
+import 'package:wrg2/frontend/pages/post/details/view.postDetails.dart';
 
 class PostItem extends StatelessWidget {
   final PostModel model;

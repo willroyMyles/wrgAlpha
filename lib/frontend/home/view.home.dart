@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/frontend/atoms/atom.offer.dart';
 import 'package:wrg2/frontend/atoms/atom.watchingAtom.dart';
-import 'package:wrg2/frontend/post/state.posts.dart';
-import 'package:wrg2/frontend/post/view.createPost.dart';
-import 'package:wrg2/frontend/post/view.postList.dart';
-import 'package:wrg2/frontend/profile/state.profile.dart';
-import 'package:wrg2/frontend/profile/view.profile.dart';
+import 'package:wrg2/frontend/pages/post/state.posts.dart';
+import 'package:wrg2/frontend/pages/post/view.createPost.dart';
+import 'package:wrg2/frontend/pages/post/view.postList.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
+import 'package:wrg2/frontend/pages/profile/view.profile.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});

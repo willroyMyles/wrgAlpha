@@ -2,7 +2,9 @@
 import 'dart:convert';
 
 import 'package:wrg2/backend/enums/enum.post.dart';
+import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/offer.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class PostModel {
   String title = "";
@@ -134,9 +136,11 @@ class PostModel {
   }
 
   bool amIOwner() {
-    // var service = Get.find<APIService>();
-    // var ans = this.userInfoId == service.userInfo.value.userId;
-    // return ans;
-    return false;
+    var ps = GF<ProfileState>();
+    if (!ps.isSignedIn.value) {
+      return false;
+    }
+    var ans = userEmail == ps.userModel?.value.email;
+    return ans;
   }
 }

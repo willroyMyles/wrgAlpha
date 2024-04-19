@@ -1,8 +1,11 @@
-import 'dart:convert';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:wrg2/backend/models/model.dart';
 import 'package:wrg2/backend/models/post.model.dart';
+import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/worker/worker.theme.dart';
 
-class CommentModel {
+class CommentModel extends Model {
   String content;
   String id;
   bool isOffer;
@@ -31,7 +34,7 @@ class CommentModel {
       // 'id': id,
       'isOffer': isOffer,
       'postId': postId,
-      // 'createdAt': createdAt,
+      'createdAt': DateTime.now().toString(),
       'userId': userId,
       'userImageUrl': userImageUrl,
       'username': username,
@@ -51,45 +54,8 @@ class CommentModel {
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory CommentModel.fromJson(String source) =>
-      CommentModel.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'CommentModel(content: $content, id: $id, isOffer: $isOffer, postId: $postId, createdAt: $createdAt, userId: $userId, userImageUrl: $userImageUrl, username: $username)';
-  }
-
   CommentModel operator <<(dynamic other) {
     return CommentModel.fromMap(other);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is CommentModel &&
-        other.content == content &&
-        other.id == id &&
-        other.isOffer == isOffer &&
-        other.postId == postId &&
-        other.createdAt == createdAt &&
-        other.userId == userId &&
-        other.userImageUrl == userImageUrl &&
-        other.username == username;
-  }
-
-  @override
-  int get hashCode {
-    return content.hashCode ^
-        id.hashCode ^
-        isOffer.hashCode ^
-        postId.hashCode ^
-        createdAt.hashCode ^
-        userId.hashCode ^
-        userImageUrl.hashCode ^
-        username.hashCode;
   }
 
   // final api = Get.find<APIService>();
@@ -110,5 +76,64 @@ class CommentModel {
   bool isPostOwner(PostModel post) {
     // return post.userInfoId == api.userInfo.value.id;
     return false;
+  }
+
+  @override
+  Widget tile() {
+    return Container(
+      margin: EdgeInsets.only(bottom: Constants.cardVerticalMargin),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Container(
+            margin: EdgeInsets.only(right: Constants.cardMargin),
+            // padding: Constants.ePadding,
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.only(
+            //     topLeft: Radius.circular(radii * 5),
+            //     bottomLeft: Radius.circular(radii * 5),
+            //   ),
+            //   color: toc.cardColor,
+            // ),
+            child: CircleAvatar(
+              radius: 20,
+              foregroundImage: Image.network(userImageUrl).image,
+            )),
+        Expanded(
+          child: Container(
+            padding: Constants.ePadding,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(radii),
+                bottomLeft: Radius.circular(radii),
+                bottomRight: Radius.circular(radii),
+              ),
+              color: toc.cardColor,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(username),
+                Text(createdAt.toString() ?? ""),
+                Text(content),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (userId == FirebaseAuth.instance.currentUser?.email)
+                      Container(
+                          child: InkWell(
+                              onTap: () {
+                                print(content);
+                              },
+                              child: Text(
+                                "Options",
+                                style: TextStyle(color: toc.primaryColor),
+                              )))
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 }

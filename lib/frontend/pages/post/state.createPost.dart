@@ -4,8 +4,8 @@ import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/store/sotre.data.dart';
 import 'package:wrg2/frontend/atoms/stom.clickList.dart';
-import 'package:wrg2/frontend/post/state.posts.dart';
-import 'package:wrg2/frontend/profile/state.profile.dart';
+import 'package:wrg2/frontend/pages/post/state.posts.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class CreatePostState extends GetxController {
   RxMap<String, String> model = RxMap({});
