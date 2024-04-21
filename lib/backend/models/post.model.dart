@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:wrg2/backend/enums/enum.post.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
-import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class PostModel {
@@ -25,7 +24,7 @@ class PostModel {
   // UserInfoModel? userInfo;
   //enum
   Status status = Status.OPEN;
-  List<OfferModel> offers = [];
+  List<String> offers = [];
   PostModel({
     this.title = '',
     this.id = '',
@@ -61,12 +60,12 @@ class PostModel {
       'views': views,
       'watching': watching,
       'comments': comments,
-      'createdAt': DateTime.now().millisecondsSinceEpoch,
+      'createdAt': createdAt?.millisecondsSinceEpoch,
       'userEmail': userEmail,
       'userName': userName,
       'userPhotoUrl': userPhotoUrl,
       'status': status.index,
-      'offers': offers.map((x) => x.toMap()).toList(),
+      'offers': offers,
     };
   }
 
@@ -92,11 +91,7 @@ class PostModel {
       userName: (map['userName'] ?? '') as String,
       userPhotoUrl: (map['userPhotoUrl'] ?? '') as String,
       status: Status.values[(map['status'] ?? 0) as int],
-      offers: List<OfferModel>.from(
-        (map['offers']).map<OfferModel>(
-          (x) => OfferModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      offers: List<String>.from((map['offers'] ?? [])),
     );
   }
 

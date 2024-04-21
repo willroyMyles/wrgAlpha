@@ -5,6 +5,8 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/messages/view.messages.dart';
+import 'package:wrg2/frontend/pages/offers/view.offers.dart';
+import 'package:wrg2/frontend/pages/personal/view.posts.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class ProfileView extends GetView<ProfileState> {
@@ -28,25 +30,22 @@ class ProfileView extends GetView<ProfileState> {
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Hero(
-                            tag: "profile icon",
-                            child: Container(
-                                height: 55,
-                                width: 55,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100)),
-                                child: InkWell(
-                                  onTap: () {
-                                    Scaffold.of(context).openDrawer();
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 35,
-                                    child: Obx(() => Image.network(controller
-                                        .userModel!.value.userImageUrl)),
-                                  ),
-                                )),
-                          ),
+                          Container(
+                              height: 55,
+                              width: 55,
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100)),
+                              child: InkWell(
+                                onTap: () {
+                                  Scaffold.of(context).openDrawer();
+                                },
+                                child: CircleAvatar(
+                                  radius: 35,
+                                  child: Obx(() => Image.network(controller
+                                      .userModel!.value.userImageUrl)),
+                                ),
+                              )),
                           const Spacer(),
                           ListTile(
                             onTap: () {
@@ -63,6 +62,9 @@ class ProfileView extends GetView<ProfileState> {
                           ),
                           ListTile(
                             title: const Text("Your Posts"),
+                            onTap: () {
+                              Get.to(() => const PersonalPosts());
+                            },
                             leading: Container(
                               margin: const EdgeInsets.only(right: 15),
                               child: Icon(
@@ -73,6 +75,9 @@ class ProfileView extends GetView<ProfileState> {
                           ),
                           ListTile(
                             title: const Text("Offers"),
+                            onTap: () {
+                              Get.to(() => const OffersView());
+                            },
                             leading: Container(
                               margin: const EdgeInsets.only(right: 15),
                               child: Icon(

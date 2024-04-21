@@ -11,8 +11,8 @@ class PostItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Get.to(() => PostDetails(), arguments: {"id": model.id});
+      onTap: () async {
+        Get.to(() => PostDetails(), arguments: {"id": model.id}, opaque: false);
       },
       child: Container(
         margin: const EdgeInsets.only(top: 10),

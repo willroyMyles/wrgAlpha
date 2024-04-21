@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:nanoid2/nanoid2.dart';
+import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/comment.model.dart';
+import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
@@ -64,20 +67,50 @@ class PostDetailsState extends GetxController {
   }
 
   getArgs() {
-    var id = Get.arguments['id'];
+    var args = Get.arguments ?? Get.rawRoute?.settings.arguments ?? {};
+    var id = args['id'];
     model = Get.find<PostState>().posts[id!]!;
   }
 
   sendOffers() async {
-    await sendComment(offer: true);
+    if (offerString.value.isEmpty) {
+      //throw error
+      return;
+    }
+
+    var offerModel = OfferModel();
+    offerModel.postId = model.id;
+    offerModel.postTitle = model.title;
+    offerModel.accepted = false;
+    offerModel.completed = false;
+    offerModel.id = nanoid(length: 7);
+    offerModel.message = offerString.value;
+
+    var auth = FirebaseAuth.instance.currentUser!;
+
+    offerModel.senderId = auth.email ?? "";
+    offerModel.senderPhoto = auth.photoURL ?? "";
+    offerModel.snederName = auth.displayName ?? "";
+    offerModel.recieverId = model.userEmail;
+
+    offerModel.recieverId = model.userEmail;
+
+    var res = await GF<GE>().offers_createOffers(offerModel);
+
+    if (res) {
+      //success
+      if (Get.isBottomSheetOpen ?? false) {
+        Get.close(1);
+      } else {
+        //show error
+      }
+    }
+
+    refresh();
   }
 
   sendComment({bool offer = false}) async {
     if (commentString.value.isEmpty && !offer) {
-      //throw error
-      return;
-    }
-    if (offerString.value.isEmpty && offer) {
       //throw error
       return;
     }
@@ -93,11 +126,9 @@ class PostDetailsState extends GetxController {
     comment.isOffer = offer;
 
     bool res;
-    if (offer) {
-      res = await Get.find<GE>().offers_createOffers(comment);
-    } else {
-      res = await Get.find<GE>().comments_createComments(comment);
-    }
+
+    res = await Get.find<GE>().comments_createComments(comment);
+
     if (res) {
       //success
       model.comments += 1;

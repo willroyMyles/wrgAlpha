@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:movements/support/widget.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/frontend/atoms/atom.offer.dart';
 import 'package:wrg2/frontend/atoms/atom.watchingAtom.dart';
@@ -17,11 +18,67 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.to(() => CreatePost());
-        },
-        child: const Text("Add"),
+      drawer: const Drawer(
+        child: ProfileView(),
+      ),
+      body: NestedScrollView(
+          headerSliverBuilder: (context, _) {
+            return [
+              // const CupertinoSliverNavigationBar(
+              //   largeTitle: Text("Your Feed"),
+              //   leading: Text("leading"),
+              //   stretch: true,
+              //   transitionBetweenRoutes: true,
+              //   alwaysShowMiddle: false,
+              // ),
+              SliverAppBar.medium(
+                title: const Text(
+                  "Your Feed",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 25,
+                  ),
+                ),
+                centerTitle: false,
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        Get.to(() => CreatePost());
+                      },
+                      icon: const Icon(Icons.my_library_add_outlined))
+                ],
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  margin: EdgeInsets.only(
+                    left: Constants.cardMargin,
+                    right: Constants.cardMargin,
+                    top: Constants.cardMargin,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Expanded(child: WatchingAtom()),
+                      SizedBox(width: Constants.cardMargin),
+                      const Expanded(child: OffersAtom()),
+                    ],
+                  ),
+                ),
+              )
+            ];
+          },
+          body: Obx(() => PostList(items: postState.posts.values.toList()))),
+    );
+    return Scaffold(
+      floatingActionButton: MovementWidget(
+        keyy: "fab",
+        isAlreadyHero: true,
+        child: FloatingActionButton(
+          onPressed: () {
+            Get.to(() => CreatePost());
+          },
+          child: const Text("Add"),
+        ),
       ),
       drawer: const Drawer(
         child: ProfileView(),
@@ -71,13 +128,16 @@ class HomeView extends StatelessWidget {
                         );
                       }
                     })),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(child: WatchingAtom()),
-                    SizedBox(width: 10),
-                    Expanded(child: OffersAtom()),
-                  ],
+                const MovementWidget(
+                  keyy: "top options",
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(child: WatchingAtom()),
+                      SizedBox(width: 10),
+                      Expanded(child: OffersAtom()),
+                    ],
+                  ),
                 ),
                 Expanded(
                     child: Obx(() =>

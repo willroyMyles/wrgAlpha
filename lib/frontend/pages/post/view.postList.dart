@@ -14,10 +14,16 @@ class PostList extends StatelessWidget {
       initState: (_) {},
       builder: (_) {
         return AutomaticAnimatedList(
+            padding: EdgeInsets.zero,
             items: items,
             itemBuilder: (p0, p1, p2) {
               var model = p1;
-              return FadeTransition(opacity: p2, child: PostItem(model: model));
+              return FadeTransition(
+                  opacity: p2,
+                  child: Hero(
+                    tag: model.id,
+                    child: Material(child: PostItem(model: model)),
+                  ));
             },
             keyingFunction: (id) => ValueKey(id));
       },

@@ -45,6 +45,8 @@ dependencies:
   csv: ^6.0.0
   collection: ^1.18.0
   automatic_animated_list: ^1.1.0
+  movements: 
+    path: "./movements/"
 
 
 dev_dependencies:

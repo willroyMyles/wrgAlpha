@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/widget.extension.dart';
+import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 
 class OffersAtom extends StatelessWidget {
   const OffersAtom({super.key});
@@ -8,10 +10,21 @@ class OffersAtom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: 50,
       width: Get.width / 2.4,
       alignment: Alignment.center,
-      child: const Text("You have no Offers"),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          GetBuilder<OfferState>(
+            initState: (_) {},
+            builder: (_) {
+              return Obx(() => Text(_.models.length.toString()));
+            },
+          ),
+          const Opacity(opacity: Constants.opacity, child: Text("Offers")),
+        ],
+      ),
     ).card;
   }
 }

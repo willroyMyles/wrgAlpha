@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/userinfo.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 mixin UserExecutor {
   final _fstore = FirebaseFirestore.instance;
@@ -52,12 +54,14 @@ mixin UserExecutor {
           });
 
           transaction.update(postDoc, {"watching": FieldValue.increment(1)});
+          GF<ProfileState>().userModel?.value.watching.add(id);
         } else {
           transaction.update(userDoc, {
             "watching": FieldValue.arrayRemove([id])
           });
 
           transaction.update(postDoc, {"watching": FieldValue.increment(-1)});
+          GF<ProfileState>().userModel?.value.watching.remove(id);
         }
       });
 

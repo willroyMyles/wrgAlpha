@@ -17,7 +17,7 @@ class PostDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.onView();
+    // controller.onView();
     return Scaffold(
         appBar: AppBar(),
         body: Obx(
@@ -26,43 +26,66 @@ class PostDetails extends StatelessWidget {
               GetBuilder<PostDetailsState>(
                   init: controller,
                   builder: (_) {
-                    return Container(
-                      padding: Constants.ePadding,
-                      color: Colors.white,
-                      child: SafeArea(
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(controller.model.title),
-                              const Divider(),
-                              Text(controller.model.content),
-                              const Divider(),
-                              Opacity(
-                                opacity: Constants.opacity,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                    // var child = movementUtil.lookUp(controller.model.id);
+                    // if (child != null) {
+                    //   return Hero(
+                    //     tag: controller.model.id,
+                    //     child: child,
+                    //   );
+                    // }
+                    return Hero(
+                      tag: controller.model.id,
+                      child: Material(
+                        child: Container(
+                          padding: Constants.ePadding,
+                          color: Colors.white,
+                          child: SafeArea(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(controller.model.category),
-                                        Text(controller.model.subCategory),
-                                      ],
+                                    Text(controller.model.title),
+                                    Divider(
+                                      color: Colors.black.withOpacity(.1),
+                                      indent: 0,
+                                      endIndent: 0,
                                     ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(controller.model.make),
-                                        Text(controller.model.model),
-                                      ],
+                                    Text(controller.model.content),
+                                    Divider(
+                                      color: Colors.black.withOpacity(.1),
+                                      indent: 0,
+                                      endIndent: 0,
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ]),
+                                    Opacity(
+                                      opacity: Constants.opacity,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(controller.model.category),
+                                              Text(
+                                                  controller.model.subCategory),
+                                            ],
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(controller.model.make),
+                                              Text(controller.model.model),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ]),
+                            ),
+                          ),
+                        ),
                       ),
                     );
                   }),

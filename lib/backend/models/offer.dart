@@ -1,33 +1,29 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:wrg2/backend/models/conversation.dart';
-import 'package:wrg2/backend/models/post.model.dart';
-import 'package:wrg2/backend/models/userinfo.dart';
-
 class OfferModel {
   String id;
   bool accepted = false;
   bool completed = false;
   String message;
-  PostModel? post;
+  String? conversationId;
   String postId;
-  ConversationModel? conversation;
-  UserInfoModel? sender;
-  UserInfoModel? reciever;
+  String postTitle;
   String senderId;
+  String snederName;
+  String senderPhoto;
   String recieverId;
   OfferModel({
     this.id = '',
     this.accepted = false,
     this.completed = false,
     this.message = '',
-    this.post,
+    this.conversationId,
     this.postId = '',
-    this.conversation,
-    this.sender,
-    this.reciever,
+    this.postTitle = '',
     this.senderId = '',
+    this.snederName = '',
+    this.senderPhoto = '',
     this.recieverId = '',
   });
 
@@ -37,12 +33,12 @@ class OfferModel {
       'accepted': accepted,
       'completed': completed,
       'message': message,
-      'post': post?.toMap(),
+      'conversationId': conversationId,
       'postId': postId,
-      'conversation': conversation?.toMap(),
-      'sender': sender?.toMap(),
-      'reciever': reciever?.toMap(),
+      'postTitle': postTitle,
       'senderId': senderId,
+      'snederName': snederName,
+      'senderPhoto': senderPhoto,
       'recieverId': recieverId,
     };
   }
@@ -53,21 +49,14 @@ class OfferModel {
       accepted: (map['accepted'] ?? false) as bool,
       completed: (map['completed'] ?? false) as bool,
       message: (map['message'] ?? '') as String,
-      post: map['post'] != null
-          ? PostModel.fromMap(map['post'] as Map<String, dynamic>)
+      conversationId: map['conversationId'] != null
+          ? map['conversationId'] as String
           : null,
       postId: (map['postId'] ?? '') as String,
-      conversation: map['conversation'] != null
-          ? ConversationModel.fromMap(
-              map['conversation'] as Map<String, dynamic>)
-          : null,
-      sender: map['sender'] != null
-          ? UserInfoModel.fromMap(map['sender'] as Map<String, dynamic>)
-          : null,
-      reciever: map['reciever'] != null
-          ? UserInfoModel.fromMap(map['reciever'] as Map<String, dynamic>)
-          : null,
+      postTitle: (map['postTitle'] ?? '') as String,
       senderId: (map['senderId'] ?? '') as String,
+      snederName: (map['snederName'] ?? '') as String,
+      senderPhoto: (map['senderPhoto'] ?? '') as String,
       recieverId: (map['recieverId'] ?? '') as String,
     );
   }
@@ -76,42 +65,6 @@ class OfferModel {
 
   factory OfferModel.fromJson(String source) =>
       OfferModel.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'OfferModel(id: $id, accepted: $accepted, completed: $completed, message: $message, post: $post, postId: $postId, conversation: $conversation, sender: $sender, reciever: $reciever, senderId: $senderId)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is OfferModel &&
-        other.id == id &&
-        other.accepted == accepted &&
-        other.completed == completed &&
-        other.message == message &&
-        other.post == post &&
-        other.postId == postId &&
-        other.conversation == conversation &&
-        other.sender == sender &&
-        other.reciever == reciever &&
-        other.senderId == senderId;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        accepted.hashCode ^
-        completed.hashCode ^
-        message.hashCode ^
-        post.hashCode ^
-        postId.hashCode ^
-        conversation.hashCode ^
-        sender.hashCode ^
-        reciever.hashCode ^
-        senderId.hashCode;
-  }
 
   factory OfferModel.empty() => OfferModel();
 }

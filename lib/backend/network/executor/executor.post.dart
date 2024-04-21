@@ -23,8 +23,11 @@ mixin PostExecutor {
     try {
       QuerySnapshot<Map<String, dynamic>> list;
       if (id == null) {
-        list =
-            await _fstore.collection(_col).limit(20).orderBy("createdAt").get();
+        list = await _fstore
+            .collection(_col)
+            .limit(20)
+            .orderBy("createdAt", descending: true)
+            .get();
       } else {
         list = await _fstore
             .collection(_col)
