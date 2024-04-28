@@ -6,7 +6,7 @@ import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/messages/view.messages.dart';
 import 'package:wrg2/frontend/pages/offers/view.offers.dart';
-import 'package:wrg2/frontend/pages/personal/view.posts.dart';
+import 'package:wrg2/frontend/pages/personal/view.personalPosts.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class ProfileView extends GetView<ProfileState> {
@@ -49,7 +49,7 @@ class ProfileView extends GetView<ProfileState> {
                           const Spacer(),
                           ListTile(
                             onTap: () {
-                              Get.to(() => const MessagesView());
+                              Get.to(() => MessagesView());
                             },
                             title: const Text("Messages"),
                             leading: Container(
@@ -63,7 +63,7 @@ class ProfileView extends GetView<ProfileState> {
                           ListTile(
                             title: const Text("Your Posts"),
                             onTap: () {
-                              Get.to(() => const PersonalPosts());
+                              Get.to(() => PersonalPosts());
                             },
                             leading: Container(
                               margin: const EdgeInsets.only(right: 15),

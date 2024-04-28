@@ -11,7 +11,7 @@ class WatchingAtom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      width: Get.width / 2.6,
+      // width: Get.width / 2.6,
       alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/extension/widget.extension.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/frontend/pages/post/details/view.postDetails.dart';
@@ -15,19 +17,19 @@ class PostItem extends StatelessWidget {
         Get.to(() => PostDetails(), arguments: {"id": model.id}, opaque: false);
       },
       child: Container(
-        margin: const EdgeInsets.only(top: 10),
-        padding: Constants.ePadding,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: Constants.br,
+        margin: EdgeInsets.symmetric(
+          horizontal: Constants.cardMargin,
+          vertical: Constants.cardVerticalMargin,
         ),
+        padding: Constants.ePadding,
+        decoration: (card as Container).decoration,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(model.title),
-          Text(
+          Txt(model.title.capitalizeFirst!).h2,
+          Txt(
             model.content,
             maxLines: 1,
-          ),
-          const Divider(),
+          ).h4,
+          // const Divider(),
           Opacity(
             opacity: Constants.opacity,
             child: Row(

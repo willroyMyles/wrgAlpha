@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movements/support/widget.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/worker/worker.theme.dart';
+import 'package:wrg2/frontend/atoms/atom.box.dart';
 import 'package:wrg2/frontend/atoms/atom.offer.dart';
 import 'package:wrg2/frontend/atoms/atom.watchingAtom.dart';
+import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
 import 'package:wrg2/frontend/pages/post/view.createPost.dart';
 import 'package:wrg2/frontend/pages/post/view.postList.dart';
@@ -40,6 +43,7 @@ class HomeView extends StatelessWidget {
                   ),
                 ),
                 centerTitle: false,
+                backgroundColor: lightBackgroundColor,
                 actions: [
                   IconButton(
                       onPressed: () {
@@ -54,13 +58,28 @@ class HomeView extends StatelessWidget {
                     left: Constants.cardMargin,
                     right: Constants.cardMargin,
                     top: Constants.cardMargin,
+                    bottom: Constants.cardMargin,
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      const Expanded(child: WatchingAtom()),
+                      GetBuilder<ProfileState>(
+                        builder: (_) {
+                          return Obx(() => AtomBox(
+                                value: _.userModel?.value.watching.length ?? 0,
+                                label: "Watching",
+                              ));
+                        },
+                      ),
                       SizedBox(width: Constants.cardMargin),
-                      const Expanded(child: OffersAtom()),
+                      GetBuilder<OfferState>(
+                        builder: (_) {
+                          return Obx(() => AtomBox(
+                                value: _.models.length,
+                                label: "Offers",
+                              ));
+                        },
+                      ),
                     ],
                   ),
                 ),

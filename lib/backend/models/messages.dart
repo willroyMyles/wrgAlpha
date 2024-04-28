@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
+import 'package:wrg2/backend/mixin/mixin.get.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class MessagesModel {
   String sender;
@@ -30,32 +31,9 @@ class MessagesModel {
 
   factory MessagesModel.empty() => MessagesModel();
 
-  String toJson() => json.encode(toMap());
-
-  factory MessagesModel.fromJson(String source) =>
-      MessagesModel.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'MessagesModel(sender: $sender, content: $content, id: $id, createdAt: $createdAt)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is MessagesModel &&
-        other.sender == sender &&
-        other.content == content &&
-        other.id == id &&
-        other.createdAt == createdAt;
-  }
-
-  @override
-  int get hashCode {
-    return sender.hashCode ^
-        content.hashCode ^
-        id.hashCode ^
-        createdAt.hashCode;
+  bool amISender() {
+    var state = GF<ProfileState>();
+    if (state.userModel == null) return false;
+    return state.userModel!.value.email == sender;
   }
 }

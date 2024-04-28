@@ -33,4 +33,12 @@ class Constants {
 
   static const double opacity = 0.7;
   static double lightOpacity = .5;
+
+  static Widget get loading => Container(
+        child: const Text("Loading"),
+      );
+  static Widget get empty => Container(
+        alignment: Alignment.center,
+        child: const Text("empty"),
+      );
 }

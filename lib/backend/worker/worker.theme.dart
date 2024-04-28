@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
@@ -9,7 +10,7 @@ extension TextColor on ThemeData {
   Color get textColor => textTheme.bodyLarge!.color!;
 }
 
-Color primaryOrg = const Color.fromRGBO(234, 97, 94, 1);
+Color primaryOrg = const Color.fromARGB(255, 244, 95, 36);
 MaterialColor primarySwatch = generateMaterialColor(color: primaryOrg);
 
 MaterialColor primaryGreen = generateMaterialColor(color: primaryOrg);
@@ -18,7 +19,7 @@ Color darkBackgroundColor = const Color.fromRGBO(30, 33, 30, 1);
 Color darkForegrounColor = const Color.fromRGBO(60, 63, 60, 1);
 
 // Color lightBackgroundColor = Color.fromRGBO(247, 248, 251, 1);
-Color lightBackgroundColor = const Color.fromRGBO(235, 240, 241, 1);
+Color lightBackgroundColor = const Color.fromARGB(255, 237, 233, 226);
 Color lightForegrounColor = Colors.white;
 
 MaterialStateProperty<T> mst<T>(T value) {
@@ -27,30 +28,32 @@ MaterialStateProperty<T> mst<T>(T value) {
 
 class ThemeWorker {
   final ThemeData _theme = ThemeData(
-      primaryColor: primaryOrg, // Change to your desired primary color
-      scaffoldBackgroundColor: Colors.white,
-      fontFamily: 'Roboto', // Change to your desired font family
-      appBarTheme: AppBarTheme(
-        color: primaryOrg, // Change to your desired app bar color
-        elevation: 0, // Change elevation as needed
-        iconTheme: const IconThemeData(
-          color: Colors.white, // Change to your desired app bar icon color
-        ),
+    primaryColor: primaryOrg, // Change to your desired primary color
+    scaffoldBackgroundColor: Colors.white,
+    fontFamily: 'Roboto', // Change to your desired font family
+    appBarTheme: AppBarTheme(
+      color: primaryOrg, // Change to your desired app bar color
+      elevation: 0, // Change elevation as needed
+      iconTheme: const IconThemeData(
+        color: Colors.white, // Change to your desired app bar icon color
       ),
-      colorScheme: ColorScheme(
-          background: lightBackgroundColor,
-          brightness: Brightness.light,
-          error: Colors.red,
-          onBackground: lightForegrounColor,
-          onError: Colors.black,
-          surface: lightBackgroundColor,
-          onSurface: lightForegrounColor,
-          onPrimary: lightForegrounColor,
-          primary: primaryOrg,
-          onSecondary: Colors.black,
-          secondary: lightBackgroundColor)
-      // Add more theme properties as needed
-      );
+    ),
+    colorScheme:
+        ColorScheme.fromSeed(seedColor: const Color.fromRGBO(239, 236, 233, 1)),
+    // colorScheme: ColorScheme(
+    //     background: lightBackgroundColor,
+    //     brightness: Brightness.light,
+    //     error: Colors.red,
+    //     onBackground: lightForegrounColor,
+    //     onError: Colors.black,
+    //     surface: lightBackgroundColor,
+    //     onSurface: lightForegrounColor,
+    //     onPrimary: lightForegrounColor,
+    //     primary: primaryOrg,
+    //     onSecondary: Colors.black,
+    //     secondary: lightBackgroundColor)
+    // Add more theme properties as needed
+  );
 
   ThemeData getDarkTheme() {
     var brightness = Brightness.dark;
@@ -84,7 +87,7 @@ class ThemeWorker {
         endIndent: 10,
       ),
       brightness: brightness,
-      scaffoldBackgroundColor: bg,
+      scaffoldBackgroundColor: lightBackgroundColor,
       cardColor: fg,
       canvasColor: bg,
       bottomNavigationBarTheme: th.bottomNavigationBarTheme.copyWith(
@@ -120,6 +123,11 @@ class ThemeWorker {
         displaySmall: th.textTheme.displaySmall?.copyWith(color: obg),
       ),
       iconTheme: th.iconTheme.copyWith(color: obg, size: 20),
+      cupertinoOverrideTheme: CupertinoThemeData(
+        applyThemeToAll: true,
+        scaffoldBackgroundColor: lightBackgroundColor,
+        barBackgroundColor: lightBackgroundColor,
+      ),
 
       dropdownMenuTheme: DropdownMenuThemeData(
           textStyle: const TextStyle(color: Colors.black),
@@ -133,7 +141,7 @@ class ThemeWorker {
       appBarTheme: th.appBarTheme.copyWith(
         titleSpacing: 0,
         toolbarHeight: 50,
-        backgroundColor: fg,
+        backgroundColor: Colors.transparent,
         surfaceTintColor: fg,
         toolbarTextStyle: TextStyle(color: obg),
         titleTextStyle: TextStyle(color: obg),

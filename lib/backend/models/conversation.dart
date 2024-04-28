@@ -2,9 +2,7 @@
 import 'dart:convert';
 
 import 'package:nanoid2/nanoid2.dart';
-import 'package:wrg2/backend/models/comment.model.dart';
 import 'package:wrg2/backend/models/messages.dart';
-import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/models/userinfo.dart';
 
 class ConversationModel {
@@ -12,8 +10,6 @@ class ConversationModel {
   // UserInfoModel sender;
   List<MessagesModel> messages = [];
   bool locked = false;
-  CommentModel? comment;
-  PostModel? post;
   String newMessage;
   String id;
   String recieverId;
@@ -23,15 +19,15 @@ class ConversationModel {
   ConversationModel({
     this.messages = const [],
     this.locked = false,
-    this.comment,
-    this.post,
     this.newMessage = '',
     this.id = '',
     this.recieverId = '',
     this.senderId = '',
     this.commentId = '',
     this.postId = '',
-  });
+  }) {
+    id = nanoid(length: 7);
+  }
 
   bool hasNewMessageForMe() {
     // final APIService ser = Get.find();
@@ -72,10 +68,8 @@ class ConversationModel {
     return <String, dynamic>{
       'messages': messages.map((x) => x.toMap()).toList(),
       'locked': locked,
-      'comment': comment?.toMap(),
-      'post': post?.toMap(),
       'newMessage': newMessage,
-      'id': nanoid(length: 7),
+      'id': id,
       'recieverId': recieverId,
       'senderId': senderId,
       'commentId': commentId,
@@ -91,12 +85,6 @@ class ConversationModel {
         ),
       ),
       locked: (map['locked'] ?? false) as bool,
-      comment: map['comment'] != null
-          ? CommentModel.fromMap(map['comment'] as Map<String, dynamic>)
-          : null,
-      post: map['post'] != null
-          ? PostModel.fromMap(map['post'] as Map<String, dynamic>)
-          : null,
       newMessage: (map['newMessage'] ?? '') as String,
       id: (map['id'] ?? '') as String,
       recieverId: (map['recieverId'] ?? '') as String,

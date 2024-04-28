@@ -2,11 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
-import 'package:wrg2/frontend/pages/messages/state.messages.dart';
+import 'package:wrg2/frontend/pages/personal/state.personalPosts.dart';
+import 'package:wrg2/frontend/pages/post/view.postItem.dart';
 
-class MessagesView extends StatelessWidget {
-  MessagesView({super.key});
-  final controller = Get.put(MessagesState());
+class PersonalPosts extends StatelessWidget {
+  PersonalPosts({super.key});
+  final controller = Get.put(PersonalPostState());
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +18,14 @@ class MessagesView extends StatelessWidget {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             const CupertinoSliverNavigationBar(
-              largeTitle: Text("Your Messages"),
-              stretch: true,
+              largeTitle: Text("Your Posts"),
+              // middle: Text("data"),
+              heroTag: "post tag",
+              // previousPageTitle: "Profile",
+              // stretch: true,
               transitionBetweenRoutes: true,
-              alwaysShowMiddle: false,
+              alwaysShowMiddle: true,
+
               border: Border(),
             ),
           ];
@@ -28,9 +33,11 @@ class MessagesView extends StatelessWidget {
         body: controller.obx(
           (state) => Container(
             child: ListView.builder(
-              itemCount: 0,
+              controller: controller.scroll,
+              itemCount: controller.posts.length,
               itemBuilder: (context, index) {
-                return null;
+                var item = controller.posts.elementAt(index);
+                return PostItem(model: item);
               },
             ),
           ),

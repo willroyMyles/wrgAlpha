@@ -7,6 +7,7 @@ Widget buildInput(String label, onChange,
     int? lines,
     double height = 80,
     TextEditingController? tec,
+    bool showHelper = true,
     String? initialValue}) {
   return Container(
     height: height,
@@ -14,13 +15,14 @@ Widget buildInput(String label, onChange,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 3, bottom: 05),
-          child: Text(
-            label.capitalize!,
-            style: const TextStyle(color: Colors.grey),
+        if (showHelper)
+          Padding(
+            padding: const EdgeInsets.only(left: 3, bottom: 05),
+            child: Text(
+              label.capitalize!,
+              style: const TextStyle(color: Colors.grey),
+            ),
           ),
-        ),
         Expanded(
           child: TextFormField(
             controller: tec,
