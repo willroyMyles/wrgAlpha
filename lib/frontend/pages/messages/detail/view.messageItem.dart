@@ -26,7 +26,8 @@ class MessageItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-                padding: Constants.ePadding,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [

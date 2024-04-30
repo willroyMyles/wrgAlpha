@@ -1,9 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nanoid2/nanoid2.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/messages.dart';
 import 'package:wrg2/backend/models/userinfo.dart';
+import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/worker/worker.auth.dart';
+import 'package:wrg2/frontend/pages/messages/detail/view.messageDetails.dart';
 
 class ConversationModel {
   // UserInfoModel reciever;
@@ -26,7 +32,9 @@ class ConversationModel {
     this.commentId = '',
     this.postId = '',
   }) {
-    id = nanoid(length: 7);
+    if (id.isEmpty) {
+      id = nanoid(length: 7);
+    }
   }
 
   bool hasNewMessageForMe() {
@@ -49,10 +57,7 @@ class ConversationModel {
   }
 
   getOthersName() {
-    // final APIService ser = Get.find();
-    // return sender.id == ser.userInfo.value.id
-    //     ? reciever.username
-    //     : sender.username;
+    return senderId == authWorker.user!.value.email ? recieverId : senderId;
   }
 
   UserInfoModel? getOthersUserInfo() {
@@ -80,7 +85,7 @@ class ConversationModel {
   factory ConversationModel.fromMap(Map<String, dynamic> map) {
     return ConversationModel(
       messages: List<MessagesModel>.from(
-        (map['messages'] as List<int>).map<MessagesModel>(
+        (map['messages']).map<MessagesModel>(
           (x) => MessagesModel.fromMap(x as Map<String, dynamic>),
         ),
       ),
@@ -98,4 +103,22 @@ class ConversationModel {
 
   factory ConversationModel.fromJson(String source) =>
       ConversationModel.fromMap(json.decode(source));
+
+  Widget tile() {
+    return InkWell(
+      onTap: () {
+        Get.to(() => MessageDetailView(), arguments: {"conversation": this});
+      },
+      child: Container(
+        padding: Constants.ePadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Opacity(opacity: .7, child: Text("your messages with")),
+            Txt(getOthersName() ?? "no name").h3,
+          ],
+        ),
+      ),
+    );
+  }
 }

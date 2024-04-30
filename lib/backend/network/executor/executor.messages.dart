@@ -25,6 +25,32 @@ mixin MessagesExecutor {
     }
   }
 
+  Future<List<ConversationModel>> conversation_getMyConvarsations(
+      String myId) async {
+    try {
+      var res = await _fstor
+          .collection(_col)
+          .where(Filter.or(Filter("senderId", isEqualTo: myId),
+              Filter("recieverId", isEqualTo: myId)))
+          .get();
+      return res.docs.map((e) => ConversationModel.fromMap(e.data())).toList();
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<ConversationModel> conversation_getConvarsationByOfferid(
+      String id) async {
+    try {
+      var res =
+          await _fstor.collection(_col).where("commentId", isEqualTo: id).get();
+      return ConversationModel.fromMap(res.docs.first.data());
+    } catch (e) {
+      return ConversationModel();
+    }
+  }
+
   Future<bool> conversation_updateConversation(ConversationModel model) async {
     try {
       await _fstor.collection(_col).doc(model.id).update(model.toMap());
@@ -42,6 +68,7 @@ mixin MessagesExecutor {
       });
       return true;
     } catch (e) {
+      print(e);
       return false;
     }
   }

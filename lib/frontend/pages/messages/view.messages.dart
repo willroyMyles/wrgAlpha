@@ -18,24 +18,29 @@ class MessagesView extends StatelessWidget {
           return [
             const CupertinoSliverNavigationBar(
               largeTitle: Text("Your Messages"),
-              stretch: true,
+              stretch: false,
               transitionBetweenRoutes: true,
               alwaysShowMiddle: false,
               border: Border(),
+              padding: EdgeInsetsDirectional.zero,
             ),
           ];
         },
-        body: controller.obx(
-          (state) => Container(
-            child: ListView.builder(
-              itemCount: 0,
-              itemBuilder: (context, index) {
-                return null;
-              },
+        body: SafeArea(
+          child: controller.obx(
+            (state) => Container(
+              padding: const EdgeInsets.only(top: 40),
+              child: ListView.builder(
+                itemCount: controller.conversations.length,
+                itemBuilder: (context, index) {
+                  var item = controller.conversations[index];
+                  return item.tile();
+                },
+              ),
             ),
+            onEmpty: Constants.empty,
+            onLoading: Constants.loading,
           ),
-          onEmpty: Constants.empty,
-          onLoading: Constants.loading,
         ),
       ),
     );

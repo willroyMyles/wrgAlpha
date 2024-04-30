@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nanoid2/nanoid2.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
@@ -12,14 +13,34 @@ class MessageDetailsState extends GetxController with StateMixin {
   ConversationModel? conversation;
   String? messageString;
   OfferModel? initial;
+  TextEditingController controller = TextEditingController();
 
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
+    setup();
+  }
 
-    if ((Get.arguments as Map).containsKey("model")) {
-      initial = Get.arguments['model'];
+  setup() async {
+    try {
+      if ((Get.arguments as Map).containsKey("conversation")) {
+        conversation = Get.arguments['conversation'];
+        messages.addAll(conversation!.messages);
+        change("", status: RxStatus.success());
+        return;
+      }
+      if ((Get.arguments as Map).containsKey("model")) {
+        initial = Get.arguments['model'];
+      }
+      var convo =
+          await GF<GE>().conversation_getConvarsationByOfferid(initial!.id);
+      conversation = convo;
+      messages.addAll(convo.messages);
+    } catch (e) {
+      if ((Get.arguments as Map).containsKey("model")) {
+        initial = Get.arguments['model'];
+      }
     }
     change("", status: RxStatus.success());
   }
@@ -40,7 +61,7 @@ class MessageDetailsState extends GetxController with StateMixin {
 
       var mess = MessagesModel(
         sender: authWorker.user?.value.email ?? "",
-        content: messageString ?? "",
+        content: controller.text,
         id: nanoid(length: 7),
       );
 
@@ -52,6 +73,7 @@ class MessageDetailsState extends GetxController with StateMixin {
         messages.add(mess);
         // show success dialouge
         conversation = convo;
+        controller.clear();
       } else {
         // show error dialouge
       }
@@ -59,16 +81,19 @@ class MessageDetailsState extends GetxController with StateMixin {
       //add to conversation
       var mess = MessagesModel(
         sender: authWorker.user?.value.email ?? "",
-        content: messageString ?? "",
+        content: controller.text,
         id: nanoid(length: 7),
       );
 
       var res = await GF<GE>().conversation_addMesages(mess, conversation!.id);
       if (res) {
         messages.add(mess);
+        controller.clear();
       } else {
         // show error dialouge
       }
     }
+
+    refresh();
   }
 }
