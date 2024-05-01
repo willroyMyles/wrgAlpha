@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wrg2/backend/worker/worker.theme.dart';
 
 mixin TypographyMixin on Text {
   final TextStyle _baseTextStyle =
@@ -7,29 +8,35 @@ mixin TypographyMixin on Text {
   TextStyle get headlineLarge => _baseTextStyle.copyWith(
         fontSize: 24.0,
         fontWeight: FontWeight.w700,
+        color: toc.textColor,
       );
 
   TextStyle get headlineMedium => _baseTextStyle.copyWith(
         fontSize: 20.0,
+        color: toc.textColor,
         fontWeight: FontWeight.w600,
       );
 
   TextStyle get bodyLarge => _baseTextStyle.copyWith(
         fontSize: 18.0,
+        color: toc.textColor,
         fontWeight: FontWeight.w400,
       );
 
   TextStyle get bodyMedium => _baseTextStyle.copyWith(
         fontSize: 16.0,
+        color: toc.textColor,
         fontWeight: FontWeight.w400,
       );
 
   TextStyle get regularCaption => _baseTextStyle.copyWith(
         fontSize: 12.0,
+        color: toc.textColor,
         fontWeight: FontWeight.w400,
       );
   TextStyle get small => _baseTextStyle.copyWith(
         fontSize: 10.0,
+        color: toc.textColor,
         fontWeight: FontWeight.w500,
       );
 

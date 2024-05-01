@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movements/support/widget.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
-import 'package:wrg2/backend/worker/worker.theme.dart';
+import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/atoms/atom.box.dart';
 import 'package:wrg2/frontend/atoms/atom.offer.dart';
 import 'package:wrg2/frontend/atoms/atom.watchingAtom.dart';
@@ -34,16 +34,8 @@ class HomeView extends StatelessWidget {
               //   transitionBetweenRoutes: true,
               //   alwaysShowMiddle: false,
               // ),
-              SliverAppBar.medium(
-                title: const Text(
-                  "Your Feed",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 25,
-                  ),
-                ),
-                centerTitle: false,
-                backgroundColor: lightBackgroundColor,
+              WRGAppBar(
+                "You're Feed  ",
                 actions: [
                   IconButton(
                       onPressed: () {
@@ -52,6 +44,7 @@ class HomeView extends StatelessWidget {
                       icon: const Icon(Icons.my_library_add_outlined))
                 ],
               ),
+
               SliverToBoxAdapter(
                 child: Container(
                   margin: EdgeInsets.only(
@@ -61,7 +54,7 @@ class HomeView extends StatelessWidget {
                     bottom: Constants.cardMargin,
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GetBuilder<ProfileState>(
                         builder: (_) {

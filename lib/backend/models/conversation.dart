@@ -115,7 +115,7 @@ class ConversationModel {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Opacity(opacity: .7, child: Text("your messages with")),
-            Txt(getOthersName() ?? "no name").h3,
+            Txt(getOthersName() ?? "no name").h2,
           ],
         ),
       ),

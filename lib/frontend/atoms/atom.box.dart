@@ -12,10 +12,11 @@ class AtomBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // height: 50,
+      constraints: const BoxConstraints(minWidth: 90, maxWidth: 95),
       padding: EdgeInsets.all(Constants.cardpadding),
       decoration: BoxDecoration(
-        color: toc.scaffoldBackgroundColor.darkerF(20),
-        borderRadius: Constants.br,
+        color: toc.scaffoldBackgroundColor.darkerF(10),
+        borderRadius: Constants.br * 3,
       ),
       alignment: Alignment.center,
       child: Column(

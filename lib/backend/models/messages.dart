@@ -1,5 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
+import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class MessagesModel {
@@ -35,5 +41,123 @@ class MessagesModel {
     var state = GF<ProfileState>();
     if (state.userModel == null) return false;
     return state.userModel!.value.email == sender;
+  }
+
+  static Widget multiTile(List<MessagesModel> items) {
+    var imsender = items.first.amISender();
+    return Container(
+      alignment: imsender ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+        // decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.circular(20),
+        //     boxShadow: [
+        //       BoxShadow(
+        //         color:
+        //             toc.scaffoldBackgroundColor.darkerF(50).withOpacity(.3),
+        //         blurRadius: 5,
+        //       )
+        //     ],
+        //     color: imsender
+        //         ? toc.scaffoldBackgroundColor.darker
+        //         : toc.scaffoldBackgroundColor.lighterF(10)),
+        // padding: const EdgeInsets.only(top: 40),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment:
+              imsender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          children: [
+            ...items.map((e) {
+              var r = 5.0;
+              var nr = 0.0;
+              var tl = Radius.circular(r);
+              var tr = Radius.circular(r);
+              var bl = Radius.circular(r);
+              var br = Radius.circular(r);
+
+              if (imsender) {
+                if (e != items.last && e != items.first) {
+                  br = Radius.circular(nr);
+                  tr = Radius.circular(nr);
+                }
+
+                if (e == items.first) {
+                  br = Radius.circular(nr);
+                  bl = Radius.circular(nr);
+                  tl = Radius.circular(r);
+                  tr = Radius.circular(r);
+                }
+
+                if (e == items.last) {
+                  tr = Radius.circular(nr);
+                  tl = Radius.circular(r);
+                  bl = Radius.circular(r);
+                  br = Radius.circular(r);
+                }
+              }
+
+              if (!imsender && e != items.last && e != items.first) {
+                bl = Radius.circular(nr);
+                tl = Radius.circular(nr);
+              }
+
+              return Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: Constants.cardMargin,
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: tl,
+                        topRight: tr,
+                        bottomLeft: bl,
+                        bottomRight: br,
+                      ),
+                      color: imsender
+                          ? toc.scaffoldBackgroundColor.darker
+                          : toc.scaffoldBackgroundColor.lighterF(10)),
+                  // margin:
+                  //     const EdgeInsets.symmetric(vertical: .5, horizontal: 3),
+                  child: Txt(
+                    e.content,
+                  ).h4);
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget tile() {
+    return Container(
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: Constants.cardMargin,
+          vertical: Constants.cardVerticalMargin / 4,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment:
+              amISender() ? MainAxisAlignment.end : MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: amISender()
+                        ? toc.scaffoldBackgroundColor.darker
+                        : toc.scaffoldBackgroundColor.lighterF(10)),
+                child: Txt(
+                  content.capitalizeFirst!,
+                  style: TextStyle(
+                      color: amISender() ? Colors.white : toc.textColor),
+                )),
+          ],
+        ),
+      ),
+    );
   }
 }

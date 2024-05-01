@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
@@ -19,7 +20,8 @@ class PostDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     // controller.onView();
     return Scaffold(
-        appBar: AppBar(),
+        appBar:
+            AppBar(backgroundColor: toc.scaffoldBackgroundColor.lighterF(20)),
         body: Obx(
           () => Column(
             children: [
@@ -38,7 +40,7 @@ class PostDetails extends StatelessWidget {
                       child: Material(
                         child: Container(
                           padding: Constants.ePadding,
-                          color: Colors.white,
+                          color: toc.scaffoldBackgroundColor.lighterF(20),
                           child: SafeArea(
                             child: SingleChildScrollView(
                               child: Column(

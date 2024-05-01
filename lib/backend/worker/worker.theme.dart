@@ -8,6 +8,8 @@ ThemeData get toc => Get.context == null ? ThemeData() : Theme.of(Get.context!);
 
 extension TextColor on ThemeData {
   Color get textColor => textTheme.bodyLarge!.color!;
+  TextStyle get cStyle =>
+      CupertinoTheme.of(Get.context!).textTheme.navLargeTitleTextStyle;
 }
 
 Color primaryOrg = const Color.fromARGB(255, 244, 95, 36);

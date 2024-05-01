@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/offers/view.offerItem.dart';
 
@@ -15,15 +15,7 @@ class OffersView extends GetView<OfferState> {
 
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            const CupertinoSliverNavigationBar(
-              largeTitle: Text("Your Offers"),
-              stretch: true,
-              transitionBetweenRoutes: true,
-              alwaysShowMiddle: false,
-              border: Border(),
-            ),
-          ];
+          return [const WRGAppBar("Your Offers")];
         },
         body: controller.obx(
           (state) => Container(
