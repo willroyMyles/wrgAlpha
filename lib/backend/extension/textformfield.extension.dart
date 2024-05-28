@@ -6,7 +6,6 @@ extension TFF on TextFormField {
     // ServiceTheme ts = Get.find<ServiceTheme>();
     var bc = Colors.grey;
     var lineHeight = 0.0;
-    var tff = this;
 
     InputBorder border = OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),

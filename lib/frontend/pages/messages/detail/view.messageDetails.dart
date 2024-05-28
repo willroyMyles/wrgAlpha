@@ -20,7 +20,6 @@ class MessageDetailView extends StatelessWidget {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         extendBodyBehindAppBar: false,
-
         bottomSheet: Container(
           color: toc.scaffoldBackgroundColor,
           child: SafeArea(
@@ -46,23 +45,6 @@ class MessageDetailView extends StatelessWidget {
             ),
           ),
         ),
-        // bottomNavigationBar: Container(
-        //   padding: EdgeInsets.symmetric(horizontal: Constants.cardpadding),
-        //   child: Row(
-        //     crossAxisAlignment: CrossAxisAlignment.center,
-        //     children: [
-        //       Expanded(
-        //           child: buildInput("message", (val) {},
-        //               showHelper: false, height: 50, tec: controller.controller)),
-        //       TextButton(
-        //           onPressed: () {
-        //             controller.onSend();
-        //           },
-        //           child: const Text("send"))
-        //     ],
-        //   ),
-        // ),
-
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
@@ -90,55 +72,61 @@ class MessageDetailView extends StatelessWidget {
           body: controller.obx(
             (state) {
               var skipCount = -1;
-              return Container(
-                  child: Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                        keyboardDismissBehavior:
-                            ScrollViewKeyboardDismissBehavior.onDrag,
-                        itemCount: controller.messages.isEmpty
-                            ? 1
-                            : controller.messages.length,
-                        itemBuilder: (context, index) {
-                          if (index - skipCount <= 0) {
-                            return Container();
-                          }
-                          if (controller.messages.isEmpty) {
-                            var m = MessagesModel(
-                                sender: initialOffer?.senderId ?? "",
-                                content: initialOffer?.message ?? "",
-                                id: "initial");
+              return StreamBuilder<Object>(
+                  stream: controller.usersStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return const Text('Something went wrong');
+                    }
 
-                            return m.tile();
-                          }
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Text("Loading");
+                    }
 
-                          var item = controller.messages[index];
+                    return Container(
+                        child: ListView.builder(
+                            keyboardDismissBehavior:
+                                ScrollViewKeyboardDismissBehavior.onDrag,
+                            itemCount: controller.messages.isEmpty
+                                ? 1
+                                : controller.messages.length,
+                            itemBuilder: (context, index) {
+                              if (index - skipCount <= 0) {
+                                return Container();
+                              }
+                              if (controller.messages.isEmpty) {
+                                var m = MessagesModel(
+                                    sender: initialOffer?.senderId ?? "",
+                                    content: initialOffer?.message ?? "",
+                                    id: "initial");
 
-                          var arr = [];
-                          // check if the next message is from the same sender
-                          var nextIndex = index + 1;
-                          while (nextIndex < controller.messages.length) {
-                            var next = controller.messages[nextIndex];
-                            if (next.sender == item.sender) {
-                              arr.add(next);
-                              skipCount = index;
-                              nextIndex++;
-                            } else {
-                              break;
-                            }
-                          }
+                                return m.tile();
+                              }
 
-                          if (arr.isNotEmpty) {
-                            skipCount = index + arr.length;
-                            return MessagesModel.multiTile([item, ...arr]);
-                          }
+                              var item = controller.messages[index];
 
-                          return item.tile();
-                        }),
-                  ),
-                ],
-              ));
+                              var arr = [];
+                              // check if the next message is from the same sender
+                              var nextIndex = index + 1;
+                              while (nextIndex < controller.messages.length) {
+                                var next = controller.messages[nextIndex];
+                                if (next.sender == item.sender) {
+                                  arr.add(next);
+                                  skipCount = index;
+                                  nextIndex++;
+                                } else {
+                                  break;
+                                }
+                              }
+
+                              if (arr.isNotEmpty) {
+                                skipCount = index + arr.length;
+                                return MessagesModel.multiTile([item, ...arr]);
+                              }
+
+                              return item.tile();
+                            }));
+                  });
             },
             onEmpty: Constants.empty,
             onLoading: Constants.loading,

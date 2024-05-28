@@ -58,22 +58,6 @@ class CreatePost extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      // Container(
-                      //   padding: const EdgeInsets.only(left: 9),
-                      //   alignment: Alignment.centerLeft,
-                      //   child: Text(
-                      //     "Seek your parts".capitalize!,
-                      //     style: const TextStyle(fontSize: 35),
-                      //   ),
-                      // ),
-                      // Container(
-                      //   padding: const EdgeInsets.only(left: 9),
-                      //   alignment: Alignment.centerLeft,
-                      //   child: Text(
-                      //     "post what your looking for".capitalize!,
-                      //     style: const TextStyle(fontSize: 16),
-                      //   ),
-                      // ),
                       Container(
                         padding: const EdgeInsets.all(9),
                         margin: const EdgeInsets.all(2),
@@ -98,79 +82,55 @@ class CreatePost extends StatelessWidget {
                                 children: [
                                   SizedBox(
                                     width: Get.width / divider,
-                                    child: InkWell(
-                                      onTap: () async {
-                                        // cps.showMake();
-                                        controller.showMake();
+                                    child: buildDropdownInput(
+                                      "make",
+                                      items: [...controller.getMakeList(), ""],
+                                      (val) {
+                                        controller.model['make'] = val;
+                                        controller.model['model'] = "";
+                                        controller.model.refresh();
                                       },
-                                      child: IgnorePointer(
-                                        child: buildInput(
-                                          "make",
-                                          (val) {},
-                                          tec: controller.crtls['make'],
-                                        ),
-                                      ),
+                                      initialValue:
+                                          controller.model['make'] ?? "",
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: Get.width / divider,
-                                    child: InkWell(
-                                      onTap: () async {
-                                        // cps.showMake();
-                                        controller.showModel();
-                                      },
-                                      child: IgnorePointer(
-                                        child: buildInput(
-                                          "model",
-                                          (val) {},
-                                          tec: controller.crtls['model'],
-                                        ),
+                                  Obx(() {
+                                    return SizedBox(
+                                      key: UniqueKey(),
+                                      width: Get.width / divider,
+                                      child: buildDropdownInput(
+                                        "model",
+                                        (val) {
+                                          controller.model['model'] = val;
+                                        },
+                                        items: [
+                                          ...controller.getModelList(),
+                                          ""
+                                        ],
+                                        initialValue:
+                                            controller.model.value['model'] ??
+                                                "",
                                       ),
-                                    ),
-                                  ),
+                                    );
+                                  }),
                                   SizedBox(
                                       width: Get.width / divider,
-                                      child: InkWell(
-                                        onTap: () async {
-                                          var ans = await Get.dialog(
-                                            Container(
-                                              height: 330,
-                                              width: Get.width,
-                                              alignment: Alignment.center,
-                                              child: Material(
-                                                color: Colors.grey,
-                                                child: YearPicker(
-                                                  firstDate: DateTime.now()
-                                                      .subtract(const Duration(
-                                                          days: 365 * 50)),
-                                                  lastDate: DateTime.now().add(
-                                                      const Duration(
-                                                          days: 365 * 2)),
-                                                  selectedDate: DateTime.now(),
-                                                  onChanged: (value) {
-                                                    // cps.setYear(value);
-                                                    controller.setYear(
-                                                        value.year.toString());
-                                                    Get.close(1);
-                                                  },
-                                                  currentDate: DateTime.now(),
-                                                  initialDate: DateTime.now(),
-                                                ),
-                                              ),
-                                            ),
-                                            barrierColor:
-                                                Colors.black.withOpacity(.4),
-                                          );
-                                        },
-                                        child: IgnorePointer(
-                                          child: SizedBox(
-                                            width: Get.width / 2.2,
-                                            child: buildInput(
-                                              "year",
-                                              (val) {},
-                                              tec: controller.crtls['year'],
-                                            ),
-                                          ),
+                                      child: SizedBox(
+                                        width: Get.width / 2.2,
+                                        child: buildDropdownInput(
+                                          "year",
+                                          (val) {
+                                            controller.model['year'] = val;
+                                          },
+                                          items: [
+                                            "",
+                                            ...List.generate(
+                                                60,
+                                                (idx) =>
+                                                    (DateTime.now().year - idx)
+                                                        .toString())
+                                          ],
+                                          tec: controller.crtls['year'],
                                         ),
                                       ))
                                 ],
@@ -182,36 +142,37 @@ class CreatePost extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  InkWell(
-                                    onTap: () async {
-                                      // cps.showCat();
-                                      controller.showCatgeory();
-                                    },
-                                    child: IgnorePointer(
-                                      child: SizedBox(
-                                          width: Get.width / 2.2,
-                                          child: buildInput(
-                                            "category",
-                                            (val) {},
-                                            tec: controller.crtls['category'],
-                                          )),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () async {
-                                      // cps.showCat();
-                                      controller.showSubcategory();
-                                    },
-                                    child: IgnorePointer(
-                                      child: SizedBox(
-                                          width: Get.width / 2.2,
-                                          child: buildInput(
-                                            "sub category",
-                                            (val) {},
-                                            tec: controller.crtls['sub'],
-                                          )),
-                                    ),
-                                  ),
+                                  SizedBox(
+                                      width: Get.width / 2.2,
+                                      child: buildDropdownInput(
+                                        "category",
+                                        (val) {
+                                          controller.model['category'] = val;
+                                          controller.model['sub'] = "";
+                                          controller.model.refresh();
+                                        },
+                                        items: [
+                                          ...controller.getCategoryList(),
+                                          ""
+                                        ],
+                                        tec: controller.crtls['category'],
+                                      )),
+                                  Obx(() => SizedBox(
+                                      key: UniqueKey(),
+                                      width: Get.width / 2.2,
+                                      child: buildDropdownInput(
+                                        "sub category",
+                                        (val) {
+                                          controller.model['sub'] = val;
+                                        },
+                                        items: [
+                                          ...controller.getSubCategoryList(),
+                                          ""
+                                        ],
+                                        tec: controller.crtls['sub'],
+                                        initialValue:
+                                            controller.model.value['sub'] ?? "",
+                                      ))),
                                 ],
                               ),
                             ),

@@ -44,7 +44,7 @@ class PostModel {
     this.status = Status.OPEN,
     this.offers = const [],
   }) {
-    createdAt = DateTime.now();
+    // createdAt = DateTime.now();
   }
 
   Map<String, dynamic> toMap() {
@@ -72,7 +72,7 @@ class PostModel {
   bool contains(Map<String, dynamic> map, String key) => map.containsKey(key);
 
   factory PostModel.fromMap(Map<String, dynamic> map) {
-    return PostModel(
+    var m = PostModel(
       title: (map['title'] ?? '') as String,
       id: (map['id'] ?? '') as String,
       content: (map['content'] ?? '') as String,
@@ -85,7 +85,7 @@ class PostModel {
       watching: (map['watching'] ?? 0) as int,
       comments: (map['comments'] ?? 0) as int,
       createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0) as int)
+          ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0))
           : null,
       userEmail: (map['userEmail'] ?? '') as String,
       userName: (map['userName'] ?? '') as String,
@@ -93,6 +93,7 @@ class PostModel {
       status: Status.values[(map['status'] ?? 0) as int],
       offers: List<String>.from((map['offers'] ?? [])),
     );
+    return m;
   }
 
   factory PostModel.fromMapWithoutUserinfo(Map<String, dynamic> map) {

@@ -20,21 +20,21 @@ mixin PostExecutor {
     }
   }
 
-  Future<List<PostModel>> posts_getPosts({int? id}) async {
+  Future<List<PostModel>> posts_getPosts({dynamic id}) async {
     try {
       QuerySnapshot<Map<String, dynamic>> list;
       if (id == null) {
         list = await _fstore
             .collection(_col)
-            .limit(20)
+            .limit(2)
             .orderBy("createdAt", descending: true)
             .get();
       } else {
         list = await _fstore
             .collection(_col)
-            .limit(20)
-            .orderBy("createdAt")
-            .startAt([id]).get();
+            .limit(2)
+            .orderBy("createdAt", descending: true)
+            .startAfter([id]).get();
       }
 
       if (list.size > 0) {

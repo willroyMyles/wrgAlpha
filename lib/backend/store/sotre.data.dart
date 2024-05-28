@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:csv/csv.dart';
 // import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -16,13 +17,23 @@ List<String> getMake() {
 }
 
 List<String> getSubCategories(int index) {
-  var list = USCategories[index];
-  return List<String>.from(list);
+  try {
+    if (index < 0) return List<String>.from(USCategories[0]);
+    var list = USCategories[index];
+    return List<String>.from(list);
+  } catch (e) {
+    return [];
+  }
 }
 
 List<String> getModels(int index) {
-  var list = USCars[index];
-  return List<String>.from(list);
+  try {
+    if (index < 0) return List<String>.from(USCars[0]);
+    var list = USCars[index];
+    return List<String>.from(list);
+  } catch (e) {
+    return [];
+  }
 }
 
 List<List<dynamic>> processList() {
@@ -157,6 +168,114 @@ Zhujiang''';
   print(list.runtimeType);
 
   return list;
+}
+
+updateConfig() async {
+  // await updateDb();
+  // await updateDbSub();
+  // await updateDbCategory();
+
+  var doc = {
+    "Engine Components": [
+      "Engine Block",
+      "Pistons",
+      "Crankshaft",
+      "Camshaft",
+      "Cylinder Head",
+      "Timing Chain/Belt",
+      "Oil Pan",
+      "Spark Plugs"
+    ],
+    "Transmission and Drivetrain": [
+      "Transmission",
+      "Clutch",
+      "Drive Shaft",
+      "Differential",
+      "Axles",
+      "CV Joints",
+      "Transfer Case"
+    ],
+    "Suspension and Steering": [
+      "Shock Absorbers",
+      "Struts",
+      "Springs",
+      "Control Arms",
+      "Steering Rack",
+      "Steering Column",
+      "Tie Rod Ends",
+      "Ball Joints"
+    ],
+    "Brakes": [
+      "Brake Pads",
+      "Brake Rotors",
+      "Brake Calipers",
+      "Brake Lines",
+      "Brake Master Cylinder",
+      "ABS Components"
+    ],
+    "Electrical and Lighting": [
+      "Battery",
+      "Alternator",
+      "Starter Motor",
+      "Wiring Harness",
+      "Fuses and Relays",
+      "Headlights",
+      "Tail Lights",
+      "Turn Signals"
+    ],
+    "Exhaust and Emission Control": [
+      "Exhaust Manifold",
+      "Catalytic Converter",
+      "Muffler",
+      "Oxygen Sensors",
+      "EGR Valve"
+    ],
+    "Cooling System": [
+      "Radiator",
+      "Water Pump",
+      "Thermostat",
+      "Cooling Fan",
+      "Hoses and Belts"
+    ],
+    "Fuel System": [
+      "Fuel Pump",
+      "Fuel Injectors",
+      "Fuel Tank",
+      "Fuel Filter",
+      "Carburetor"
+    ],
+    "Air and Intake System": [
+      "Air Filter",
+      "Intake Manifold",
+      "Throttle Body",
+      "Mass Air Flow Sensor"
+    ],
+    "Heating and Air Conditioning": [
+      "HVAC Blower Motor",
+      "Compressor",
+      "Condenser",
+      "Evaporator",
+      "Heater Core"
+    ],
+    "Body and Interior": [
+      "Bumpers",
+      "Fenders",
+      "Doors",
+      "Mirrors",
+      "Seats",
+      "Dashboard",
+      "Carpet",
+      "Headliner"
+    ],
+    "Wheels and Tires": ["Rims", "Tires", "Wheel Bearings", "Lug Nuts"],
+    "Miscellaneous": [
+      "Fasteners (nuts, bolts, screws)",
+      "Gaskets and Seals",
+      "Fluids (oil, coolant, brake fluid)"
+    ]
+  };
+
+  FirebaseFirestore.instance.collection("config").doc("parts").set(doc);
 }
 
 updateDb() async {

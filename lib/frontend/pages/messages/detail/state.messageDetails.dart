@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nanoid2/nanoid2.dart';
@@ -15,6 +16,7 @@ class MessageDetailsState extends GetxController with StateMixin {
   OfferModel? initial;
   TextEditingController controller = TextEditingController();
 
+  Stream<DocumentSnapshot>? usersStream;
   @override
   void onInit() {
     // TODO: implement onInit
@@ -28,6 +30,11 @@ class MessageDetailsState extends GetxController with StateMixin {
         conversation = Get.arguments['conversation'];
         messages.addAll(conversation!.messages);
         change("", status: RxStatus.success());
+        usersStream = FirebaseFirestore.instance
+            .collection('conversation')
+            .doc(conversation!.id)
+            .snapshots();
+
         return;
       }
       if ((Get.arguments as Map).containsKey("model")) {
@@ -37,6 +44,10 @@ class MessageDetailsState extends GetxController with StateMixin {
           await GF<GE>().conversation_getConvarsationByOfferid(initial!.id);
       conversation = convo;
       messages.addAll(convo.messages);
+      usersStream = FirebaseFirestore.instance
+          .collection('conversation')
+          .doc(conversation!.id)
+          .snapshots();
     } catch (e) {
       if ((Get.arguments as Map).containsKey("model")) {
         initial = Get.arguments['model'];
@@ -74,6 +85,10 @@ class MessageDetailsState extends GetxController with StateMixin {
         // show success dialouge
         conversation = convo;
         controller.clear();
+        usersStream = FirebaseFirestore.instance
+            .collection('conversation')
+            .doc(conversation!.id)
+            .snapshots();
       } else {
         // show error dialouge
       }

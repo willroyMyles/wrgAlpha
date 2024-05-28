@@ -112,7 +112,7 @@ class CommentModel extends Model {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(username),
-                Text(createdAt.toString() ?? ""),
+                Text(createdAt.toString()),
                 Text(content),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,

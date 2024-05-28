@@ -17,7 +17,27 @@ class CreatePostState extends GetxController {
     super.onInit();
     for (var element in ['make', 'model', 'year', 'category', 'sub']) {
       crtls.putIfAbsent(element, () => TextEditingController());
+      model[element] = "";
     }
+  }
+
+  List<String> getMakeList() {
+    var makeList = getMake();
+    return makeList;
+  }
+
+  List<String> getModelList() {
+    var makeList = getMake();
+    var key = model['make'];
+
+    if (key == null) {
+      //throw error
+      return [];
+    }
+
+    var idx = makeList.indexOf(key);
+    var modelList = getModels(idx);
+    return modelList;
   }
 
   void showMake() async {
@@ -89,6 +109,25 @@ class CreatePostState extends GetxController {
       model['model'] = modelList[ans];
       crtls['model']!.text = modelList[ans];
     }
+  }
+
+  List<String> getCategoryList() {
+    var category = getCategories();
+    return category;
+  }
+
+  List<String> getSubCategoryList() {
+    var category = getCategories();
+    var key = model['category'];
+
+    if (key == null) {
+      //throw error
+      return [];
+    }
+
+    var idx = category.indexOf(key);
+    var modelList = getSubCategories(idx);
+    return modelList;
   }
 
   void showCatgeory() async {

@@ -9,8 +9,9 @@ class WRGAppBar extends StatelessWidget {
   final String? additional;
   final PreferredSizeWidget? bottom;
   final List<Widget>? actions;
+  final Widget? leading;
   const WRGAppBar(this.label,
-      {super.key, this.additional, this.bottom, this.actions});
+      {super.key, this.additional, this.bottom, this.actions, this.leading});
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +24,20 @@ class WRGAppBar extends StatelessWidget {
       elevation: 0,
       shadowColor: toc.scaffoldBackgroundColor.withOpacity(.1),
       actions: actions,
+
       // bottom: bottom,
       // toolbarHeight: 50,
       // collapsedHeight: 50,
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_ios,
-          color: toc.primaryColor,
-        ),
-        onPressed: () {
-          Get.back();
-        },
-      ),
+      leading: leading ??
+          IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: toc.primaryColor,
+            ),
+            onPressed: () {
+              Get.back();
+            },
+          ),
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: EdgeInsets.zero,
         title: BackdropFilter(

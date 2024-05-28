@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
@@ -46,44 +47,36 @@ class PostDetails extends StatelessWidget {
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(controller.model.title),
+                                    Txt(controller.model.title).h4,
                                     Divider(
                                       color: Colors.black.withOpacity(.1),
                                       indent: 0,
                                       endIndent: 0,
                                     ),
-                                    Text(controller.model.content),
+                                    Txt(controller.model.content).h3,
                                     Divider(
                                       color: Colors.black.withOpacity(.1),
                                       indent: 0,
                                       endIndent: 0,
                                     ),
-                                    Opacity(
-                                      opacity: Constants.opacity,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(controller.model.category),
-                                              Text(
-                                                  controller.model.subCategory),
-                                            ],
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              Text(controller.model.make),
-                                              Text(controller.model.model),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      // spacing: 10,
+                                      // runAlignment: WrapAlignment.center,
+                                      children: [
+                                        _buildLabel("Year",
+                                            controller.model.year.toString()),
+                                        _buildLabel(
+                                            "make", controller.model.make),
+                                        _buildLabel(
+                                            "model", controller.model.model),
+                                        _buildLabel("category",
+                                            controller.model.category),
+                                        _buildLabel("sub-category",
+                                            controller.model.subCategory),
+                                      ],
+                                    )
                                   ]),
                             ),
                           ),
@@ -256,6 +249,19 @@ class PostDetails extends StatelessWidget {
             ],
           ),
         ));
+  }
+
+  Widget _buildLabel(String label, String value) {
+    return Container(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Opacity(opacity: .5, child: Text("${label.capitalize!}: ")),
+          Text(value),
+        ],
+      ),
+    );
   }
 
   Widget _buildIconsInfo(IconData ic, int number, FutureOr Function() param2) {
