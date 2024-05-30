@@ -13,6 +13,7 @@ class OfferModel {
   String snederName;
   String senderPhoto;
   String recieverId;
+  DateTime? createdAt;
   OfferModel({
     this.id = '',
     this.accepted = false,
@@ -25,6 +26,7 @@ class OfferModel {
     this.snederName = '',
     this.senderPhoto = '',
     this.recieverId = '',
+    this.createdAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -40,6 +42,7 @@ class OfferModel {
       'snederName': snederName,
       'senderPhoto': senderPhoto,
       'recieverId': recieverId,
+      'createdAt': createdAt?.millisecondsSinceEpoch,
     };
   }
 
@@ -58,6 +61,9 @@ class OfferModel {
       snederName: (map['snederName'] ?? '') as String,
       senderPhoto: (map['senderPhoto'] ?? '') as String,
       recieverId: (map['recieverId'] ?? '') as String,
+      createdAt: map['createdAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0) as int)
+          : null,
     );
   }
 

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/store/sotre.data.dart';
-import 'package:wrg2/frontend/atoms/stom.clickList.dart';
+import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
@@ -13,7 +13,6 @@ class CreatePostState extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     for (var element in ['make', 'model', 'year', 'category', 'sub']) {
       crtls.putIfAbsent(element, () => TextEditingController());
@@ -40,77 +39,6 @@ class CreatePostState extends GetxController {
     return modelList;
   }
 
-  void showMake() async {
-    var makeList = getMake();
-    var ans = await Get.bottomSheet(
-      BottomSheet(
-        onClosing: () {},
-        builder: (context) {
-          return DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: .9,
-            minChildSize: .4,
-            maxChildSize: .9,
-            builder: (context, scrollController) {
-              return ClickedList(
-                list: makeList,
-              );
-            },
-          );
-        },
-      ),
-      isScrollControlled: false,
-    );
-
-    if (ans == null) {
-      return;
-    } else {
-      model['make'] = makeList[ans];
-      crtls['make']!.text = makeList[ans];
-      model.refresh();
-      refresh();
-    }
-  }
-
-  void showModel() async {
-    var makeList = getMake();
-    var key = model['make'];
-
-    if (key == null) {
-      //throw error
-      return;
-    }
-
-    var idx = makeList.indexOf(key);
-    var modelList = getModels(idx);
-    var ans = await Get.bottomSheet(
-      BottomSheet(
-        onClosing: () {},
-        builder: (context) {
-          return DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: .9,
-            minChildSize: .4,
-            maxChildSize: .9,
-            builder: (context, scrollController) {
-              return ClickedList(
-                list: modelList,
-              );
-            },
-          );
-        },
-      ),
-      isScrollControlled: false,
-    );
-
-    if (ans == null) {
-      return;
-    } else {
-      model['model'] = modelList[ans];
-      crtls['model']!.text = modelList[ans];
-    }
-  }
-
   List<String> getCategoryList() {
     var category = getCategories();
     return category;
@@ -130,79 +58,34 @@ class CreatePostState extends GetxController {
     return modelList;
   }
 
-  void showCatgeory() async {
-    var category = getCategories();
-    var ans = await Get.bottomSheet(
-      BottomSheet(
-        onClosing: () {},
-        builder: (context) {
-          return DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: .9,
-            minChildSize: .4,
-            maxChildSize: .9,
-            builder: (context, scrollController) {
-              return ClickedList(
-                list: category,
-              );
-            },
-          );
-        },
-      ),
-      isScrollControlled: false,
-    );
+  bool _validate() {
+    if (model['content'] == null || model['content']!.isEmpty) {
+      SBUtil.showErrorSnackBar("Content of post must not be empty");
 
-    if (ans == null) {
-      return;
-    } else {
-      model['category'] = category[ans];
-      crtls['category']!.text = category[ans];
-      model.refresh();
-      refresh();
+      return false;
     }
-  }
+    if (model['make'] == null || model['make']!.isEmpty) {
+      SBUtil.showErrorSnackBar("Please select make of car to continue");
 
-  void showSubcategory() async {
-    var category = getCategories();
-    var key = model['category'];
+      return false;
+    }
+    if (model['model'] == null || model['model']!.isEmpty) {
+      SBUtil.showErrorSnackBar("Please select model of car to continue");
 
-    if (key == null) {
-      //throw error
-      return;
+      return false;
     }
 
-    var idx = category.indexOf(key);
-    var modelList = getSubCategories(idx);
-    var ans = await Get.bottomSheet(
-      BottomSheet(
-        onClosing: () {},
-        builder: (context) {
-          return DraggableScrollableSheet(
-            expand: false,
-            initialChildSize: .9,
-            minChildSize: .4,
-            maxChildSize: .9,
-            builder: (context, scrollController) {
-              return ClickedList(
-                list: modelList,
-              );
-            },
-          );
-        },
-      ),
-      isScrollControlled: false,
-    );
-
-    if (ans == null) {
-      return;
-    } else {
-      model['sub'] = modelList[ans];
-      crtls['sub']!.text = modelList[ans];
-    }
+    return true;
   }
 
   onSubmit() async {
+    if (!_validate()) {
+      //show error
+      return;
+    }
+
     PostModel pm = PostModel();
+
     pm.title = model['title'] ?? "";
     pm.content = model['content'] ?? "";
     pm.make = model['make'] ?? "";
@@ -215,6 +98,7 @@ class CreatePostState extends GetxController {
     pm.userEmail = user.email;
     pm.userName = user.username;
     pm.userPhotoUrl = user.userImageUrl;
+    pm.createdAt = DateTime.now();
 
     var res = await Get.find<GE>().posts_createPost(pm);
     if (res) {

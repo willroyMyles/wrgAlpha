@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/offer.dart';
+import 'package:wrg2/backend/utils/util.formatter.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 mixin offersExecutor {
@@ -9,6 +10,9 @@ mixin offersExecutor {
 
   Future<bool> offers_createOffers(OfferModel model) async {
     try {
+      var id =
+          "${model.senderId.parseEmail}-${model.createdAt!.formatDateForPost()}";
+      model.id = id;
       var data = model.toMap();
       var comment = _fstore.collection(_col).doc(model.id);
       var post = _fstore.collection("posts").doc(model.postId);

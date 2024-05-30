@@ -17,7 +17,7 @@ void main() async {
   );
 
   authWorker.init();
-  Get.lazyPut(() => OfferState());
+  Get.lazyPut(() => OfferState(), fenix: true);
   Get.put(GE());
   Get.put(ProfileState());
 

@@ -1,6 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+Widget buildLargeInput(String label, onChange,
+    {bool obscure = false,
+    FormFieldValidator? validator,
+    int? lines,
+    double height = 80,
+    TextEditingController? tec,
+    bool showHelper = true,
+    bool requireInput = false,
+    String? initialValue}) {
+  return buildInput(label, onChange,
+      obscure: obscure,
+      validator: validator,
+      lines: lines,
+      height: height,
+      tec: tec,
+      showHelper: showHelper,
+      largeInput: true,
+      requireInput: requireInput,
+      initialValue: initialValue);
+}
+
 Widget buildInput(String label, onChange,
     {bool obscure = false,
     FormFieldValidator? validator,
@@ -8,6 +29,8 @@ Widget buildInput(String label, onChange,
     double height = 80,
     TextEditingController? tec,
     bool showHelper = true,
+    bool largeInput = false,
+    bool requireInput = false,
     String? initialValue}) {
   return Container(
     height: height,
@@ -18,9 +41,20 @@ Widget buildInput(String label, onChange,
         if (showHelper)
           Padding(
             padding: const EdgeInsets.only(left: 3, bottom: 05),
-            child: Text(
-              label.capitalize!,
-              style: const TextStyle(color: Colors.grey),
+            child: Row(
+              children: [
+                Text(
+                  label.capitalize!,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                if (requireInput)
+                  Text(
+                    "*".capitalize!,
+                    style: TextStyle(
+                        color: Colors.red.withOpacity(0.5),
+                        fontWeight: FontWeight.w700),
+                  ),
+              ],
             ),
           ),
         Expanded(
@@ -33,7 +67,8 @@ Widget buildInput(String label, onChange,
             onChanged: onChange,
             initialValue: initialValue,
             textAlign: TextAlign.justify,
-            textAlignVertical: TextAlignVertical.top,
+            textAlignVertical:
+                largeInput ? TextAlignVertical.top : TextAlignVertical.center,
             style: const TextStyle(
               color: Colors.black,
             ),
@@ -62,6 +97,7 @@ Widget buildDropdownInput(String label, onChange,
     double height = 80,
     TextEditingController? tec,
     bool showHelper = true,
+    bool requireInput = false,
     String? initialValue}) {
   return Container(
     height: height,
@@ -72,9 +108,20 @@ Widget buildDropdownInput(String label, onChange,
         if (showHelper)
           Padding(
             padding: const EdgeInsets.only(left: 3, bottom: 05),
-            child: Text(
-              label.capitalize!,
-              style: const TextStyle(color: Colors.grey),
+            child: Row(
+              children: [
+                Text(
+                  label.capitalize!,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                if (requireInput)
+                  Text(
+                    "*".capitalize!,
+                    style: TextStyle(
+                        color: Colors.red.withOpacity(0.5),
+                        fontWeight: FontWeight.w700),
+                  ),
+              ],
             ),
           ),
         Expanded(

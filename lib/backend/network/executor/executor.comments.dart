@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:wrg2/backend/models/comment.model.dart';
+import 'package:wrg2/backend/utils/util.formatter.dart';
 
 mixin CommentsExecutor {
   final String _col = "comments";
@@ -7,7 +8,11 @@ mixin CommentsExecutor {
 
   Future<bool> comments_createComments(CommentModel model) async {
     try {
+      model.createdAt = DateTime.now();
+      var id =
+          "${model.userId.parseEmail}-${model.createdAt!.formatDateForPost()}";
       var data = model.toMap();
+      data['id'] = id;
 
       var comment = _fstore.collection(_col).doc(data['id']);
       var post = _fstore.collection("posts").doc(model.postId);

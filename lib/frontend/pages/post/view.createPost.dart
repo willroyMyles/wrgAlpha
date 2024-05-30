@@ -70,9 +70,9 @@ class CreatePost extends StatelessWidget {
                               controller.model['title'] = val;
                             }),
                             space,
-                            buildInput("content", (val) {
+                            buildLargeInput("content", (val) {
                               controller.model['content'] = val;
-                            }, height: 180),
+                            }, height: 180, requireInput: true),
                             space,
                             SizedBox(
                               width: Get.width,
@@ -84,6 +84,7 @@ class CreatePost extends StatelessWidget {
                                     width: Get.width / divider,
                                     child: buildDropdownInput(
                                       "make",
+                                      requireInput: true,
                                       items: [...controller.getMakeList(), ""],
                                       (val) {
                                         controller.model['make'] = val;
@@ -100,6 +101,7 @@ class CreatePost extends StatelessWidget {
                                       width: Get.width / divider,
                                       child: buildDropdownInput(
                                         "model",
+                                        requireInput: true,
                                         (val) {
                                           controller.model['model'] = val;
                                         },

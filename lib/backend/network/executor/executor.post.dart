@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:nanoid2/nanoid2.dart';
 import 'package:wrg2/backend/models/post.model.dart';
+import 'package:wrg2/backend/utils/util.formatter.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 
 mixin PostExecutor {
@@ -9,7 +9,8 @@ mixin PostExecutor {
 
   Future posts_createPost(PostModel model) async {
     try {
-      var id = nanoid(length: 7);
+      var id =
+          "${model.userEmail.parseEmail}-${model.createdAt!.formatDateForPost()}";
       model.id = id;
       await _fstore.collection(_col).doc(id).set(model.toMap());
 
