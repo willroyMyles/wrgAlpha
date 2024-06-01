@@ -6,6 +6,7 @@ import 'package:wrg2/backend/models/comment.model.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
+import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
@@ -19,7 +20,9 @@ class PostDetailsState extends GetxController {
     Get.find<GE>().posts_incrimentViews(model.id);
     model.views = model.views + 1;
     Future.delayed(const Duration(seconds: 3), () {
-      Get.find<PostState>().posts[model.id] = model;
+      var idx = Get.find<PostState>().posts.indexOf(model);
+
+      Get.find<PostState>().posts[idx] = model;
     });
   }
 
@@ -31,12 +34,13 @@ class PostDetailsState extends GetxController {
 
   onWatching() async {
     var user = Get.find<ProfileState>().userModel;
-    if (user.isNull) {
+    if (user == null) {
       //throw error
+      SBUtil.showErrorSnackBar("You need to be sign in to watch this post");
       return;
     }
 
-    var isWatching = user!.value.watching.contains(model.id);
+    var isWatching = user.value.watching.contains(model.id);
 
     var res =
         await Get.find<GE>().user_modifyWatching(model.id, add: !isWatching);
@@ -45,16 +49,17 @@ class PostDetailsState extends GetxController {
     if (res) {
       var state = Get.find<PostState>();
       if (isWatching) {
-        user.value.watching.remove(model.id);
         model.watching = model.watching - 1;
       } else {
-        user.value.watching.add(model.id);
         model.watching = model.watching + 1;
       }
-      state.posts[model.id] = model;
+      var idx = state.posts.indexOf(model);
+      state.posts[idx] = model;
     } else {
       //throw error
     }
+
+    Get.find<ProfileState>().onRefresh();
 
     getArgs();
     refresh();
@@ -68,17 +73,16 @@ class PostDetailsState extends GetxController {
 
   getArgs() {
     var args = Get.arguments ?? Get.rawRoute?.settings.arguments ?? {};
-    var id = args['id'];
-    model = Get.find<PostState>().posts[id!]!;
+    var post = args['post'];
+    model = post;
   }
 
-  sendOffers() async {
+  sendOffers(OfferModel offerModel) async {
     if (offerString.value.isEmpty) {
       //throw error
       return;
     }
 
-    var offerModel = OfferModel();
     offerModel.postId = model.id;
     offerModel.postTitle = model.title;
     offerModel.accepted = false;
@@ -93,16 +97,21 @@ class PostDetailsState extends GetxController {
     offerModel.snederName = auth.displayName ?? "";
     offerModel.recieverId = model.userEmail;
 
+    offerModel.createdAt = DateTime.now();
+
     offerModel.recieverId = model.userEmail;
 
     var res = await GF<GE>().offers_createOffers(offerModel);
 
     if (res) {
       //success
+      SBUtil.showSuccessSnackBar("Offer was sent");
+
       if (Get.isBottomSheetOpen ?? false) {
         Get.close(1);
       } else {
         //show error
+        SBUtil.showErrorSnackBar("Offer was not created successfully");
       }
     }
 

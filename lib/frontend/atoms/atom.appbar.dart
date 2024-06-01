@@ -6,7 +6,8 @@ import 'package:wrg2/backend/worker/worker.theme.dart';
 
 class WRGAppBar extends StatelessWidget {
   final String label;
-  final String? additional;
+  final Widget? additional;
+
   final PreferredSizeWidget? bottom;
   final List<Widget>? actions;
   final Widget? leading;
@@ -62,14 +63,7 @@ class WRGAppBar extends StatelessWidget {
                   ),
                 ),
                 if (additional != null)
-                  Opacity(
-                    opacity: .7,
-                    child: Text(
-                      additional!,
-                      style: toc.cStyle
-                          .copyWith(fontSize: 12, fontWeight: FontWeight.w400),
-                    ),
-                  )
+                  additional!
                 else
                   const SizedBox(
                     height: 10,

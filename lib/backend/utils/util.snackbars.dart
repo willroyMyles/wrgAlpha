@@ -15,6 +15,16 @@ class SBUtil {
     await _showSnackBar("Error", message, icon);
   }
 
+  static Future showSuccessSnackBar(String message) async {
+    // Show snackbar
+    var icon = const Icon(
+      Icons.check,
+      color: Colors.green,
+      size: 30,
+    );
+    await _showSnackBar("Success", message, icon);
+  }
+
   static _showSnackBar(String title, String msg, Widget icon) async {
     // Show snackbar
     try {

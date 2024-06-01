@@ -18,17 +18,15 @@ class OffersView extends GetView<OfferState> {
           return [const WRGAppBar("Your Offers")];
         },
         body: controller.obx(
-          (state) => Container(
-            child: ListView.builder(
-              itemCount: controller.offerMap.keys.length,
-              itemBuilder: (context, index) {
-                var key = controller.offerMap.keys.elementAt(index);
-                var values = controller.offerMap[key] ?? [];
-                return OfferBundle(
-                    models: values,
-                    postTitle: values.firstOrNull?.postTitle ?? "");
-              },
-            ),
+          (state) => ListView.builder(
+            itemCount: controller.offerMap.keys.length,
+            itemBuilder: (context, index) {
+              var key = controller.offerMap.keys.elementAt(index);
+              var values = controller.offerMap.value[key] ?? [];
+              return OfferBundle(
+                  models: values,
+                  postTitle: values.firstOrNull?.postTitle ?? "");
+            },
           ),
           onEmpty: Constants.empty,
           onLoading: Constants.loading,

@@ -14,6 +14,14 @@ class OfferModel {
   String senderPhoto;
   String recieverId;
   DateTime? createdAt;
+  String? offerPrice;
+  String? hasPart;
+  String? paymentMethod;
+  String? logistics;
+  String? condition;
+  String? policy;
+  bool anonymous;
+
   OfferModel({
     this.id = '',
     this.accepted = false,
@@ -27,6 +35,13 @@ class OfferModel {
     this.senderPhoto = '',
     this.recieverId = '',
     this.createdAt,
+    this.offerPrice,
+    this.hasPart,
+    this.paymentMethod,
+    this.logistics,
+    this.condition,
+    this.policy,
+    this.anonymous = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -43,6 +58,13 @@ class OfferModel {
       'senderPhoto': senderPhoto,
       'recieverId': recieverId,
       'createdAt': createdAt?.millisecondsSinceEpoch,
+      'offerPrice': offerPrice,
+      'hasPart': hasPart,
+      'paymentMethod': paymentMethod,
+      'logistics': logistics,
+      'condition': condition,
+      'policy': policy,
+      'anonymous': anonymous,
     };
   }
 
@@ -64,6 +86,15 @@ class OfferModel {
       createdAt: map['createdAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0) as int)
           : null,
+      offerPrice:
+          map['offerPrice'] != null ? map['offerPrice'] as String : null,
+      hasPart: map['hasPart'] != null ? map['hasPart'] as String : null,
+      paymentMethod:
+          map['paymentMethod'] != null ? map['paymentMethod'] as String : null,
+      logistics: map['logistics'] != null ? map['logistics'] as String : null,
+      condition: map['condition'] != null ? map['condition'] as String : null,
+      policy: map['policy'] != null ? map['policy'] as String : null,
+      anonymous: (map['anonymous'] ?? false) as bool,
     );
   }
 

@@ -27,7 +27,7 @@ mixin offersExecutor {
       return true;
     } catch (e) {
       print(e);
-      return true;
+      return false;
     }
   }
 

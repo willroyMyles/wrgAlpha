@@ -17,9 +17,9 @@ class MessageDetailsState extends GetxController with StateMixin {
   TextEditingController controller = TextEditingController();
 
   Stream<DocumentSnapshot>? usersStream;
+  ScrollController scroll = ScrollController();
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     setup();
   }
@@ -31,10 +31,10 @@ class MessageDetailsState extends GetxController with StateMixin {
         messages.addAll(conversation!.messages);
         change("", status: RxStatus.success());
         usersStream = FirebaseFirestore.instance
-            .collection('conversation')
+            .collection('conversations')
             .doc(conversation!.id)
             .snapshots();
-
+        _startListen();
         return;
       }
       if ((Get.arguments as Map).containsKey("model")) {
@@ -45,15 +45,34 @@ class MessageDetailsState extends GetxController with StateMixin {
       conversation = convo;
       messages.addAll(convo.messages);
       usersStream = FirebaseFirestore.instance
-          .collection('conversation')
+          .collection('conversations')
           .doc(conversation!.id)
           .snapshots();
+
+      _startListen();
     } catch (e) {
       if ((Get.arguments as Map).containsKey("model")) {
         initial = Get.arguments['model'];
       }
     }
     change("", status: RxStatus.success());
+  }
+
+  _startListen() {
+    usersStream!.listen(_onData);
+  }
+
+  _onData(DocumentSnapshot event) async {
+    var data = event.data() as Map<String, dynamic>?;
+    if (data != null) {
+      List<MessagesModel> mess = List<MessagesModel>.from(
+          data['messages'].map((e) => MessagesModel.fromMap(e)).toList());
+      messages.clear();
+      messages.addAll(mess);
+      // refresh();
+      // await Future.delayed(const Duration(milliseconds: 150));
+      scroll.jumpTo(scroll.position.maxScrollExtent);
+    }
   }
 
   onSend() async {

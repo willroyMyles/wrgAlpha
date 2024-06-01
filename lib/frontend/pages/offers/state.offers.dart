@@ -7,14 +7,10 @@ class OfferState extends GetxController with StateMixin {
   RxList<OfferModel> models = RxList([]);
   RxMap<String, List<OfferModel>> offerMap = RxMap({});
 
-  @override
-  void onInit() {
-    super.onInit();
-    setup();
-  }
-
   Future setup() async {
     try {
+      models.clear();
+      offerMap.clear();
       var offers = await GF<GE>().offers_getAllOffers();
       models.value = offers;
       _updateMap();
@@ -29,8 +25,10 @@ class OfferState extends GetxController with StateMixin {
 
   _updateMap() {
     for (var of in models) {
-      offerMap.update(of.postId, (value) => {...value, of}.toList(),
-          ifAbsent: () => [of]);
+      offerMap.update(of.postId, (value) {
+        value.add(of);
+        return value;
+      }, ifAbsent: () => [of]);
     }
   }
 }

@@ -103,7 +103,7 @@ class CreatePostState extends GetxController {
     var res = await Get.find<GE>().posts_createPost(pm);
     if (res) {
       // show success
-      Get.find<PostState>().setup();
+      Get.find<PostState>().addPost(pm);
       Get.back();
     } else {
       //show error

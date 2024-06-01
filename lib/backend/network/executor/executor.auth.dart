@@ -17,9 +17,9 @@ mixin AuthExecutor {
     try {
       await GoogleSignIn().signOut();
 
-      var clientId = GetPlatform.isAndroid
-          ? "562995348940-f8svrjv49g67mec1hpvl2q67fpq2i8ac.apps.googleusercontent.com"
-          : "562995348940-f8svrjv49g67mec1hpvl2q67fpq2i8ac.apps.googleusercontent.com";
+      // var clientId = GetPlatform.isAndroid
+      //     ? "562995348940-f8svrjv49g67mec1hpvl2q67fpq2i8ac.apps.googleusercontent.com"
+      //     : "562995348940-f8svrjv49g67mec1hpvl2q67fpq2i8ac.apps.googleusercontent.com";
 
       // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn(

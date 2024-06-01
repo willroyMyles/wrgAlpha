@@ -13,12 +13,6 @@ class ProfileState extends GetxController {
   RxBool isSignedIn = false.obs;
   String feedback = "";
 
-  @override
-  void onInit() async {
-    // TODO: implement onInit
-    super.onInit();
-  }
-
   setup() async {
     var res = await Get.find<GE>().user_getUser();
     if (res != null) {
@@ -51,6 +45,11 @@ class ProfileState extends GetxController {
   remove() async {
     userModel = null;
     isSignedIn.value = false;
+    refresh();
+  }
+
+  onRefresh() {
+    userModel!.refresh();
     refresh();
   }
 }

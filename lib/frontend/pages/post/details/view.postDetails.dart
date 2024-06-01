@@ -10,6 +10,7 @@ import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/atom.bottomSheet.dart';
+import 'package:wrg2/frontend/pages/post/details/atom.offerBottomComp.dart';
 import 'package:wrg2/frontend/pages/post/details/state.postDetails.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
@@ -89,55 +90,28 @@ class PostDetails extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     TextButton(
-                        onPressed: () {
-                          controller.onWatching();
-                        },
-                        child: const Text("Watch")),
+                      onPressed: () {
+                        controller.onWatching();
+                      },
+                      child: Obx(() {
+                        var isWatching = GF<ProfileState>()
+                                .userModel
+                                ?.value
+                                .watching
+                                .contains(controller.model.id) ??
+                            false;
+                        return !isWatching
+                            ? const Text("Watch")
+                            : const Text("Watching");
+                      }),
+                    ),
                     if (!controller.model.amIOwner())
                       TextButton(
                           onPressed: () async {
                             await Get.bottomSheet(BottomSheet(
                               onClosing: () {},
                               builder: (context) {
-                                return Container(
-                                  color: toc.scaffoldBackgroundColor,
-                                  child: SafeArea(
-                                    child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius: Constants.br,
-                                            color: toc.scaffoldBackgroundColor),
-                                        // alignment: Alignment.center,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: Constants.cardpadding,
-                                            vertical:
-                                                Constants.cardVerticalMargin),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Expanded(
-                                                child:
-                                                    buildInput("Offer", (val) {
-                                              controller.offerString.value =
-                                                  val;
-                                            })),
-                                            Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 15),
-                                              child: IconButton(
-                                                  onPressed: () {
-                                                    controller.sendOffers();
-                                                  },
-                                                  icon: const Icon(
-                                                    CupertinoIcons
-                                                        .arrow_up_right_circle,
-                                                    size: 25,
-                                                  )),
-                                            )
-                                          ],
-                                        )),
-                                  ),
-                                );
+                                return OfferBottomComp();
                               },
                             ));
                           },

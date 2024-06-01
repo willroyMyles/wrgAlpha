@@ -52,16 +52,27 @@ class OfferItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Txt(model.message.capitalizeFirst!).h3,
-              if (showPost)
-                Txt(
-                  "Post : ${model.postTitle.capitalizeFirst!}",
-                  maxLines: 1,
-                ).h4,
+            Expanded(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Txt(
+                      model.message.capitalizeFirst!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ).h4,
+                    if (model.offerPrice != null)
+                      Txt("Offer Price: ${model.offerPrice!.capitalizeFirst!}")
+                          .h3,
+                    if (showPost)
+                      Txt(
+                        "Post : ${model.postTitle.capitalizeFirst!}",
+                        maxLines: 1,
+                      ).h4,
 
-              // const Divider(),
-            ]),
+                    // const Divider(),
+                  ]),
+            ),
             Text(
               "view",
               style: TextStyle(

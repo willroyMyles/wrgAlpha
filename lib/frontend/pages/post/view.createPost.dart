@@ -44,7 +44,10 @@ class CreatePost extends StatelessWidget {
               // ),
               const WRGAppBar(
                 "Seek your parts",
-                additional: "post what parts you're looking for",
+                additional: Text(
+                  "post what parts you're looking for",
+                  textScaler: TextScaler.linear(.5),
+                ),
               )
             ];
           },
@@ -132,7 +135,6 @@ class CreatePost extends StatelessWidget {
                                                     (DateTime.now().year - idx)
                                                         .toString())
                                           ],
-                                          tec: controller.crtls['year'],
                                         ),
                                       ))
                                 ],
@@ -157,7 +159,6 @@ class CreatePost extends StatelessWidget {
                                           ...controller.getCategoryList(),
                                           ""
                                         ],
-                                        tec: controller.crtls['category'],
                                       )),
                                   Obx(() => SizedBox(
                                       key: UniqueKey(),
@@ -171,7 +172,6 @@ class CreatePost extends StatelessWidget {
                                           ...controller.getSubCategoryList(),
                                           ""
                                         ],
-                                        tec: controller.crtls['sub'],
                                         initialValue:
                                             controller.model.value['sub'] ?? "",
                                       ))),

@@ -24,8 +24,8 @@ Color darkForegrounColor = const Color.fromRGBO(60, 63, 60, 1);
 Color lightBackgroundColor = const Color.fromARGB(255, 237, 233, 226);
 Color lightForegrounColor = Colors.white;
 
-MaterialStateProperty<T> mst<T>(T value) {
-  return MaterialStateProperty.all(value);
+WidgetStateProperty<T> mst<T>(T value) {
+  return WidgetStateProperty.all(value);
 }
 
 class ThemeWorker {
@@ -162,9 +162,7 @@ class ThemeWorker {
         ),
       ),
       colorScheme: th.colorScheme.copyWith(
-        background: bg,
         brightness: brightness,
-        onBackground: ofg,
         onError: bg,
         onPrimary: bg,
         onSecondary: obg,

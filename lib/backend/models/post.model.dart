@@ -102,7 +102,7 @@ class PostModel {
       var name = element.name.toUpperCase();
       return name == map["status"];
     });
-    st ??= Status.OPEN;
+    // st ??= Status.OPEN;
     var p = PostModel(
       title: map['title'],
       id: map['id'],

@@ -17,7 +17,7 @@ mixin CommentsExecutor {
       var comment = _fstore.collection(_col).doc(data['id']);
       var post = _fstore.collection("posts").doc(model.postId);
 
-      var res = await _fstore.runTransaction((transaction) async {
+      await _fstore.runTransaction((transaction) async {
         comment.set(data);
         post.update({"comments": FieldValue.increment(1)});
       });

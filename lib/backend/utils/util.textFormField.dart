@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/worker/worker.theme.dart';
 
 Widget buildLargeInput(String label, onChange,
     {bool obscure = false,
@@ -89,15 +90,85 @@ Widget buildInput(String label, onChange,
   );
 }
 
-Widget buildDropdownInput(String label, onChange,
+Widget buildInputHorizontal(String label, onChange,
     {bool obscure = false,
-    List<String> items = const [],
     FormFieldValidator? validator,
     int? lines,
-    double height = 80,
+    double height = 50,
     TextEditingController? tec,
     bool showHelper = true,
+    bool largeInput = false,
     bool requireInput = false,
+    String? initialValue}) {
+  return Container(
+    height: height,
+    decoration: const BoxDecoration(),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (showHelper)
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 3, bottom: 05),
+              child: Row(
+                children: [
+                  Text(
+                    label.capitalize!,
+                    style: TextStyle(
+                        color: toc.textColor.withOpacity(.8),
+                        fontWeight: FontWeight.w600),
+                  ),
+                  if (requireInput)
+                    Text(
+                      "*".capitalize!,
+                      style: TextStyle(
+                          color: Colors.red.withOpacity(0.5),
+                          fontWeight: FontWeight.w700),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        Expanded(
+          flex: 2,
+          child: TextFormField(
+            controller: tec,
+            validator: validator,
+            minLines: lines,
+            maxLines: lines,
+            expands: lines == null,
+            onChanged: onChange,
+            initialValue: initialValue,
+            textAlign: TextAlign.justify,
+            textAlignVertical:
+                largeInput ? TextAlignVertical.top : TextAlignVertical.center,
+            style: const TextStyle(
+              color: Colors.black,
+            ),
+            decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                alignLabelWithHint: true,
+                // labelText: label,
+                focusedBorder: border,
+                enabledBorder: border,
+                border: border),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buildDropdownInput(String label, onChange,
+    {List<String> items = const [],
+    double height = 80,
+    bool showHelper = true,
+    bool requireInput = false,
+    bool dense = false,
     String? initialValue}) {
   return Container(
     height: height,
@@ -132,14 +203,20 @@ Widget buildDropdownInput(String label, onChange,
           },
           menuMaxHeight: Get.height * 0.5,
           items: items.map((String value) {
+            var isFirst = value == items.first;
+            var isLast = value == items.last;
             return DropdownMenuItem<String>(
               value: value.trim(),
-              child: Text(value),
+              child: Container(
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                  child: Text(value)),
             );
           }).toList(),
           isExpanded: true,
           elevation: 30,
-          isDense: true,
+          dropdownColor: toc.cardColor,
+          isDense: dense,
           enableFeedback: true,
           padding: const EdgeInsets.all(0),
           decoration: InputDecoration(
@@ -152,6 +229,105 @@ Widget buildDropdownInput(String label, onChange,
               enabledBorder: border,
               border: border),
         )),
+      ],
+    ),
+  );
+}
+
+Widget buildDropdownInputHorizontal(String label, onChange,
+    {List<String> items = const [],
+    double height = 60,
+    bool showHelper = true,
+    bool requireInput = false,
+    bool dense = false,
+    String? additional,
+    String? initialValue}) {
+  return Container(
+    height: height,
+    decoration: const BoxDecoration(),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (showHelper)
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 3, bottom: 05),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            "${label.capitalize!} : ",
+                            maxLines: 1,
+                            style: TextStyle(
+                                color: toc.textColor.withOpacity(.8),
+                                fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        if (additional != null)
+                          Text(
+                            additional,
+                            maxLines: 2,
+                            style: TextStyle(
+                                color: toc.textColor.withOpacity(.7),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500),
+                          )
+                      ],
+                    ),
+                  ),
+                  if (requireInput)
+                    Text(
+                      "*".capitalize!,
+                      style: TextStyle(
+                          color: Colors.red.withOpacity(0.5),
+                          fontWeight: FontWeight.w700),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        Expanded(
+            flex: 2,
+            child: DropdownButtonFormField<String>(
+              value: initialValue,
+              onChanged: (String? value) {
+                onChange(value);
+              },
+              menuMaxHeight: Get.height * 0.5,
+              items: items.map((String value) {
+                var isFirst = value == items.first;
+                var isLast = value == items.last;
+                return DropdownMenuItem<String>(
+                  value: value.trim(),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Text(value)),
+                );
+              }).toList(),
+              isExpanded: true,
+              elevation: 30,
+              dropdownColor: toc.cardColor,
+              isDense: dense,
+              enableFeedback: true,
+              padding: const EdgeInsets.all(0),
+              decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  contentPadding: const EdgeInsets.only(left: 8, top: 2),
+
+                  // labelText: this.labelText,
+                  focusedBorder: border,
+                  enabledBorder: border,
+                  border: border),
+            )),
       ],
     ),
   );

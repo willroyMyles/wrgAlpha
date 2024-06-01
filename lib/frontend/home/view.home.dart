@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/atoms/atom.box.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
+import 'package:wrg2/frontend/pages/offers/view.offers.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
 import 'package:wrg2/frontend/pages/post/view.createPost.dart';
 import 'package:wrg2/frontend/pages/post/view.postList.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 import 'package:wrg2/frontend/pages/profile/view.profile.dart';
+import 'package:wrg2/frontend/pages/watching/view.watching.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});
@@ -35,32 +38,54 @@ class HomeView extends StatelessWidget {
               // ),
               WRGAppBar(
                 "You're Feed  ",
+                additional: Text(
+                  GF<ProfileState>().userModel?.value.email ?? "",
+                  textScaler: const TextScaler.linear(.5),
+                ),
                 leading: Builder(builder: (context) {
-                  return IconButton(
-                    icon: const Icon(
-                      CupertinoIcons.person_alt_circle,
-                      size: 35,
-                    ),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                  );
+                  return Obx(() => GF<ProfileState>().isSignedIn.value
+                      ? InkWell(
+                          onTap: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                          child: Container(
+                              margin: const EdgeInsets.all(5),
+                              clipBehavior: Clip.antiAlias,
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: Image.network(GF<ProfileState>()
+                                  .userModel!
+                                  .value
+                                  .userImageUrl)),
+                        )
+                      : IconButton(
+                          icon: const Icon(
+                            CupertinoIcons.person_alt_circle,
+                            size: 35,
+                          ),
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                        ));
                 }),
                 actions: [
-                  IconButton(
-                      onPressed: () {
-                        Get.to(() => CreatePost());
-                      },
-                      icon: const Icon(Icons.my_library_add_outlined))
+                  Obx(() => GF<ProfileState>().isSignedIn.value
+                      ? IconButton(
+                          onPressed: () {
+                            Get.to(() => CreatePost());
+                          },
+                          icon: const Icon(Icons.my_library_add_outlined))
+                      : Container())
                 ],
               ),
 
               SliverToBoxAdapter(
                 child: GetBuilder<ProfileState>(
                   builder: (_) {
-                    if (_.userModel.isNull) {
-                      return Container(
-                          child: Row(
+                    if (_.userModel == null) {
+                      return Row(
                         children: [
                           SizedBox(width: Constants.cardpadding * 2),
                           InkWell(
@@ -82,7 +107,7 @@ class HomeView extends StatelessWidget {
                                   ))),
                           const Text(" to view more options.")
                         ],
-                      ));
+                      );
                     }
                     return Container(
                       margin: EdgeInsets.only(
@@ -94,16 +119,28 @@ class HomeView extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          AtomBox(
-                            value: _.userModel?.value.watching.length ?? 0,
-                            label: "Watching",
+                          InkWell(
+                            onTap: () {
+                              Get.to(() => WatchingView(), arguments: {
+                                "list": _.userModel?.value.watching
+                              });
+                            },
+                            child: AtomBox(
+                              value: _.userModel?.value.watching.length ?? 0,
+                              label: "Watching",
+                            ),
                           ),
                           SizedBox(width: Constants.cardMargin),
                           GetBuilder<OfferState>(
                             builder: (_) {
-                              return AtomBox(
-                                value: _.models.length,
-                                label: "Offers",
+                              return InkWell(
+                                onTap: () {
+                                  Get.to(() => const OffersView());
+                                },
+                                child: AtomBox(
+                                  value: _.models.length,
+                                  label: "Offers",
+                                ),
                               );
                             },
                           ),
@@ -116,7 +153,6 @@ class HomeView extends StatelessWidget {
             ];
           },
           body: Obx(() => PostList(
-                items: postState.posts.values.toList(),
                 hasMorePosts: !postState.noMorePosts.value,
               ))),
     );

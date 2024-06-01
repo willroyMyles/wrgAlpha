@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class HeaderText extends StatelessWidget {
   final String title;
@@ -15,7 +14,7 @@ class HeaderText extends StatelessWidget {
           title,
           style: const TextStyle(fontSize: 25),
         ),
-        if (!sub.isNull) Text(sub!)
+        if (sub != null) Text(sub!)
       ]),
     );
   }

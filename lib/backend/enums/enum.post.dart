@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 
-enum Status { OPEN, PROCESSING, COMPLETED, EXPIRED, CANCELED }
+enum Status {
+  OPEN("Open", Colors.green),
+  PROCESSING("Processing", Colors.blue),
+  COMPLETED("Completed", Colors.purple),
+  EXPIRED("Expired", Colors.red),
+  CANCELED("Canceled", Colors.orange);
+
+  final String displayName;
+  final Color color;
+
+  const Status(this.displayName, this.color);
+}
 
 extension StatusHelper on Status {
   static Color openColor = Colors.green;
