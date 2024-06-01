@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -18,6 +20,9 @@ class MessageDetailsState extends GetxController with StateMixin {
 
   Stream<DocumentSnapshot>? usersStream;
   ScrollController scroll = ScrollController();
+  bool initialStart = true;
+  GlobalKey last = GlobalKey();
+  StreamSubscription? sub;
   @override
   void onInit() {
     super.onInit();
@@ -28,13 +33,18 @@ class MessageDetailsState extends GetxController with StateMixin {
     try {
       if ((Get.arguments as Map).containsKey("conversation")) {
         conversation = Get.arguments['conversation'];
-        messages.addAll(conversation!.messages);
-        change("", status: RxStatus.success());
+        var convo =
+            await GF<GE>().conversation_getConvarsation(conversation!.id);
+        messages.addAll(convo.messages);
         usersStream = FirebaseFirestore.instance
             .collection('conversations')
             .doc(conversation!.id)
             .snapshots();
         _startListen();
+        change("", status: RxStatus.success());
+
+        _lastVisible();
+
         return;
       }
       if ((Get.arguments as Map).containsKey("model")) {
@@ -56,22 +66,30 @@ class MessageDetailsState extends GetxController with StateMixin {
       }
     }
     change("", status: RxStatus.success());
+    _lastVisible();
   }
 
   _startListen() {
-    usersStream!.listen(_onData);
+    sub = usersStream!.listen(_onData);
   }
 
+  var messageCount = 0;
   _onData(DocumentSnapshot event) async {
     var data = event.data() as Map<String, dynamic>?;
     if (data != null) {
+      messageCount++;
+      if (initialStart) {
+        initialStart = false;
+        return;
+      }
       List<MessagesModel> mess = List<MessagesModel>.from(
           data['messages'].map((e) => MessagesModel.fromMap(e)).toList());
-      messages.clear();
-      messages.addAll(mess);
-      // refresh();
-      // await Future.delayed(const Duration(milliseconds: 150));
-      scroll.jumpTo(scroll.position.maxScrollExtent);
+      messages.add(mess.last);
+      messages.refresh();
+
+      _lastVisible();
+
+      print("messageCount $messageCount");
     }
   }
 
@@ -121,7 +139,7 @@ class MessageDetailsState extends GetxController with StateMixin {
 
       var res = await GF<GE>().conversation_addMesages(mess, conversation!.id);
       if (res) {
-        messages.add(mess);
+        // messages.add(mess);
         controller.clear();
       } else {
         // show error dialouge
@@ -129,5 +147,23 @@ class MessageDetailsState extends GetxController with StateMixin {
     }
 
     refresh();
+  }
+
+  @override
+  void onClose() {
+    // TODO: implement onClose
+    super.onClose();
+    sub?.cancel();
+    sub = null;
+    usersStream = null;
+    scroll.dispose();
+  }
+
+  void _lastVisible() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (last.currentContext == null) return;
+      Scrollable.ensureVisible(last.currentContext!,
+          duration: const Duration(milliseconds: 200), curve: Curves.linear);
+    });
   }
 }

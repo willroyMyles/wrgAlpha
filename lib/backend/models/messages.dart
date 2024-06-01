@@ -12,18 +12,22 @@ class MessagesModel {
   String sender;
   String content;
   String id;
+  DateTime? createdAt;
   MessagesModel({
     this.sender = '',
     this.content = '',
     this.id = '',
-  });
-  DateTime createdAt = DateTime.now();
+    this.createdAt,
+  }) {
+    createdAt ??= DateTime.now();
+  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'sender': sender,
       'content': content,
       'id': id,
+      'createdAt': createdAt?.millisecondsSinceEpoch,
     };
   }
 
@@ -32,6 +36,9 @@ class MessagesModel {
       sender: (map['sender'] ?? '') as String,
       content: (map['content'] ?? '') as String,
       id: (map['id'] ?? '') as String,
+      createdAt: map['createdAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0) as int)
+          : null,
     );
   }
 
@@ -48,20 +55,6 @@ class MessagesModel {
     return Container(
       alignment: imsender ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-        // decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.circular(20),
-        //     boxShadow: [
-        //       BoxShadow(
-        //         color:
-        //             toc.scaffoldBackgroundColor.darkerF(50).withOpacity(.3),
-        //         blurRadius: 5,
-        //       )
-        //     ],
-        //     color: imsender
-        //         ? toc.scaffoldBackgroundColor.darker
-        //         : toc.scaffoldBackgroundColor.lighterF(10)),
-        // padding: const EdgeInsets.only(top: 40),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment:
@@ -129,34 +122,28 @@ class MessagesModel {
     );
   }
 
-  Widget tile() {
+  Widget tile([Key? key]) {
     return Container(
+      alignment: amISender() ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
+        key: key,
+        constraints: BoxConstraints(maxWidth: Get.width * .7),
         margin: EdgeInsets.symmetric(
           horizontal: Constants.cardMargin,
           vertical: Constants.cardVerticalMargin / 4,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment:
-              amISender() ? MainAxisAlignment.end : MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: amISender()
-                        ? toc.scaffoldBackgroundColor.darker
-                        : toc.scaffoldBackgroundColor.lighterF(10)),
-                child: Txt(
-                  content.capitalizeFirst!,
-                  style: TextStyle(
-                      color: amISender() ? Colors.white : toc.textColor),
-                )),
-          ],
-        ),
+        child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: amISender()
+                    ? toc.scaffoldBackgroundColor.darker
+                    : toc.scaffoldBackgroundColor.lighterF(10)),
+            child: Text(
+              content.capitalizeFirst!,
+              maxLines: 20,
+              style: TextStyle(color: toc.textColor),
+            )),
       ),
     );
   }
