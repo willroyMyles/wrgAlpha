@@ -1,5 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
+
+class TS {
+  static const TextStyle _baseTextStyle =
+      TextStyle(fontFamily: 'YourFontFamily');
+
+  static TextStyle get h1 => _baseTextStyle.copyWith(
+        fontSize: 24.0,
+        fontWeight: FontWeight.w700,
+        color: toc.textColor,
+      );
+
+  static TextStyle get h2 => _baseTextStyle.copyWith(
+        fontSize: 20.0,
+        color: toc.textColor,
+        fontWeight: FontWeight.w600,
+      );
+
+  static TextStyle get h3 => _baseTextStyle.copyWith(
+        fontSize: 18.0,
+        color: toc.textColor,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle get h4 => _baseTextStyle.copyWith(
+        fontSize: 16.0,
+        color: toc.textColor,
+        fontWeight: FontWeight.w400,
+      );
+
+  static TextStyle get h5 => _baseTextStyle.copyWith(
+        fontSize: 12.0,
+        color: toc.textColor,
+        fontWeight: FontWeight.w400,
+      );
+  static TextStyle get small => _baseTextStyle.copyWith(
+        fontSize: 10.0,
+        color: toc.textColor,
+        fontWeight: FontWeight.w500,
+      );
+  static TextStyle get hint1 => _baseTextStyle.copyWith(
+        fontSize: 12.0,
+        color: toc.primaryColor.darker,
+        fontWeight: FontWeight.w500,
+      );
+}
 
 mixin TypographyMixin on Text {
   final TextStyle _baseTextStyle =

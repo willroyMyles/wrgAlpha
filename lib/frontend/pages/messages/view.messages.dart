@@ -17,21 +17,16 @@ class MessagesView extends StatelessWidget {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [const WRGAppBar("Your Messages")];
         },
-        body: SafeArea(
-          child: controller.obx(
-            (state) => Container(
-              padding: const EdgeInsets.only(top: 40),
-              child: ListView.builder(
-                itemCount: controller.conversations.length,
-                itemBuilder: (context, index) {
-                  var item = controller.conversations[index];
-                  return item.tile();
-                },
-              ),
-            ),
-            onEmpty: Constants.empty,
-            onLoading: Constants.loading,
+        body: controller.obx(
+          (state) => ListView.builder(
+            itemCount: controller.conversations.length,
+            itemBuilder: (context, index) {
+              var item = controller.conversations[index];
+              return item.tile();
+            },
           ),
+          onEmpty: Constants.empty,
+          onLoading: Constants.loading,
         ),
       ),
     );

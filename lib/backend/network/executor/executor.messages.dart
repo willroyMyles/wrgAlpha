@@ -8,7 +8,7 @@ mixin MessagesExecutor {
 
   Future<bool> conversation_createConversation(ConversationModel model) async {
     try {
-      var res = await _fstor.collection(_col).doc(model.id).set(model.toMap());
+      await _fstor.collection(_col).doc(model.id).set(model.toMap());
 
       return true;
     } catch (e) {
@@ -40,14 +40,14 @@ mixin MessagesExecutor {
     }
   }
 
-  Future<ConversationModel> conversation_getConvarsationByOfferid(
+  Future<ConversationModel?> conversation_getConvarsationByOfferid(
       String id) async {
     try {
       var res =
-          await _fstor.collection(_col).where("commentId", isEqualTo: id).get();
+          await _fstor.collection(_col).where("offerId", isEqualTo: id).get();
       return ConversationModel.fromMap(res.docs.first.data());
     } catch (e) {
-      return ConversationModel();
+      return null;
     }
   }
 

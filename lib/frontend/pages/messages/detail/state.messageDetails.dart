@@ -44,34 +44,50 @@ class MessageDetailsState extends GetxController with StateMixin {
         change("", status: RxStatus.success());
 
         _lastVisible();
-
+        _getInitial();
         return;
       }
+
       if ((Get.arguments as Map).containsKey("model")) {
         initial = Get.arguments['model'];
       }
       var convo =
           await GF<GE>().conversation_getConvarsationByOfferid(initial!.id);
       conversation = convo;
-      messages.addAll(convo.messages);
+      if (convo != null) {
+        // SBUtil.showErrorSnackBar("Could not get conversation");
+        messages.addAll(convo.messages);
+      }
       usersStream = FirebaseFirestore.instance
           .collection('conversations')
           .doc(conversation!.id)
           .snapshots();
 
       _startListen();
+      _getInitial();
     } catch (e) {
       if ((Get.arguments as Map).containsKey("model")) {
         initial = Get.arguments['model'];
       }
+      _getInitial();
     }
     change("", status: RxStatus.success());
     _lastVisible();
   }
 
+  _getInitial() async {
+    if (initial != null) return;
+    initial = await GF<GE>().offers_getOfferById(conversation!.offerId);
+    refresh();
+  }
+
   _startListen() {
     sub = usersStream!.listen(_onData);
   }
+
+  onAccept() async {}
+
+  onDecline() async {}
 
   var messageCount = 0;
   _onData(DocumentSnapshot event) async {
@@ -97,10 +113,13 @@ class MessageDetailsState extends GetxController with StateMixin {
     if (messages.isEmpty) {
       //create conversation
       var convo = ConversationModel();
-      convo.commentId = initial?.id ?? "";
+      convo.offerId = initial?.id ?? "";
       convo.postId = initial?.postId ?? "";
       convo.recieverId = authWorker.user?.value.email ?? "";
       convo.senderId = initial?.senderId ?? "";
+
+      convo.postTitle = initial?.postTitle ?? "";
+      convo.newMessage = controller.text;
 
       var m = MessagesModel(
           sender: initial?.senderId ?? "",

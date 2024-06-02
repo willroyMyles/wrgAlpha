@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/extension/color.extension.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/messages.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
@@ -9,7 +11,7 @@ import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/messages/detail/state.messageDetails.dart';
 
 class MessageDetailView extends StatelessWidget {
-  final OfferModel? initialOffer;
+  OfferModel? initialOffer;
   MessageDetailView({super.key, this.initialOffer});
   final controller = Get.put(MessageDetailsState());
 
@@ -63,34 +65,48 @@ class MessageDetailView extends StatelessWidget {
           ]),
           bottom: PreferredSize(
             preferredSize: Size(Get.width, 50),
-            child: Container(
-                color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    const VerticalDivider(),
+            child: GetBuilder<MessageDetailsState>(
+              init: controller,
+              initState: (_) {},
+              builder: (_) {
+                if (_.status.isSuccess) {
+                  return Container(
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              const VerticalDivider(),
 
-                    TextButton(
-                        onPressed: () async {
-                          var res = await showBinaryPrompt(
-                              "By Declining this offer, you agree that this person will not undertake your request and futher conversations with this person will be suspended. Do you wish to continue?");
+                              TextButton(
+                                  onPressed: () async {
+                                    var res = await showBinaryPrompt(
+                                        "By Declining this offer, you agree that this person will not undertake your request and futher conversations with this person will be suspended. Do you wish to continue?");
 
-                          if (res) {}
-                        },
-                        child: const Text("Decline")),
-                    // SizedBox(width: Constants.cardMargin),
-                    const VerticalDivider(),
-                    TextButton(
-                        onPressed: () async {
-                          var res = await showBinaryPrompt(
-                              "By Accepting this offer, you agree that this person will be undertaking your request and all other offers will be disregarded. Do you wish to continue?");
+                                    if (res) {}
+                                  },
+                                  child: const Text("Decline")),
+                              // SizedBox(width: Constants.cardMargin),
+                              const VerticalDivider(),
+                              TextButton(
+                                  onPressed: () async {
+                                    var res = await showBinaryPrompt(
+                                        "By Accepting this offer, you agree that this person will be undertaking your request and all other offers will be disregarded. Do you wish to continue?");
 
-                          if (res) {}
-                        },
-                        child: const Text("Accept")),
-                    const VerticalDivider(),
-                  ],
-                )),
+                                    if (res) {}
+                                  },
+                                  child: const Text("Accept")),
+                              const VerticalDivider(),
+                            ],
+                          ),
+                        ],
+                      ));
+                }
+
+                return Container();
+              },
+            ),
           ),
         ),
         body: controller.obx(
@@ -103,73 +119,8 @@ class MessageDetailView extends StatelessWidget {
               child: Obx(() => Column(
                     children: [
                       SizedBox(height: Constants.cardMargin),
-                      if (controller.messages.isEmpty)
-                        Builder(builder: (context) {
-                          var m = MessagesModel(
-                              sender: initialOffer?.senderId ?? "",
-                              content: initialOffer?.message ?? "",
-                              id: "initial");
-                          return Column(
-                            children: [
-                              if (initialOffer != null)
-                                Container(
-                                  margin: Constants.ePadding,
-                                  padding: Constants.ePadding,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: toc.cardColor,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: [
-                                      const Text("initial Offer"),
-                                      Text(
-                                        "Sender: ${initialOffer?.senderId ?? ""}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        "Message: ${initialOffer?.message ?? ""}",
-                                        style: const TextStyle(
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                      Text(
-                                        "Offer Price: ${initialOffer?.offerPrice ?? ""}",
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: [
-                                            _buildChip(
-                                                "has part",
-                                                initialOffer?.hasPart
-                                                        ?.toString() ??
-                                                    ""),
-                                            _buildChip("Logistics",
-                                                initialOffer?.logistics ?? ""),
-                                            _buildChip("Condition",
-                                                initialOffer?.condition ?? ""),
-                                            _buildChip("Price",
-                                                initialOffer?.offerPrice ?? ""),
-                                            _buildChip(
-                                                "Payment Method",
-                                                initialOffer?.paymentMethod ??
-                                                    ""),
-                                            _buildChip("Refund Policy",
-                                                initialOffer?.policy ?? ""),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              if (initialOffer == null) m.tile(),
-                            ],
-                          );
-                        }),
+                      _buildInitial(),
+                      if (controller.messages.isEmpty) _buildEmpty(),
                       ...controller.messages.map((e) {
                         return e.tile(e == controller.messages.last
                             ? controller.last
@@ -187,18 +138,102 @@ class MessageDetailView extends StatelessWidget {
     );
   }
 
+  Widget _buildInitial() {
+    if (controller.initial == null) return Container();
+    initialOffer ??= controller.initial;
+    return Builder(builder: (context) {
+      var m = MessagesModel(
+          sender: initialOffer?.senderId ?? "",
+          content: initialOffer?.message ?? "",
+          id: "initial");
+      return Column(
+        children: [
+          if (initialOffer != null)
+            Container(
+              margin: Constants.ePadding,
+              padding: Constants.ePadding,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: toc.cardColor,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text("initial Offer"),
+                  _buildChip(
+                    "Sender:",
+                    " ${initialOffer?.senderId ?? ""}",
+                  ),
+                  _buildChip(
+                    "Message:",
+                    " ${initialOffer?.message ?? ""}",
+                  ),
+                  _buildChip(
+                    "Offer Price:",
+                    " ${initialOffer?.offerPrice ?? ""}",
+                  ),
+                  _buildChip(
+                    "Has Part:",
+                    " ${initialOffer?.hasPart ?? ""}",
+                  ),
+                  _buildChip(
+                    "Logistics:",
+                    " ${initialOffer?.logistics ?? ""}",
+                  ),
+                  _buildChip(
+                    "Condition:",
+                    " ${initialOffer?.condition ?? ""}",
+                  ),
+                  _buildChip(
+                    "Payment Method:",
+                    " ${initialOffer?.paymentMethod ?? ""}",
+                  ),
+                  _buildChip(
+                    "Refund Policy:",
+                    " ${initialOffer?.policy ?? ""}",
+                  ),
+                ],
+              ),
+            ),
+          if (initialOffer == null) m.tile(),
+        ],
+      );
+    });
+  }
+
   Widget _buildChip(String s, String t) {
+    return Container(
+      decoration: const BoxDecoration(
+          // borderRadius: BorderRadius.circular(5),
+          // color: toc.scaffoldBackgroundColor,
+          ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(s, style: TS.h4.copyWith(color: toc.textColor.withOpacity(.7))),
+          const SizedBox(width: 5),
+          Expanded(child: Text(t, style: TS.h4)),
+        ],
+      ),
+    );
+  }
+
+  _buildEmpty() {
     return Container(
       padding: Constants.ePadding,
       margin: Constants.ePadding,
+      alignment: Alignment.center,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
-        color: toc.scaffoldBackgroundColor,
+        color: toc.cardColor.withOpacity(1),
+        borderRadius: Constants.br * 2,
+        border: Border.all(color: toc.primaryColor.lighter, width: 1.5),
       ),
       child: Column(
         children: [
-          Text(t, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(s),
+          Text(
+            "Here you can message the person who sent you the offer to discuss details. You can also accept or decline the offer, this will update the original post letting everyone know that your request has been answered. Below is the chat box where you can type and send your message. send your first message to get started. ",
+            style: TS.h4,
+          ),
         ],
       ),
     );

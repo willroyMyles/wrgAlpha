@@ -46,6 +46,21 @@ mixin offersExecutor {
     }
   }
 
+  Future<OfferModel?> offers_getOfferById(String offerId) async {
+    try {
+      var res = await _fstore
+          .collection(_col)
+          .doc(offerId)
+          // .where("isOffer", isEqualTo: true)
+          .get();
+      var ans = OfferModel.fromMap(res.data()!);
+      return ans;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<List<OfferModel>> offers_getAllOffers() async {
     try {
       if (!GF<ProfileState>().isSignedIn.value) return [];

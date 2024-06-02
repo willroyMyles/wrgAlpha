@@ -18,23 +18,30 @@ class ConversationModel {
   bool locked = false;
   String newMessage;
   String id;
+  String offerId;
   String recieverId;
   String senderId;
-  String commentId;
   String postId;
+  String postTitle;
+  DateTime? lastMessage;
+  DateTime? createdAt;
   ConversationModel({
     this.messages = const [],
     this.locked = false,
     this.newMessage = '',
     this.id = '',
+    this.offerId = '',
     this.recieverId = '',
     this.senderId = '',
-    this.commentId = '',
     this.postId = '',
+    this.postTitle = '',
+    this.lastMessage,
+    this.createdAt,
   }) {
     if (id.isEmpty) {
       id = nanoid(length: 7);
     }
+    createdAt ??= DateTime.now();
   }
 
   bool hasNewMessageForMe() {
@@ -75,10 +82,13 @@ class ConversationModel {
       'locked': locked,
       'newMessage': newMessage,
       'id': id,
+      'offerId': offerId,
       'recieverId': recieverId,
       'senderId': senderId,
-      'commentId': commentId,
       'postId': postId,
+      'postTitle': postTitle,
+      'lastMessage': lastMessage?.millisecondsSinceEpoch,
+      'createdAt': createdAt?.millisecondsSinceEpoch,
     };
   }
 
@@ -92,10 +102,18 @@ class ConversationModel {
       locked: (map['locked'] ?? false) as bool,
       newMessage: (map['newMessage'] ?? '') as String,
       id: (map['id'] ?? '') as String,
+      offerId: (map['offerId'] ?? '') as String,
       recieverId: (map['recieverId'] ?? '') as String,
       senderId: (map['senderId'] ?? '') as String,
-      commentId: (map['commentId'] ?? '') as String,
       postId: (map['postId'] ?? '') as String,
+      postTitle: (map['postTitle'] ?? '') as String,
+      lastMessage: map['lastMessage'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(
+              (map['lastMessage'] ?? 0) as int)
+          : null,
+      createdAt: map['createdAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0) as int)
+          : null,
     );
   }
 
@@ -111,11 +129,30 @@ class ConversationModel {
       },
       child: Container(
         padding: Constants.ePadding,
+        margin: Constants.ePadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Opacity(opacity: .7, child: Text("your messages with")),
-            Txt(getOthersName() ?? "no name").h2,
+            Wrap(
+              alignment: WrapAlignment.start,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Opacity(
+                    opacity: .7,
+                    child: Text(
+                      "your messages with ",
+                      style: TS.hint1,
+                    )),
+                Txt(getOthersName() ?? "no name").h2,
+                Opacity(
+                    opacity: .7,
+                    child: Text(
+                      " about: ",
+                      style: TS.hint1,
+                    )),
+                Txt(postTitle.capitalize!).h2,
+              ],
+            )
           ],
         ),
       ),
