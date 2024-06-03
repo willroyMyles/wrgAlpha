@@ -46,10 +46,10 @@ class OfferState extends GetxController with StateMixin {
     var myId = GF<ProfileState>().userModel!.value.email;
 
     if (model.recieverId == myId) return 0;
-    if (model.senderId == myId) return 1;
     if (model.senderId == myId && model.status == OfferStatus.Declined) {
       return 2;
     }
+    if (model.senderId == myId) return 1;
     if (model.senderId == myId && model.status == OfferStatus.Archived) {
       return 3;
     }
@@ -64,7 +64,7 @@ class OfferState extends GetxController with StateMixin {
         value.update(of.postId, (v) {
           v.add(of);
           return v;
-        });
+        }, ifAbsent: () => [of]);
         return value;
       },
           ifAbsent: () => {

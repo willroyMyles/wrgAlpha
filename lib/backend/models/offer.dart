@@ -1,17 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 enum OfferStatus {
-  Open("Open"),
-  Accepted("Accepted"),
-  Declined("Declined"),
-  Archived("Archived");
+  Open("Open", Colors.blue),
+  Accepted("Accepted", Colors.green),
+  Declined("Declined", Colors.red),
+  Archived("Archived", Colors.grey);
 
   final String displayName;
-  const OfferStatus(this.displayName);
+  final Color color;
+  const OfferStatus(this.displayName, this.color);
 }
 
 class OfferModel {

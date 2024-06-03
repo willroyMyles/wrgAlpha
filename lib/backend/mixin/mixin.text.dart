@@ -31,6 +31,11 @@ class TS {
       );
 
   static TextStyle get h5 => _baseTextStyle.copyWith(
+        fontSize: 14.0,
+        color: toc.textColor,
+        fontWeight: FontWeight.w400,
+      );
+  static TextStyle get h6 => _baseTextStyle.copyWith(
         fontSize: 12.0,
         color: toc.textColor,
         fontWeight: FontWeight.w400,
@@ -41,6 +46,11 @@ class TS {
         fontWeight: FontWeight.w500,
       );
   static TextStyle get hint1 => _baseTextStyle.copyWith(
+        fontSize: 12.0,
+        color: Colors.grey.darker,
+        fontWeight: FontWeight.w500,
+      );
+  static TextStyle get hint2 => _baseTextStyle.copyWith(
         fontSize: 12.0,
         color: toc.primaryColor.darker,
         fontWeight: FontWeight.w500,

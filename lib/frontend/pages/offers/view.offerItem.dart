@@ -4,6 +4,7 @@ import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/messages/detail/view.messageDetails.dart';
 
@@ -28,25 +29,18 @@ class OfferItem extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(
             // horizontal: Constants.cardMargin,
-            vertical: alt ? Constants.cardVerticalMargin / 4 : 0
+            vertical: alt ? 2 : 0
             // vertical: Constants.cardVerticalMargin / 4,
             ),
-        padding: EdgeInsets.all(Constants.cardpadding),
+        padding: EdgeInsets.all(Constants.cardpadding / 2),
         decoration: BoxDecoration(
           color:
               alt ? toc.scaffoldBackgroundColor.darkerF(0) : Colors.transparent,
-          border: Border.all(
-            width: 3,
-            color: toc.scaffoldBackgroundColor.darkerF(20),
-          ),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.black.withOpacity(.1),
-          //     offset: const Offset(5, 5),
-          //     blurRadius: 2,
-          //   )
-          // ],
-          borderRadius: Constants.br * 4,
+          // border: Border.all(
+          //   width: 3,
+          //   color: toc.scaffoldBackgroundColor.darkerF(20),
+          // ),
+          borderRadius: Constants.br,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,14 +50,17 @@ class OfferItem extends StatelessWidget {
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Txt(
+                    Text(
                       model.message.capitalizeFirst!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                    ).h4,
+                      style: TS.h5,
+                    ),
                     if (model.offerPrice != null)
-                      Txt("Offer Price: ${model.offerPrice!.capitalizeFirst!}")
-                          .h3,
+                      Text(
+                        "Offer Price: ${model.offerPrice!.capitalizeFirst!}",
+                        style: TS.h5,
+                      ),
                     if (showPost)
                       Txt(
                         "Post : ${model.postTitle.capitalizeFirst!}",
@@ -73,12 +70,16 @@ class OfferItem extends StatelessWidget {
                     // const Divider(),
                   ]),
             ),
-            Text(
-              "view",
-              style: TextStyle(
-                  fontSize: 15,
-                  color: toc.primaryColor.darkerF(5),
-                  fontWeight: FontWeight.w500),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                buildChip(model.status!.name, color: model.status!.color),
+                const SizedBox(height: 3),
+                // Text(
+                //   "tap to view",
+                //   style: TS.hint1,
+                // ),
+              ],
             ),
           ],
         ),
@@ -99,7 +100,7 @@ class OfferBundle extends StatelessWidget {
           horizontal: Constants.cardMargin,
           vertical: Constants.cardVerticalMargin,
         ),
-        padding: Constants.ePadding * 1.2,
+        padding: Constants.ePadding,
         decoration: BoxDecoration(
           // border: Border.all(
           //   width: 3,
@@ -125,7 +126,7 @@ class OfferBundle extends StatelessWidget {
                 )
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
             ...models.map((e) => OfferItem(
                   model: e,
                   showPost: false,

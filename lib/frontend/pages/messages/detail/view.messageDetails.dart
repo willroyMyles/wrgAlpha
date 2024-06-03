@@ -70,14 +70,15 @@ class MessageDetailView extends StatelessWidget {
             Text(
                 "${(initialOffer?.amISender() ?? false) ? initialOffer?.recieverId : initialOffer?.senderId}"),
           ]),
-          bottom: initialOffer?.amISender() == false
+          bottom: !(initialOffer?.amISender() ?? false)
               ? PreferredSize(
                   preferredSize: Size(Get.width, 50),
                   child: GetBuilder<MessageDetailsState>(
                     init: controller,
                     initState: (_) {},
                     builder: (_) {
-                      if (_.initial?.status != null) {
+                      if (_.initial?.status == OfferStatus.Accepted ||
+                          _.initial?.status == OfferStatus.Declined) {
                         return Container(
                           child: Text(
                             "This offer was ${_.initial!.status!.displayName.toLowerCase()}",

@@ -11,7 +11,7 @@ class Constants {
       colors: [Colors.white, Colors.grey.shade200],
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter);
-  static BorderRadius br = BorderRadius.circular(3);
+  static BorderRadius br = BorderRadius.circular(5);
   // static brRadisu = 5.0;
   static List<BoxShadow> boxShadow = [
     BoxShadow(
