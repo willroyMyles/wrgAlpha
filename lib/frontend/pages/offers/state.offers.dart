@@ -2,15 +2,18 @@ import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class OfferState extends GetxController with StateMixin {
   RxList<OfferModel> models = RxList([]);
-  RxMap<String, List<OfferModel>> offerMap = RxMap({});
+
+  RxMap<int, Map<String, List<OfferModel>>> offerMap2 = RxMap({});
+  RxInt currentIndex = 0.obs;
 
   Future setup() async {
     try {
       models.clear();
-      offerMap.clear();
+      offerMap2.clear();
       var offers = await GF<GE>().offers_getAllOffers();
       models.value = offers;
       _updateMap();
@@ -23,12 +26,50 @@ class OfferState extends GetxController with StateMixin {
     }
   }
 
+  String indexName(int index) {
+    var str = switch (index) {
+      0 => "Incoming Offers",
+      1 => "Outgoing Offers",
+      2 => "Declined Offers",
+      3 => "Archived Offers",
+      _ => "Unknown Offers",
+    };
+    return str;
+  }
+
+  onTabChanged(int index) async {
+    currentIndex.value = index;
+  }
+
+  _getIndex(OfferModel model) {
+    int idx = 0;
+    var myId = GF<ProfileState>().userModel!.value.email;
+
+    if (model.recieverId == myId) return 0;
+    if (model.senderId == myId) return 1;
+    if (model.senderId == myId && model.status == OfferStatus.Declined) {
+      return 2;
+    }
+    if (model.senderId == myId && model.status == OfferStatus.Archived) {
+      return 3;
+    }
+
+    return idx;
+  }
+
   _updateMap() {
     for (var of in models) {
-      offerMap.update(of.postId, (value) {
-        value.add(of);
+      offerMap2.update(_getIndex(of), (value) {
+        // if (value.postId == of.postId) value.list.add(of);
+        value.update(of.postId, (v) {
+          v.add(of);
+          return v;
+        });
         return value;
-      }, ifAbsent: () => [of]);
+      },
+          ifAbsent: () => {
+                of.postId: [of]
+              });
     }
   }
 }

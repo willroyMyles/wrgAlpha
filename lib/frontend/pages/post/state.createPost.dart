@@ -92,7 +92,6 @@ class CreatePostState extends GetxController {
     pm.model = model['model'] ?? "";
     pm.year = num.tryParse(model['year'] ?? "2000")!.toInt();
     pm.category = model['category'] ?? "";
-    pm.subCategory = model['sub'] ?? "";
 
     var user = Get.find<ProfileState>().userModel!.value;
     pm.userEmail = user.email;

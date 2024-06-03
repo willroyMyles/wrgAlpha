@@ -146,35 +146,20 @@ class CreatePost extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  SizedBox(
-                                      width: Get.width / 2.2,
-                                      child: buildDropdownInput(
-                                        "category",
-                                        (val) {
-                                          controller.model['category'] = val;
-                                          controller.model['sub'] = "";
-                                          controller.model.refresh();
-                                        },
-                                        items: [
-                                          ...controller.getCategoryList(),
-                                          ""
-                                        ],
-                                      )),
-                                  Obx(() => SizedBox(
-                                      key: UniqueKey(),
-                                      width: Get.width / 2.2,
-                                      child: buildDropdownInput(
-                                        "sub category",
-                                        (val) {
-                                          controller.model['sub'] = val;
-                                        },
-                                        items: [
-                                          ...controller.getSubCategoryList(),
-                                          ""
-                                        ],
-                                        initialValue:
-                                            controller.model.value['sub'] ?? "",
-                                      ))),
+                                  Expanded(
+                                    child: buildDropdownInput(
+                                      "category",
+                                      (val) {
+                                        controller.model['category'] = val;
+                                        controller.model['sub'] = "";
+                                        controller.model.refresh();
+                                      },
+                                      items: [
+                                        ...controller.getCategoryList(),
+                                        ""
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

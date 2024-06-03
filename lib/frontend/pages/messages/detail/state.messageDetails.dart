@@ -9,6 +9,7 @@ import 'package:wrg2/backend/models/conversation.dart';
 import 'package:wrg2/backend/models/messages.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
+import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 
 class MessageDetailsState extends GetxController with StateMixin {
@@ -51,6 +52,8 @@ class MessageDetailsState extends GetxController with StateMixin {
       if ((Get.arguments as Map).containsKey("model")) {
         initial = Get.arguments['model'];
       }
+
+      //below is null because no conversation is here as yet
       var convo =
           await GF<GE>().conversation_getConvarsationByOfferid(initial!.id);
       conversation = convo;
@@ -85,9 +88,23 @@ class MessageDetailsState extends GetxController with StateMixin {
     sub = usersStream!.listen(_onData);
   }
 
-  onAccept() async {}
+  onAccept() async {
+    var res = await GF<GE>().offer_acceptOffer(initial!.id, initial!.postId);
+    if (res) {
+      SBUtil.showSuccessSnackBar("Offer Accepted");
+    } else {
+      SBUtil.showErrorSnackBar("Could not accept offer, try again");
+    }
+  }
 
-  onDecline() async {}
+  onDecline() async {
+    var res = await GF<GE>().offer_declineOffer(initial!.id);
+    if (res) {
+      SBUtil.showSuccessSnackBar("Offer Declined");
+    } else {
+      SBUtil.showErrorSnackBar("Could not decline offer, try again");
+    }
+  }
 
   var messageCount = 0;
   _onData(DocumentSnapshot event) async {

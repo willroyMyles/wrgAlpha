@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/extension/color.extension.dart';
+import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 
 Widget buildLargeInput(String label, onChange,
@@ -331,6 +333,20 @@ Widget buildDropdownInputHorizontal(String label, onChange,
       ],
     ),
   );
+}
+
+Widget buildChip(String text, {Color color = Colors.transparent}) {
+  return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withOpacity(.15),
+        border: Border.all(color: color.withOpacity(.6), width: .6),
+        borderRadius: Constants.br,
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: color.darker, fontSize: 12),
+      ));
 }
 
 InputBorder border = OutlineInputBorder(

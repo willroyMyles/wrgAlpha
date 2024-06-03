@@ -109,6 +109,7 @@ class PostDetailsState extends GetxController {
 
       if (Get.isBottomSheetOpen ?? false) {
         Get.close(1);
+        GF<ProfileState>().setup();
       } else {
         //show error
         SBUtil.showErrorSnackBar("Offer was not created successfully");

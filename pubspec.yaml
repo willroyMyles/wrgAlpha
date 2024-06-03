@@ -49,6 +49,17 @@ dependencies:
   intl: ^0.17.0
 
 
+  animated_introduction: ^1.0.4
+  blurhash_ffi: ^1.2.6
+  flutter_tilt: ^3.0.1
+  diagonal_decoration: ^1.0.2+3
+  smooth_sheets: ^0.7.1
+  safe_text: ^0.0.3
+  smart_text_flutter: ^0.2.1
+  material_floating_search_bar_2: ^0.5.0
+  redacted: ^1.0.11
+
+
   movements: 
     path: "./movements/"
 
@@ -76,9 +87,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

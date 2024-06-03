@@ -74,8 +74,6 @@ class PostDetails extends StatelessWidget {
                                             "model", controller.model.model),
                                         _buildLabel("category",
                                             controller.model.category),
-                                        _buildLabel("sub-category",
-                                            controller.model.subCategory),
                                       ],
                                     )
                                   ]),
@@ -226,15 +224,13 @@ class PostDetails extends StatelessWidget {
   }
 
   Widget _buildLabel(String label, String value) {
-    return Container(
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Opacity(opacity: .5, child: Text("${label.capitalize!}: ")),
-          Text(value),
-        ],
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Opacity(opacity: .5, child: Text("${label.capitalize!}: ")),
+        Text(value),
+      ],
     );
   }
 

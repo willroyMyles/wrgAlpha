@@ -29,13 +29,6 @@ class HomeView extends StatelessWidget {
           controller: postState.scroll,
           headerSliverBuilder: (context, _) {
             return [
-              // const CupertinoSliverNavigationBar(
-              //   largeTitle: Text("Your Feed"),
-              //   leading: Text("leading"),
-              //   stretch: true,
-              //   transitionBetweenRoutes: true,
-              //   alwaysShowMiddle: false,
-              // ),
               WRGAppBar(
                 "You're Feed  ",
                 additional: Text(
@@ -80,7 +73,6 @@ class HomeView extends StatelessWidget {
                       : Container())
                 ],
               ),
-
               SliverToBoxAdapter(
                 child: GetBuilder<ProfileState>(
                   builder: (_) {

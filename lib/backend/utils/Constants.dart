@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 
 class Constants {
   static Duration defaultAnimationSpeed = const Duration(milliseconds: 350);
@@ -40,5 +41,18 @@ class Constants {
   static Widget get empty => Container(
         alignment: Alignment.center,
         child: const Text("empty"),
+      );
+  static Widget emptyWidget(String? str) => Container(
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset("assets/icons/empty.png"),
+            Text(
+              str ?? "empty",
+              style: TS.h2,
+            ),
+          ],
+        ),
       );
 }

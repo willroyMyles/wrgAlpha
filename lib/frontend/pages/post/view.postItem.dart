@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/extension/widget.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/post/details/view.postDetails.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
@@ -32,20 +31,7 @@ class PostItem extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Txt(model.title.capitalizeFirst!).h2),
-              Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                  decoration: BoxDecoration(
-                    color: model.status.color.withOpacity(.15),
-                    border: Border.all(
-                        color: model.status.color.withOpacity(.6), width: .6),
-                    borderRadius: Constants.br,
-                  ),
-                  child: Text(
-                    model.status.name,
-                    style: TextStyle(
-                        color: model.status.color.darker, fontSize: 12),
-                  )),
+              buildChip(model.status.name, color: model.status.color),
             ],
           ),
           Txt(
@@ -62,7 +48,7 @@ class PostItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(model.category),
-                    Text(model.subCategory),
+                    // Text(model.subCategory),
                   ],
                 ),
                 Column(
@@ -76,19 +62,26 @@ class PostItem extends StatelessWidget {
             ),
           ),
 
-          Obx(() => (GF<ProfileState>()
-                      .userModel
-                      ?.value
-                      .watching
-                      .contains(model.id) ??
-                  false)
-              ? Container(
-                  margin: const EdgeInsets.only(top: 5),
-                  child: Icon(
-                    CupertinoIcons.eyeglasses,
-                    color: toc.primaryColor.darker,
-                  ))
-              : Container()),
+          Obx(() {
+            var state = GF<ProfileState>();
+            if (state.isSignedIn.value == false) {
+              return Container();
+            }
+            return Opacity(
+              opacity: .7,
+              child: Row(
+                children: [
+                  (state.userModel?.value.watching.contains(model.id) ?? false)
+                      ? Container(
+                          margin: const EdgeInsets.only(right: 5),
+                          child: buildChip("Watching", color: toc.textColor))
+                      : Container(),
+                  if (state.userModel?.value.email == model.userEmail)
+                    buildChip("Owner", color: toc.textColor)
+                ],
+              ),
+            );
+          }),
         ]),
       ),
     );

@@ -28,7 +28,7 @@ class ProfileView extends GetView<ProfileState> {
               initState: (_) {},
               builder: (_) {
                 return Obx(() => AnimatedSwitcher(
-                    duration: 250.milliseconds,
+                    duration: 350.milliseconds,
                     child: showFeedback.value
                         ? Container(
                             key: UniqueKey(), child: _feedbackPage(context))
@@ -108,6 +108,8 @@ class ProfileView extends GetView<ProfileState> {
                       Image.network(controller.userModel!.value.userImageUrl)),
                 ),
               )),
+          const SizedBox(height: 5),
+          Text(controller.userModel!.value.email),
           const Spacer(),
           ListTile(
             onTap: () {

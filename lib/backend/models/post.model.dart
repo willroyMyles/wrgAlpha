@@ -10,7 +10,6 @@ class PostModel {
   String id = "";
   String content = "";
   String category = "";
-  String subCategory = "";
   String make = "";
   String model = "";
   int year = 0;
@@ -30,7 +29,6 @@ class PostModel {
     this.id = '',
     this.content = '',
     this.category = '',
-    this.subCategory = '',
     this.make = '',
     this.model = '',
     this.year = 0,
@@ -53,7 +51,6 @@ class PostModel {
       'id': id,
       'content': content,
       'category': category,
-      'subCategory': subCategory,
       'make': make,
       'model': model,
       'year': year,
@@ -72,12 +69,11 @@ class PostModel {
   bool contains(Map<String, dynamic> map, String key) => map.containsKey(key);
 
   factory PostModel.fromMap(Map<String, dynamic> map) {
-    var m = PostModel(
+    return PostModel(
       title: (map['title'] ?? '') as String,
       id: (map['id'] ?? '') as String,
       content: (map['content'] ?? '') as String,
       category: (map['category'] ?? '') as String,
-      subCategory: (map['subCategory'] ?? '') as String,
       make: (map['make'] ?? '') as String,
       model: (map['model'] ?? '') as String,
       year: (map['year'] ?? 0) as int,
@@ -85,15 +81,14 @@ class PostModel {
       watching: (map['watching'] ?? 0) as int,
       comments: (map['comments'] ?? 0) as int,
       createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0))
+          ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0) as int)
           : null,
       userEmail: (map['userEmail'] ?? '') as String,
       userName: (map['userName'] ?? '') as String,
       userPhotoUrl: (map['userPhotoUrl'] ?? '') as String,
       status: Status.values[(map['status'] ?? 0) as int],
-      offers: List<String>.from((map['offers'] ?? [])),
+      offers: List<String>.from((map['offers'] ?? const <String>[])),
     );
-    return m;
   }
 
   factory PostModel.fromMapWithoutUserinfo(Map<String, dynamic> map) {

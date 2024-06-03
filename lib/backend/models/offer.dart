@@ -1,6 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:wrg2/backend/mixin/mixin.get.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
+
+enum OfferStatus {
+  Open("Open"),
+  Accepted("Accepted"),
+  Declined("Declined"),
+  Archived("Archived");
+
+  final String displayName;
+  const OfferStatus(this.displayName);
+}
+
 class OfferModel {
   String id;
   bool accepted = false;
@@ -22,6 +35,9 @@ class OfferModel {
   String? policy;
   bool anonymous;
 
+  //enum
+  OfferStatus? status;
+
   OfferModel({
     this.id = '',
     this.accepted = false,
@@ -42,6 +58,7 @@ class OfferModel {
     this.condition,
     this.policy,
     this.anonymous = false,
+    this.status = OfferStatus.Open,
   });
 
   Map<String, dynamic> toMap() {
@@ -65,6 +82,7 @@ class OfferModel {
       'condition': condition,
       'policy': policy,
       'anonymous': anonymous,
+      'status': status?.index,
     };
   }
 
@@ -95,6 +113,9 @@ class OfferModel {
       condition: map['condition'] != null ? map['condition'] as String : null,
       policy: map['policy'] != null ? map['policy'] as String : null,
       anonymous: (map['anonymous'] ?? false) as bool,
+      status: map['status'] != null
+          ? OfferStatus.values[(map['status'] ?? 0) as int]
+          : null,
     );
   }
 
@@ -104,4 +125,6 @@ class OfferModel {
       OfferModel.fromMap(json.decode(source));
 
   factory OfferModel.empty() => OfferModel();
+
+  bool amISender() => senderId == GF<ProfileState>().userModel?.value.email;
 }
