@@ -22,7 +22,7 @@ class PersonalPostState extends GetxController with StateMixin {
         );
       },
       onDetach: (position) {
-        print("object");
+        print("detached");
       },
     );
   }

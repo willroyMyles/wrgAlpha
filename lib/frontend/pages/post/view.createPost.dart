@@ -20,28 +20,6 @@ class CreatePost extends StatelessWidget {
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
-              // CupertinoSliverNavigationBar(
-              //   largeTitle: Container(
-              //     color: Colors.white,
-              //     child: const Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       mainAxisAlignment: MainAxisAlignment.end,
-              //       children: [
-              //         Text("Seek your parts"),
-              //         Text(
-              //           "post what your looking for",
-              //           style: TextStyle(
-              //               fontSize: 12, fontWeight: FontWeight.w400),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              //   stretch: false,
-              //   transitionBetweenRoutes: true,
-              //   alwaysShowMiddle: false,
-              //   border: const Border(),
-              //   padding: EdgeInsetsDirectional.zero,
-              // ),
               const WRGAppBar(
                 "Seek your parts",
                 additional: Text(

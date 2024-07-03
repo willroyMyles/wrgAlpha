@@ -36,13 +36,19 @@ class Constants {
   static double lightOpacity = .5;
 
   static Widget get loading => Container(
-        child: const Text("Loading"),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            Text("Loading"),
+          ],
+        ),
       );
   static Widget get empty => Container(
         alignment: Alignment.center,
         child: const Text("empty"),
       );
-  static Widget emptyWidget(String? str) => Container(
+  static Widget emptyWidget(String? str, [String? additional]) => Container(
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -52,6 +58,12 @@ class Constants {
               str ?? "empty",
               style: TS.h2,
             ),
+            if (additional != null)
+              Text(
+                additional,
+                style: TS.h5,
+              ),
+            const SizedBox(height: 20),
           ],
         ),
       );

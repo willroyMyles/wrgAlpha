@@ -21,8 +21,7 @@ mixin UserExecutor {
         await _fstore.collection(_col).doc(user.email).set(user.toMap());
       }
     } catch (e) {
-      //throw error
-      print(e);
+      rethrow;
     }
   }
 

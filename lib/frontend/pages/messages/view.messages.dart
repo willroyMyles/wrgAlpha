@@ -25,7 +25,7 @@ class MessagesView extends StatelessWidget {
               return item.tile();
             },
           ),
-          onEmpty: Constants.empty,
+          onEmpty: Constants.emptyWidget("No Messages"),
           onLoading: Constants.loading,
         ),
       ),

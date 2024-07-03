@@ -13,7 +13,7 @@ mixin AuthExecutor {
     }
   }
 
-  Future signInWithGoogle() async {
+  Future<bool> signInWithGoogle() async {
     try {
       await GoogleSignIn().signOut();
 
@@ -32,7 +32,7 @@ mixin AuthExecutor {
 
       if (googleUser.isNull) {
         //throw cant log in
-        return;
+        return false;
       }
 
       // Obtain the auth details from the request
@@ -47,9 +47,10 @@ mixin AuthExecutor {
 
       // Once signed in, return the UserCredential
       var cred = await FirebaseAuth.instance.signInWithCredential(credential);
-      registerNewUser(cred);
+      await registerNewUser(cred);
+      return true;
     } catch (error) {
-      return Future.error("did not sign in");
+      return false;
     }
     // return await FirebaseAuth.instance.signInWithCredential(credential);
   }

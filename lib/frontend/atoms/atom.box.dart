@@ -3,8 +3,8 @@ import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 
-class AtomBox extends StatelessWidget {
-  final dynamic value;
+class AtomBox<T extends dynamic> extends StatelessWidget {
+  final T? value;
   final String label;
   const AtomBox({super.key, this.value, required this.label});
 

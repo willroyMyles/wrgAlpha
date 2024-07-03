@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:wrg2/backend/network/executor/executor.auth.dart';
+import 'package:wrg2/backend/network/executor/executor.cars.dart';
 import 'package:wrg2/backend/network/executor/executor.chat.dart';
 import 'package:wrg2/backend/network/executor/executor.comments.dart';
 import 'package:wrg2/backend/network/executor/executor.messages.dart';
@@ -15,4 +16,5 @@ class GE extends GetxController
         CommentsExecutor,
         offersExecutor,
         MessagesExecutor,
-        ChatExecutor {}
+        ChatExecutor,
+        CarsExecutor {}

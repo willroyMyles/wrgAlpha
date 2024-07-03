@@ -93,16 +93,26 @@ mixin offersExecutor {
 
   Future<OfferModel?> offers_getOfferById(String offerId) async {
     try {
-      var res = await _fstore
-          .collection(_col)
-          .doc(offerId)
-          // .where("isOffer", isEqualTo: true)
-          .get();
+      var res = await _fstore.collection(_col).doc(offerId).get();
       var ans = OfferModel.fromMap(res.data()!);
       return ans;
     } catch (e) {
       print(e);
       return null;
+    }
+  }
+
+  Future<List<OfferModel>> offers_getOfferByPostId(String postId) async {
+    try {
+      var res = await _fstore
+          .collection(_col)
+          .where("postId", isEqualTo: postId)
+          .get();
+      var ans = res.docs.map((e) => OfferModel.fromMap(e.data())).toList();
+      return ans;
+    } catch (e) {
+      print(e);
+      return [];
     }
   }
 

@@ -58,7 +58,9 @@ class OffersView extends GetView<OfferState> {
                     Constants.emptyWidget(
                         "No ${controller.indexName(controller.currentIndex.value)}"),
                     Text(
-                        "This is where you can find ${controller.currentIndex.value == 0 ? 'Offers made to you' : controller.currentIndex.value == 1 ? 'Offers you made' : controller.currentIndex.value == 2 ? ' offers you sent that was declined by others' : controller.currentIndex.value == 3 ? 'offers' : 'Unknown Offers'}"),
+                      "This is where you can find ${controller.currentIndex.value == 0 ? 'Offers made to you' : controller.currentIndex.value == 1 ? 'Offers you made' : controller.currentIndex.value == 2 ? ' offers you sent that was declined by others' : controller.currentIndex.value == 3 ? 'offers' : 'Unknown Offers'}",
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               );

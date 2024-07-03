@@ -4,7 +4,10 @@ import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
+import 'package:wrg2/frontend/atoms/atom.box.dart';
+import 'package:wrg2/frontend/cars/view.cars.dart';
 import 'package:wrg2/frontend/pages/messages/view.messages.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/offers/view.offers.dart';
@@ -110,6 +113,12 @@ class ProfileView extends GetView<ProfileState> {
               )),
           const SizedBox(height: 5),
           Text(controller.userModel!.value.email),
+          const SizedBox(height: 15),
+          InkWell(
+              onTap: () {
+                Get.to(() => CarsView());
+              },
+              child: const AtomBox<int>(label: "Cars", value: 3)),
           const Spacer(),
           ListTile(
             onTap: () {
@@ -193,7 +202,11 @@ class ProfileView extends GetView<ProfileState> {
             children: [
               TextButton(
                   onPressed: () async {
-                    await Get.find<GE>().signInWithGoogle();
+                    var res = await Get.find<GE>().signInWithGoogle();
+                    if (!res) {
+                      SBUtil.showErrorSnackBar(
+                          "Unable to sign in with google. Please try again later");
+                    }
                   },
                   child: const Text("Log in")),
               Hero(

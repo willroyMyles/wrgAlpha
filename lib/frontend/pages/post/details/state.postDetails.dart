@@ -12,9 +12,11 @@ import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class PostDetailsState extends GetxController {
   late PostModel model;
+  List<OfferModel> offers = [];
   RxString commentString = "".obs;
   RxString offerString = "".obs;
   List<CommentModel> comments = [];
+  RxInt bottomView = 0.obs;
 
   onView() {
     Get.find<GE>().posts_incrimentViews(model.id);
@@ -26,10 +28,12 @@ class PostDetailsState extends GetxController {
     });
   }
 
-  Future<dynamic> getCommentsForPost() async {
+  Future<List<CommentModel>> getCommentsForPost() async {
+    await Future.delayed(3.seconds);
     var res = await Get.find<GE>().comments_getComments(model.id);
-    comments.addAll(res);
-    refresh();
+    return res;
+    // comments.addAll(res);
+    // refresh();
   }
 
   onWatching() async {
@@ -75,6 +79,18 @@ class PostDetailsState extends GetxController {
     var args = Get.arguments ?? Get.rawRoute?.settings.arguments ?? {};
     var post = args['post'];
     model = post;
+    getOffers();
+  }
+
+  Future<List<OfferModel>> getOffers() async {
+    try {
+      var res = await GF<GE>().offers_getOfferByPostId(model.id);
+      return res;
+      // offers.addAll(res);
+      // return offers;
+    } catch (e) {
+      return [];
+    }
   }
 
   sendOffers(OfferModel offerModel) async {
@@ -149,6 +165,11 @@ class PostDetailsState extends GetxController {
       }
     }
 
+    refresh();
+  }
+
+  void updateBottomView(int value) {
+    bottomView.value = value;
     refresh();
   }
 }
