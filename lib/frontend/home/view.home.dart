@@ -119,7 +119,7 @@ class HomeView extends StatelessWidget {
                             },
                             child: AtomBox(
                               value: _.userModel?.value.watching.length ?? 0,
-                              label: "Watching",
+                              label: "Bookmarks",
                             ),
                           ),
                           SizedBox(width: Constants.cardMargin),

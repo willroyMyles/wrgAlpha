@@ -1,7 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/mixin/mixin.get.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
+import 'package:wrg2/frontend/cars/state.cars.dart';
 import 'package:wrg2/frontend/pages/post/state.createPost.dart';
 
 class CreatePost extends StatelessWidget {
@@ -20,12 +24,57 @@ class CreatePost extends StatelessWidget {
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
-              const WRGAppBar(
+              WRGAppBar(
                 "Seek your parts",
-                additional: Text(
+                additional: const Text(
                   "post what parts you're looking for",
                   textScaler: TextScaler.linear(.5),
                 ),
+                actions: [
+                  IconButton(
+                      onPressed: () async {
+                        await Get.bottomSheet(
+                            DraggableScrollableSheet(builder: (context, con) {
+                          return Container(
+                            padding: const EdgeInsets.all(10),
+                            color: Colors.white,
+                            child: ListView(
+                              controller: con,
+                              children: [
+                                Text(
+                                  "Your Cars",
+                                  style: TS.h2,
+                                ),
+                                const SizedBox(height: 10),
+                                if (GF<CarState>().cars.isEmpty)
+                                  Expanded(
+                                    child: Container(
+                                        alignment: Alignment.center,
+                                        child: const Text("No cars found")),
+                                  ),
+                                ...GF<CarState>().cars.map((e) => ListTile(
+                                      title: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          child: Row(
+                                            children: [
+                                              Text("${e.year} "),
+                                              Text("${e.make} "),
+                                              Text(e.model),
+                                            ],
+                                          )),
+                                      onTap: () {
+                                        controller.addCarModel(e);
+                                        Get.back(result: e);
+                                      },
+                                    ))
+                              ],
+                            ),
+                          );
+                        }));
+                      },
+                      icon: const Icon(CupertinoIcons.car_detailed))
+                ],
               )
             ];
           },
@@ -57,66 +106,78 @@ class CreatePost extends StatelessWidget {
                             space,
                             SizedBox(
                               width: Get.width,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: Get.width / divider,
-                                    child: buildDropdownInput(
-                                      "make",
-                                      requireInput: true,
-                                      items: [...controller.getMakeList(), ""],
-                                      (val) {
-                                        controller.model['make'] = val;
-                                        controller.model['model'] = "";
-                                        controller.model.refresh();
-                                      },
-                                      initialValue:
-                                          controller.model['make'] ?? "",
-                                    ),
-                                  ),
-                                  Obx(() {
-                                    return SizedBox(
-                                      key: UniqueKey(),
-                                      width: Get.width / divider,
-                                      child: buildDropdownInput(
-                                        "model",
-                                        requireInput: true,
-                                        (val) {
-                                          controller.model['model'] = val;
-                                        },
-                                        items: [
-                                          ...controller.getModelList(),
-                                          ""
-                                        ],
-                                        initialValue:
-                                            controller.model.value['model'] ??
-                                                "",
-                                      ),
+                              child: GetBuilder<CreatePostState>(
+                                  init: controller,
+                                  builder: (_) {
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: Get.width / divider,
+                                          child: buildDropdownInput(
+                                            "make",
+                                            requireInput: true,
+                                            items: [
+                                              ...controller.getMakeList(),
+                                              ""
+                                            ],
+                                            (val) {
+                                              controller.model['make'] = val;
+                                              controller.model['model'] = "";
+                                              controller.model.refresh();
+                                            },
+                                            initialValue:
+                                                controller.model['make'] ?? "",
+                                          ),
+                                        ),
+                                        Obx(() {
+                                          return SizedBox(
+                                            key: UniqueKey(),
+                                            width: Get.width / divider,
+                                            child: buildDropdownInput(
+                                              "model",
+                                              requireInput: true,
+                                              (val) {
+                                                controller.model['model'] = val;
+                                              },
+                                              items: [
+                                                ...controller.getModelList(),
+                                                ""
+                                              ],
+                                              initialValue: controller
+                                                      .model.value['model'] ??
+                                                  "",
+                                            ),
+                                          );
+                                        }),
+                                        SizedBox(
+                                            width: Get.width / divider,
+                                            child: SizedBox(
+                                              width: Get.width / 2.2,
+                                              child: buildDropdownInput(
+                                                "year",
+                                                (val) {
+                                                  controller.model['year'] =
+                                                      val;
+                                                },
+                                                initialValue: controller
+                                                        .model.value['year'] ??
+                                                    "",
+                                                items: [
+                                                  "",
+                                                  ...List.generate(
+                                                      60,
+                                                      (idx) =>
+                                                          (DateTime.now().year -
+                                                                  idx)
+                                                              .toString())
+                                                ],
+                                              ),
+                                            ))
+                                      ],
                                     );
                                   }),
-                                  SizedBox(
-                                      width: Get.width / divider,
-                                      child: SizedBox(
-                                        width: Get.width / 2.2,
-                                        child: buildDropdownInput(
-                                          "year",
-                                          (val) {
-                                            controller.model['year'] = val;
-                                          },
-                                          items: [
-                                            "",
-                                            ...List.generate(
-                                                60,
-                                                (idx) =>
-                                                    (DateTime.now().year - idx)
-                                                        .toString())
-                                          ],
-                                        ),
-                                      ))
-                                ],
-                              ),
                             ),
                             space,
                             Container(

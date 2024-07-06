@@ -30,36 +30,34 @@ class PostItem extends StatelessWidget {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             children: [
-              Expanded(child: Txt(model.title.capitalizeFirst!).h2),
+              Expanded(
+                  child: Txt(
+                model.title.capitalizeFirst!,
+                style: TS.h3,
+              )),
               buildChip(model.status.name, color: model.status.color),
             ],
           ),
           Txt(
             model.content,
             maxLines: 1,
-          ).h4,
+            style: TS.h2,
+          ),
           // const Divider(),
           Opacity(
             opacity: Constants.opacity,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(model.category),
-                    // Text(model.subCategory),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(model.make),
-                    Text(model.model),
-                  ],
-                ),
+                Text("${model.year} "),
+                Text("${model.make} "),
+                Text(model.model),
               ],
             ),
+          ),
+          Opacity(
+            opacity: Constants.opacity,
+            child: Text(model.category),
           ),
 
           Obx(() {

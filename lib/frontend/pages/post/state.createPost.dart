@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/models/model.cars.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/store/sotre.data.dart';
@@ -76,6 +77,14 @@ class CreatePostState extends GetxController {
     }
 
     return true;
+  }
+
+  addCarModel(CarModel carModel) {
+    model['make'] = carModel.make;
+    model['model'] = carModel.model;
+    model['year'] = carModel.year.toString();
+    model.refresh();
+    refresh();
   }
 
   onSubmit() async {

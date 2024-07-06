@@ -25,10 +25,14 @@ class AtomBox<T extends dynamic> extends StatelessWidget {
           Text(value.toString()),
           Opacity(
               opacity: Constants.opacity,
-              child: Text(
-                label.toUpperCase(),
-                style:
-                    const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label.toUpperCase(),
+                  maxLines: 1,
+                  style: const TextStyle(
+                      fontSize: 11, fontWeight: FontWeight.w700),
+                ),
               )),
         ],
       ),

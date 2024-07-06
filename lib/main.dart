@@ -6,6 +6,7 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/firebase_options.dart';
+import 'package:wrg2/frontend/cars/state.cars.dart';
 import 'package:wrg2/frontend/home/view.home.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
@@ -20,6 +21,7 @@ void main() async {
   Get.lazyPut(() => OfferState(), fenix: true);
   Get.put(GE());
   Get.put(ProfileState());
+  Get.put(CarState());
 
   runApp(const MyApp());
 }

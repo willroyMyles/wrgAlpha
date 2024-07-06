@@ -5,12 +5,11 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/store/sotre.data.dart';
 
 class CarState extends GetxController with StateMixin {
-  RxList<dynamic> cars = RxList();
+  RxList<CarModel> cars = RxList();
   Rx<CarModel> car = Rx(CarModel());
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     setup();
   }
