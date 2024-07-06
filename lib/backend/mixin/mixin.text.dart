@@ -57,6 +57,11 @@ class TS {
       );
 }
 
+extension TSE on TextStyle {
+  TextStyle get white => copyWith(color: Colors.white);
+  TextStyle get bold => copyWith(fontWeight: FontWeight.bold);
+}
+
 mixin TypographyMixin on Text {
   final TextStyle _baseTextStyle =
       const TextStyle(fontFamily: 'YourFontFamily');

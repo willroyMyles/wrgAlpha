@@ -72,7 +72,7 @@ class PostItem extends StatelessWidget {
                   (state.userModel?.value.watching.contains(model.id) ?? false)
                       ? Container(
                           margin: const EdgeInsets.only(right: 5),
-                          child: buildChip("Watching", color: toc.textColor))
+                          child: buildChip("Bookmarked", color: toc.textColor))
                       : Container(),
                   if (state.userModel?.value.email == model.userEmail)
                     buildChip("Owner", color: toc.textColor)

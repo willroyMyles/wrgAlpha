@@ -17,7 +17,7 @@ class WatchingView extends StatelessWidget {
 
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [const WRGAppBar("Posts Your Watching")];
+          return [const WRGAppBar("Posts You've Bookmarked")];
         },
         body: SafeArea(
           child: controller.obx(
