@@ -12,7 +12,7 @@ extension TextColor on ThemeData {
       CupertinoTheme.of(Get.context!).textTheme.navLargeTitleTextStyle;
 }
 
-Color primaryOrg = const Color.fromARGB(255, 244, 95, 36);
+Color primaryOrg = const Color.fromARGB(255, 129, 87, 31);
 MaterialColor primarySwatch = generateMaterialColor(color: primaryOrg);
 
 MaterialColor primaryGreen = generateMaterialColor(color: primaryOrg);

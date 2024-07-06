@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:wrg2/backend/models/post.model.dart';
+import 'package:wrg2/backend/models/service.model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 
-class PostState extends GetxController with ScrollMixin {
-  RxList<PostModel> posts = RxList([]);
+class ServiceState extends GetxController with ScrollMixin {
+  RxList<ServiceModel> posts = RxList([]);
   RxInt lastLength = 0.obs;
   RxBool noMorePosts = false.obs;
 
@@ -16,17 +16,18 @@ class PostState extends GetxController with ScrollMixin {
   setup() async {
     try {
       posts.clear();
-      noMorePosts.value = false;
       var ans = await Get.find<GE>().posts_getPosts();
-      posts.addAll(ans);
+      // posts.addAll(ans);
+
       lastLength.value = posts.length;
+
       refresh();
     } catch (e) {
       print(e);
     }
   }
 
-  addPost(PostModel model) {
+  addPost(ServiceModel model) {
     posts.insert(0, model);
     refresh();
   }
@@ -36,7 +37,7 @@ class PostState extends GetxController with ScrollMixin {
       if (noMorePosts.value) return;
       var ans = await Get.find<GE>().posts_getPosts(
           id: posts.lastOrNull?.createdAt?.millisecondsSinceEpoch);
-      posts.addAll(ans);
+      // posts.addAll(ans);
 
       noMorePosts.value = lastLength.value == posts.length;
 
