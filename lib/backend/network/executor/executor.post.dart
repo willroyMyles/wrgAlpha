@@ -91,4 +91,24 @@ mixin PostExecutor {
       print(e);
     }
   }
+
+  Future<bool> posts_modifyPost(String id, Map<String, dynamic> data) async {
+    try {
+      _fstore.collection(_col).doc(id).update(data);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  posts_deletePost(String id) async {
+    try {
+      _fstore.collection(_col).doc(id).delete();
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }

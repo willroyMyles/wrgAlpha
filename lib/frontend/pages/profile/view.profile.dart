@@ -7,6 +7,7 @@ import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/atom.box.dart';
+import 'package:wrg2/frontend/cars/state.cars.dart';
 import 'package:wrg2/frontend/cars/view.cars.dart';
 import 'package:wrg2/frontend/pages/messages/view.messages.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
@@ -118,7 +119,9 @@ class ProfileView extends GetView<ProfileState> {
               onTap: () {
                 Get.to(() => CarsView());
               },
-              child: const AtomBox<int>(label: "Cars", value: 3)),
+              child: AtomBox<int>(
+                  label: GF<CarState>().cars.length <= 1 ? 'Car' : 'Cars',
+                  value: GF<CarState>().cars.length)),
           const Spacer(),
           ListTile(
             onTap: () {

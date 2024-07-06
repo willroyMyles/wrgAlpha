@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:nanoid2/nanoid2.dart';
+import 'package:wrg2/backend/enums/enum.post.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/comment.model.dart';
 import 'package:wrg2/backend/models/offer.dart';
@@ -59,6 +60,9 @@ class PostDetailsState extends GetxController {
       }
       var idx = state.posts.indexOf(model);
       state.posts[idx] = model;
+      SBUtil.showSuccessSnackBar(isWatching
+          ? "You no longer bookmark this post"
+          : "You've bookmarked this post");
     } else {
       //throw error
     }
@@ -171,5 +175,28 @@ class PostDetailsState extends GetxController {
   void updateBottomView(int value) {
     bottomView.value = value;
     refresh();
+  }
+
+  void updateStatus(Status e) async {
+    var res =
+        await Get.find<GE>().posts_modifyPost(model.id, {"status": e.index});
+    if (res) {
+      model.status = e;
+      GF<PostState>().posts.where((e) => e.id == model.id).first.status = e;
+      SBUtil.showSuccessSnackBar("Status updated");
+      refresh();
+    } else {
+      SBUtil.showErrorSnackBar("Unable to update status");
+    }
+  }
+
+  void deletePost() async {
+    var res = await Get.find<GE>().posts_deletePost(model.id);
+    if (res) {
+      SBUtil.showSuccessSnackBar("Post deleted");
+      Get.back();
+    } else {
+      SBUtil.showErrorSnackBar("Unable to delete post");
+    }
   }
 }

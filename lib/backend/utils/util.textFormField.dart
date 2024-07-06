@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_popup/flutter_popup.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
@@ -347,6 +348,23 @@ Widget buildChip(String text, {Color color = Colors.transparent}) {
         text,
         style: TextStyle(color: color.darker, fontSize: 12),
       ));
+}
+
+Widget buildPopup(Widget child, List<Widget> children) {
+  return CustomPopup(
+      contentPadding: EdgeInsets.zero,
+      contentRadius: 5,
+      showArrow: false,
+      content: Container(
+        width: Get.width * .5,
+        padding: const EdgeInsets.all(5),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: children,
+        ),
+      ),
+      child: child);
 }
 
 InputBorder border = OutlineInputBorder(

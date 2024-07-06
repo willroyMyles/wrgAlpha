@@ -2,17 +2,20 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_popup/flutter_popup.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/enums/enum.post.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
+import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/comment.model.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.promptHelper.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/stom.futureBuilder.dart';
 import 'package:wrg2/frontend/pages/post/details/state.postDetails.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class PostDetails extends StatelessWidget {
   PostDetails({super.key});
@@ -39,53 +42,130 @@ class PostDetails extends StatelessWidget {
           ),
         ),
         actions: [
-          CustomPopup(
-            contentPadding: EdgeInsets.zero,
-            contentRadius: 5,
-            content: Container(
-              width: Get.width * .45,
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        Get.close(1);
+          buildPopup(
+            const Icon(CupertinoIcons.ellipsis_vertical_circle),
+            [
+              Obx(() => TextButton(
+                  onPressed: () {
+                    Get.close(1);
+                    controller.onWatching();
+                  },
+                  child: (GF<ProfileState>()
+                              .userModel
+                              ?.value
+                              .watching
+                              .contains(controller.model.id) ??
+                          false)
+                      ? const Text("Remove Bookmark")
+                      : const Text("Add Bookmark"))),
+              TextButton(
+                  onPressed: () async {
+                    Get.close(1);
+                    await Get.bottomSheet(BottomSheet(
+                      onClosing: () {},
+                      builder: (context) {
+                        return Container(
+                          color: toc.scaffoldBackgroundColor,
+                          child: SafeArea(
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: Constants.br,
+                                    color: toc.scaffoldBackgroundColor),
+                                // alignment: Alignment.center,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: Constants.cardpadding,
+                                    vertical: Constants.cardVerticalMargin),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                        child: buildInput("Comment", (val) {
+                                      controller.commentString.value = val;
+                                    })),
+                                    Container(
+                                      margin: const EdgeInsets.only(top: 15),
+                                      child: IconButton(
+                                          onPressed: () {
+                                            controller.sendComment();
+                                          },
+                                          icon: const Icon(
+                                            CupertinoIcons
+                                                .arrow_up_right_circle,
+                                            size: 25,
+                                          )),
+                                    )
+                                  ],
+                                )),
+                          ),
+                        );
                       },
-                      child: const Text("Add Bookmark")),
-                  TextButton(
-                      onPressed: () {
-                        Get.close(1);
-                      },
-                      child: const Text("Add Comment")),
-                  if (controller.model.amIOwner())
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Divider(
-                          color: Colors.black.withOpacity(.1),
-                        ),
-                        TextButton(
-                            onPressed: () {
-                              Get.close(1);
-                            },
-                            child: const Text("Update Progress")),
-                        TextButton(
-                            onPressed: () {
-                              Get.close(1);
-                            },
-                            child: const Text(
-                              "Delete Post",
-                              style: TextStyle(color: Colors.red),
-                            )),
-                      ],
+                    ));
+                  },
+                  child: const Text("Add Comment")),
+              if (controller.model.amIOwner())
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Divider(
+                      color: Colors.black.withOpacity(.1),
                     ),
-                ],
-              ),
-            ),
-            child: const Icon(CupertinoIcons.ellipsis_vertical_circle),
+                    buildPopup(
+                        Container(
+                          margin: const EdgeInsets.only(
+                              left: 10, top: 5, bottom: 5),
+                          child: Text(
+                            "Update Progress",
+                            style: TextStyle(
+                                color: toc.primaryColor,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                        [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Opacity(
+                                  opacity: Constants.opacity,
+                                  child: Text("Update Progress", style: TS.h3)),
+                            ],
+                          ),
+                          const Divider(),
+                          ...Status.values.map((e) => InkWell(
+                                onTap: () {
+                                  controller.updateStatus(e);
+                                  Get.close(2);
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(5),
+                                  child: Text(
+                                    e.name.capitalize!,
+                                    style: TextStyle(
+                                      color: e.color,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              )),
+                        ]),
+                    TextButton(
+                        onPressed: () async {
+                          var res = await showBinaryPrompt(
+                              "Are you sure you want to delete this post?");
+                          if (res) {
+                            controller.deletePost();
+                          }
+                          Get.close(1);
+                        },
+                        child: const Text(
+                          "Delete Post",
+                          style: TextStyle(color: Colors.red),
+                        )),
+                  ],
+                ),
+            ],
           ),
           const SizedBox(width: 20),
         ],

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.snackbars.dart';
+import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/atoms/atom.box.dart';
@@ -30,7 +32,7 @@ class HomeView extends StatelessWidget {
           headerSliverBuilder: (context, _) {
             return [
               WRGAppBar(
-                "You're Feed  ",
+                "Welcome",
                 additional: Text(
                   GF<ProfileState>().userModel?.value.email ?? "",
                   textScaler: const TextScaler.linear(.5),
@@ -64,13 +66,47 @@ class HomeView extends StatelessWidget {
                         ));
                 }),
                 actions: [
-                  Obx(() => GF<ProfileState>().isSignedIn.value
-                      ? IconButton(
-                          onPressed: () {
-                            Get.to(() => CreatePost());
-                          },
-                          icon: const Icon(Icons.my_library_add_outlined))
-                      : Container())
+                  buildPopup(
+                      Container(
+                          padding:
+                              EdgeInsets.only(right: Constants.cardpadding),
+                          child: Icon(
+                            Icons.add_circle_outline,
+                            color: toc.primaryColor,
+                          )),
+                      [
+                        Obx(() => GF<ProfileState>().isSignedIn.value
+                            ? TextButton(
+                                onPressed: () {
+                                  Get.close(1);
+
+                                  Get.to(() => CreatePost());
+                                },
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.post_add),
+                                    SizedBox(width: 5),
+                                    Text("Request Car Part")
+                                  ],
+                                ))
+                            : Container()),
+                        Obx(() => GF<ProfileState>().isSignedIn.value
+                            ? TextButton(
+                                onPressed: () {
+                                  Get.close(1);
+                                  // Get.to(() => CreatePost());
+                                  SBUtil.showInfoSnackBar(
+                                      "This feature is not yet available");
+                                },
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.room_service_outlined),
+                                    SizedBox(width: 5),
+                                    Text("Request Service")
+                                  ],
+                                ))
+                            : Container()),
+                      ])
                 ],
               ),
               SliverToBoxAdapter(

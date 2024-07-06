@@ -25,26 +25,38 @@ class SBUtil {
     await _showSnackBar("Success", message, icon);
   }
 
+  static Future showInfoSnackBar(String message) async {
+    // Show snackbar
+    var icon = const Icon(
+      Icons.info_outline,
+      color: Colors.blue,
+      size: 30,
+    );
+    await _showSnackBar("Info", message, icon);
+  }
+
   static _showSnackBar(String title, String msg, Widget icon) async {
     // Show snackbar
     try {
       Get.showSnackbar(GetSnackBar(
         // title: "",
-        titleText: Txt(title).h2,
+        titleText: Text(
+          title,
+          style: TS.h3,
+        ),
 
         message: msg,
-        // margin: EdgeInsets.symmetric(horizontal: 5),
         borderRadius: Constants.lightOpacity,
         icon: icon,
         duration: Constants.longAnimationSpeed,
         snackStyle: SnackStyle.GROUNDED,
         barBlur: 5,
-        messageText: Txt(
+        messageText: Text(
           msg,
-        ).h3,
+          style: TS.h4,
+        ),
         showProgressIndicator: true,
-
-        backgroundColor: toc.cardColor.withOpacity(.4),
+        backgroundColor: toc.cardColor.withOpacity(1),
       ));
     } catch (e) {}
   }
