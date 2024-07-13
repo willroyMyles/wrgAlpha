@@ -6,8 +6,6 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
-import 'package:wrg2/frontend/atoms/atom.box.dart';
-import 'package:wrg2/frontend/cars/state.cars.dart';
 import 'package:wrg2/frontend/cars/view.cars.dart';
 import 'package:wrg2/frontend/pages/messages/view.messages.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
@@ -16,7 +14,8 @@ import 'package:wrg2/frontend/pages/personal/view.personalPosts.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class ProfileView extends GetView<ProfileState> {
-  ProfileView({super.key});
+  final bool show;
+  ProfileView({super.key, this.show = true});
   RxBool showFeedback = false.obs;
 
   @override
@@ -96,33 +95,49 @@ class ProfileView extends GetView<ProfileState> {
       return Container(
         alignment: Alignment.center,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Container(
-              height: 55,
-              width: 55,
-              clipBehavior: Clip.antiAlias,
-              decoration:
-                  BoxDecoration(borderRadius: BorderRadius.circular(100)),
-              child: InkWell(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: CircleAvatar(
-                  radius: 35,
-                  child: Obx(() =>
-                      Image.network(controller.userModel!.value.userImageUrl)),
-                ),
-              )),
-          const SizedBox(height: 5),
-          Text(controller.userModel!.value.email),
-          const SizedBox(height: 15),
-          InkWell(
-              onTap: () {
-                Get.to(() => CarsView());
-              },
-              child: AtomBox<int>(
-                  label: GF<CarState>().cars.length <= 1 ? 'Car' : 'Cars',
-                  value: GF<CarState>().cars.length)),
-          const Spacer(),
+          if (show)
+            Container(
+                height: 55,
+                width: 55,
+                clipBehavior: Clip.antiAlias,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(100)),
+                child: InkWell(
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: CircleAvatar(
+                    radius: 35,
+                    child: Obx(() => Image.network(
+                        controller.userModel!.value.userImageUrl)),
+                  ),
+                )),
+          if (show) const SizedBox(height: 5),
+          if (show) Text(controller.userModel!.value.email),
+          if (show) const SizedBox(height: 15),
+          // if(show)
+
+          // InkWell(
+          //     onTap: () {
+          //       Get.to(() => CarsView());
+          //     },
+          //     child: AtomBox<int>(
+          //         label: GF<CarState>().cars.length <= 1 ? 'Car' : 'Cars',
+          //         value: GF<CarState>().cars.length)),
+          // const Spacer(),
+          ListTile(
+            onTap: () {
+              Get.to(() => CarsView());
+            },
+            title: const Text("Cars"),
+            leading: Container(
+              margin: const EdgeInsets.only(right: 15),
+              child: Icon(
+                CupertinoIcons.car_detailed,
+                color: toc.textColor,
+              ),
+            ),
+          ),
           ListTile(
             onTap: () {
               Get.to(() => MessagesView());
@@ -174,10 +189,16 @@ class ProfileView extends GetView<ProfileState> {
               ),
             ),
           ),
-          const Spacer(),
+          // const Spacer(),
+          const SizedBox(height: 40),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              TextButton(
+                  onPressed: () {
+                    Get.find<GE>().user_logout();
+                  },
+                  child: const Text("Log out")),
               Hero(
                 tag: "feedback",
                 child: TextButton(
@@ -186,11 +207,6 @@ class ProfileView extends GetView<ProfileState> {
                     },
                     child: const Text("Feedback")),
               ),
-              TextButton(
-                  onPressed: () {
-                    Get.find<GE>().user_logout();
-                  },
-                  child: const Text("Log out"))
             ],
           ),
         ]),

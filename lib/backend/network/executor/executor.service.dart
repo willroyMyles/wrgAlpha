@@ -3,7 +3,7 @@ import 'package:wrg2/backend/models/service.model.dart';
 import 'package:wrg2/backend/utils/util.formatter.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 
-mixin PostExecutor {
+mixin ServiceExecutor {
   final String _col = "services";
   final _fstore = FirebaseFirestore.instance;
 

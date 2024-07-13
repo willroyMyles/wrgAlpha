@@ -6,10 +6,52 @@ extension WidgetExt on Widget {
         alignment: Alignment.center,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          color: lightBackgroundColor,
-          // border: Border.all(width: 1, color: lightBackgroundColor.darker),
+          gradient: LinearGradient(
+            colors: [
+              lightBackgroundColor,
+              lightBackgroundColor.withOpacity(.5),
+              // lightBackgroundColor,
+              // lightBackgroundColor.withOpacity(.5),
+              // lightBackgroundColor,
+              // lightBackgroundColor.withOpacity(.5),
+              // lightBackgroundColor,
+              // lightBackgroundColor.withOpacity(.5),
+              // lightBackgroundColor,
+              // lightBackgroundColor.withOpacity(.5),
+              // lightBackgroundColor,
+              // lightBackgroundColor.withOpacity(.5),
+              // lightBackgroundColor,
+              // lightBackgroundColor.withOpacity(.5),
+              // lightBackgroundColor,
+              // lightBackgroundColor.withOpacity(.5),
+              // lightBackgroundColor,
+              // lightBackgroundColor.withOpacity(.5),
+              // lightBackgroundColor,
+              // lightBackgroundColor.withOpacity(.5),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(5),
         ),
         child: this,
       );
+}
+
+var decoration = BoxDecoration(
+  gradient: LinearGradient(
+    colors: [
+      lightBackgroundColor.withOpacity(.5),
+      lightBackgroundColor.withOpacity(_getFraction()),
+      lightBackgroundColor.withOpacity(.5),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.topRight,
+  ).scale(2.5),
+  borderRadius: BorderRadius.circular(5),
+  border: Border.all(color: lightBackgroundColor.withOpacity(.5), width: 8),
+);
+
+double _getFraction() {
+  return .1;
 }

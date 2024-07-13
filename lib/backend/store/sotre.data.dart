@@ -11,6 +11,11 @@ List<String> getCategories() {
   return List<String>.from(list);
 }
 
+List<String> getServices() {
+  var list = processServices();
+  return List<String>.from(list);
+}
+
 List<String> getMake() {
   var list = USCars.map((e) => e.first).toList();
   return List<String>.from(list);
@@ -34,6 +39,38 @@ List<String> getModels(int index) {
   } catch (e) {
     return [];
   }
+}
+
+List<dynamic> processServices() {
+  var carServices = '''
+Oil and Filter Change
+Brake Service
+Tire Services
+Wheel Alignment
+Battery Services
+Fluid Checks and Replacements
+Engine Services
+Transmission Services
+Exhaust System Services
+ Heating and Air Conditioning Services
+ Suspension and Steering Services
+ Inspection Services
+ Diagnostics and Troubleshooting
+ Wiper Blades Replacement
+ Headlights and Taillights Replacement
+ Detailing Services
+ Glass Repair and Replacement
+ Bodywork and Paint Services
+ Accessory Installation
+ Roadside Assistance Services
+ Other
+''';
+  var list = const CsvToListConverter(
+    fieldDelimiter: "\n",
+    eol: "\n",
+  ).convert(carServices);
+  var l = list.map((e) => e.first.trim()).toList();
+  return l;
 }
 
 List<List<dynamic>> processList() {

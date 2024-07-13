@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/frontend/atoms/atom.customListVIew.dart';
 import 'package:wrg2/frontend/pages/services/state.service.dart';
+import 'package:wrg2/frontend/pages/services/tile.service.dart';
 
 class ServiceList extends StatelessWidget {
   ServiceList({super.key});
@@ -22,10 +23,11 @@ class ServiceList extends StatelessWidget {
             )
           ],
         ),
+        items: controller.posts,
         loadMore: controller.loadMore,
         reset: controller.setup,
         builder: (p0) {
-          return Container();
+          return ServiceTile(model: p0);
         },
         con: controller.scroll);
   }

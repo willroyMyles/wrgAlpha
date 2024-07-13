@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
-import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/atoms/atom.box.dart';
+import 'package:wrg2/frontend/home/view.navbar.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/offers/view.offers.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
@@ -16,6 +16,7 @@ import 'package:wrg2/frontend/pages/post/view.createPost.dart';
 import 'package:wrg2/frontend/pages/post/view.postList.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 import 'package:wrg2/frontend/pages/profile/view.profile.dart';
+import 'package:wrg2/frontend/pages/services/create/view.createService.dart';
 import 'package:wrg2/frontend/pages/services/view.service.dart';
 import 'package:wrg2/frontend/pages/watching/view.watching.dart';
 
@@ -83,16 +84,42 @@ class HomeView extends StatelessWidget {
         child: ProfileView(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: SizedBox(
-        height: 63,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _buildIcon(CupertinoIcons.wrench, "Parts", 0),
-            _buildIcon(CupertinoIcons.circle_grid_hex, "Services", 1),
-          ],
-        ),
-      ),
+      floatingActionButton: Obx(() => WrgNavBar(
+            selectedIndex: currentIndex.value,
+            items: [
+              WrgNavBarItem(
+                  title: "Parts",
+                  icon: CupertinoIcons.wrench,
+                  onTap: () {
+                    currentIndex.value = 0;
+                    pg.jumpToPage(0);
+                  }),
+              WrgNavBarItem(
+                  title: "Services",
+                  icon: CupertinoIcons.circle_grid_hex,
+                  onTap: () {
+                    currentIndex.value = 1;
+                    pg.jumpToPage(1);
+                  }),
+              WrgNavBarItem(
+                  title: "Profile",
+                  icon: CupertinoIcons.profile_circled,
+                  onTap: () {
+                    currentIndex.value = 2;
+                    pg.jumpToPage(2);
+                  }),
+            ],
+          )),
+      // floatingActionButton: SizedBox(
+      //   height: 63,
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       _buildIcon(CupertinoIcons.wrench, "Parts", 0),
+      //       _buildIcon(CupertinoIcons.circle_grid_hex, "Services", 1),
+      //     ],
+      //   ),
+      // ),
       body: NestedScrollView(
           controller: postState.scroll,
           headerSliverBuilder: (context, _) {
@@ -158,9 +185,8 @@ class HomeView extends StatelessWidget {
                               TextButton(
                                   onPressed: () {
                                     Get.close(1);
-                                    // Get.to(() => CreatePost());
-                                    SBUtil.showInfoSnackBar(
-                                        "This feature is not yet available");
+
+                                    Get.to(CreateService());
                                   },
                                   child: const Row(
                                     children: [
@@ -257,6 +283,7 @@ class HomeView extends StatelessWidget {
                     hasMorePosts: !postState.noMorePosts.value,
                   )),
               ServiceList(),
+              ProfileView(show: false)
             ],
           )),
     );

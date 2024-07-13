@@ -16,8 +16,8 @@ class ServiceState extends GetxController with ScrollMixin {
   setup() async {
     try {
       posts.clear();
-      var ans = await Get.find<GE>().posts_getPosts();
-      // posts.addAll(ans);
+      var ans = await Get.find<GE>().service_getPosts();
+      posts.addAll(ans);
 
       lastLength.value = posts.length;
 

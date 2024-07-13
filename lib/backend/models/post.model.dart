@@ -24,6 +24,7 @@ class PostModel {
   //enum
   Status status = Status.OPEN;
   List<String> offers = [];
+  bool isService;
   PostModel({
     this.title = '',
     this.id = '',
@@ -41,12 +42,13 @@ class PostModel {
     this.userPhotoUrl = '',
     this.status = Status.OPEN,
     this.offers = const [],
+    this.isService = false,
   }) {
     // createdAt = DateTime.now();
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'title': title,
       'id': id,
       'content': content,
@@ -63,6 +65,7 @@ class PostModel {
       'userPhotoUrl': userPhotoUrl,
       'status': status.index,
       'offers': offers,
+      'isService': isService,
     };
   }
 
@@ -70,24 +73,25 @@ class PostModel {
 
   factory PostModel.fromMap(Map<String, dynamic> map) {
     return PostModel(
-      title: (map['title'] ?? '') as String,
-      id: (map['id'] ?? '') as String,
-      content: (map['content'] ?? '') as String,
-      category: (map['category'] ?? '') as String,
-      make: (map['make'] ?? '') as String,
-      model: (map['model'] ?? '') as String,
-      year: (map['year'] ?? 0) as int,
-      views: (map['views'] ?? 0) as int,
-      watching: (map['watching'] ?? 0) as int,
-      comments: (map['comments'] ?? 0) as int,
+      title: map['title'] ?? '',
+      id: map['id'] ?? '',
+      content: map['content'] ?? '',
+      category: map['category'] ?? '',
+      make: map['make'] ?? '',
+      model: map['model'] ?? '',
+      year: map['year']?.toInt() ?? 0,
+      views: map['views']?.toInt() ?? 0,
+      watching: map['watching']?.toInt() ?? 0,
+      comments: map['comments']?.toInt() ?? 0,
       createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0) as int)
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
           : null,
-      userEmail: (map['userEmail'] ?? '') as String,
-      userName: (map['userName'] ?? '') as String,
-      userPhotoUrl: (map['userPhotoUrl'] ?? '') as String,
-      status: Status.values[(map['status'] ?? 0) as int],
-      offers: List<String>.from((map['offers'] ?? const <String>[])),
+      userEmail: map['userEmail'] ?? '',
+      userName: map['userName'] ?? '',
+      userPhotoUrl: map['userPhotoUrl'] ?? '',
+      status: Status.values[map['status'] ?? 0],
+      offers: List<String>.from(map['offers'] ?? const []),
+      isService: map['isService'] ?? false,
     );
   }
 
