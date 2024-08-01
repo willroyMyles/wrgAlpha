@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/frontend/atoms/atom.customListVIew.dart';
-import 'package:wrg2/frontend/pages/post/state.posts.dart';
+import 'package:wrg2/frontend/pages/post/state.service.dart';
 import 'package:wrg2/frontend/pages/post/view.postItem.dart';
 
-class PostList extends StatelessWidget {
+class ServiceList extends StatelessWidget {
   final bool hasMorePosts;
-  const PostList({super.key, required this.hasMorePosts});
+  const ServiceList({super.key, required this.hasMorePosts});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<PostState>(
+    return GetBuilder<ServiceState>(
       initState: (_) {},
       builder: (_) {
         return CustomListView(
@@ -21,7 +21,7 @@ class PostList extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    "Parts Wanted",
+                    "Service Wanted",
                     style: TextStyle(fontSize: 20),
                   ),
                 )

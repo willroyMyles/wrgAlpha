@@ -21,7 +21,8 @@ mixin PostExecutor {
     }
   }
 
-  Future<List<PostModel>> posts_getPosts({dynamic id}) async {
+  Future<List<PostModel>> posts_getPosts(
+      {dynamic id, isService = false}) async {
     try {
       QuerySnapshot<Map<String, dynamic>> list;
       if (id == null) {
@@ -29,12 +30,14 @@ mixin PostExecutor {
             .collection(_col)
             .limit(2)
             .orderBy("createdAt", descending: true)
+            .where("isService", isEqualTo: isService)
             .get();
       } else {
         list = await _fstore
             .collection(_col)
             .limit(2)
             .orderBy("createdAt", descending: true)
+            .where("isService", isEqualTo: isService)
             .startAfter([id]).get();
       }
 

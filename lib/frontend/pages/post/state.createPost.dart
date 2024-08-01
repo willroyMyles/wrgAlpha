@@ -6,11 +6,13 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/store/sotre.data.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
+import 'package:wrg2/frontend/pages/post/state.service.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class CreatePostState extends GetxController {
   RxMap<String, String> model = RxMap({});
   Map<String, TextEditingController> crtls = {};
+  RxBool isService = false.obs;
 
   @override
   void onInit() {
@@ -18,6 +20,11 @@ class CreatePostState extends GetxController {
     for (var element in ['make', 'model', 'year', 'category', 'sub']) {
       crtls.putIfAbsent(element, () => TextEditingController());
       model[element] = "";
+    }
+
+    var arg = Get.arguments['isService'];
+    if (arg != null) {
+      isService.value = arg;
     }
   }
 
@@ -41,7 +48,7 @@ class CreatePostState extends GetxController {
   }
 
   List<String> getCategoryList() {
-    var category = getCategories();
+    var category = isService.value ? getServices() : getCategories();
     return category;
   }
 
@@ -107,11 +114,16 @@ class CreatePostState extends GetxController {
     pm.userName = user.username;
     pm.userPhotoUrl = user.userImageUrl;
     pm.createdAt = DateTime.now();
+    pm.isService = isService.value;
 
     var res = await Get.find<GE>().posts_createPost(pm);
     if (res) {
       // show success
-      Get.find<PostState>().addPost(pm);
+      if (isService.value) {
+        Get.find<ServiceState>().addPost(pm);
+      } else {
+        Get.find<PostState>().addPost(pm);
+      }
       Get.back();
     } else {
       //show error

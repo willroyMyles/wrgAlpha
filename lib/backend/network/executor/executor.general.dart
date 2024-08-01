@@ -6,7 +6,6 @@ import 'package:wrg2/backend/network/executor/executor.comments.dart';
 import 'package:wrg2/backend/network/executor/executor.messages.dart';
 import 'package:wrg2/backend/network/executor/executor.offer.dart';
 import 'package:wrg2/backend/network/executor/executor.post.dart';
-import 'package:wrg2/backend/network/executor/executor.service.dart';
 import 'package:wrg2/backend/network/executor/executor.user.dart';
 
 class GE extends GetxController
@@ -14,7 +13,6 @@ class GE extends GetxController
         AuthExecutor,
         UserExecutor,
         PostExecutor,
-        ServiceExecutor,
         CommentsExecutor,
         offersExecutor,
         MessagesExecutor,

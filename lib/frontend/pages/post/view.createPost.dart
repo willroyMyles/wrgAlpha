@@ -24,58 +24,63 @@ class CreatePost extends StatelessWidget {
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
-              WRGAppBar(
-                "Seek your parts",
-                additional: const Text(
-                  "post what parts you're looking for",
-                  textScaler: TextScaler.linear(.5),
-                ),
-                actions: [
-                  IconButton(
-                      onPressed: () async {
-                        await Get.bottomSheet(
-                            DraggableScrollableSheet(builder: (context, con) {
-                          return Container(
-                            padding: const EdgeInsets.all(10),
-                            color: Colors.white,
-                            child: ListView(
-                              controller: con,
-                              children: [
-                                Text(
-                                  "Your Cars",
-                                  style: TS.h2,
+              Obx(() => WRGAppBar(
+                    controller.isService.value
+                        ? "Request a service"
+                        : "Seek your parts",
+                    additional: Text(
+                      controller.isService.value
+                          ? "Reequest which service you're looking for"
+                          : "post what parts you're looking for",
+                      textScaler: const TextScaler.linear(.5),
+                    ),
+                    actions: [
+                      IconButton(
+                          onPressed: () async {
+                            await Get.bottomSheet(DraggableScrollableSheet(
+                                builder: (context, con) {
+                              return Container(
+                                padding: const EdgeInsets.all(10),
+                                color: Colors.white,
+                                child: ListView(
+                                  controller: con,
+                                  children: [
+                                    Text(
+                                      "Your Cars",
+                                      style: TS.h2,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    if (GF<CarState>().cars.isEmpty)
+                                      Expanded(
+                                        child: Container(
+                                            alignment: Alignment.center,
+                                            child: const Text("No cars found")),
+                                      ),
+                                    ...GF<CarState>().cars.map((e) => ListTile(
+                                          title: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: Row(
+                                                children: [
+                                                  Text("${e.year} "),
+                                                  Text("${e.make} "),
+                                                  Text(e.model),
+                                                ],
+                                              )),
+                                          onTap: () {
+                                            controller.addCarModel(e);
+                                            Get.back(result: e);
+                                          },
+                                        ))
+                                  ],
                                 ),
-                                const SizedBox(height: 10),
-                                if (GF<CarState>().cars.isEmpty)
-                                  Expanded(
-                                    child: Container(
-                                        alignment: Alignment.center,
-                                        child: const Text("No cars found")),
-                                  ),
-                                ...GF<CarState>().cars.map((e) => ListTile(
-                                      title: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Row(
-                                            children: [
-                                              Text("${e.year} "),
-                                              Text("${e.make} "),
-                                              Text(e.model),
-                                            ],
-                                          )),
-                                      onTap: () {
-                                        controller.addCarModel(e);
-                                        Get.back(result: e);
-                                      },
-                                    ))
-                              ],
-                            ),
-                          );
-                        }));
-                      },
-                      icon: const Icon(CupertinoIcons.car_detailed))
-                ],
-              )
+                              );
+                            }));
+                          },
+                          icon: const Icon(CupertinoIcons.car_detailed))
+                    ],
+                  ))
             ];
           },
           body: GestureDetector(

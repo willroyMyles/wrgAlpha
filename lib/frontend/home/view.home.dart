@@ -12,17 +12,18 @@ import 'package:wrg2/frontend/home/view.navbar.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/offers/view.offers.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
+import 'package:wrg2/frontend/pages/post/state.service.dart';
 import 'package:wrg2/frontend/pages/post/view.createPost.dart';
 import 'package:wrg2/frontend/pages/post/view.postList.dart';
+import 'package:wrg2/frontend/pages/post/view.serviceList.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 import 'package:wrg2/frontend/pages/profile/view.profile.dart';
-import 'package:wrg2/frontend/pages/services/create/view.createService.dart';
-import 'package:wrg2/frontend/pages/services/view.service.dart';
 import 'package:wrg2/frontend/pages/watching/view.watching.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});
   final postState = Get.put(PostState());
+  final serviceState = Get.put(ServiceState());
   PageController pg = PageController();
 
   RxInt currentIndex = 0.obs;
@@ -186,7 +187,9 @@ class HomeView extends StatelessWidget {
                                   onPressed: () {
                                     Get.close(1);
 
-                                    Get.to(CreateService());
+                                    Get.to(() => CreatePost(), arguments: {
+                                      "isService": true,
+                                    });
                                   },
                                   child: const Row(
                                     children: [
@@ -282,7 +285,9 @@ class HomeView extends StatelessWidget {
               Obx(() => PostList(
                     hasMorePosts: !postState.noMorePosts.value,
                   )),
-              ServiceList(),
+              ServiceList(
+                hasMorePosts: !serviceState.noMorePosts.value,
+              ),
               ProfileView(show: false)
             ],
           )),
