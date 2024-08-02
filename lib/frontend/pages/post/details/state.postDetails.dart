@@ -97,11 +97,13 @@ class PostDetailsState extends GetxController {
     }
   }
 
-  sendOffers(OfferModel offerModel) async {
+  sendOffers([OfferModel? offerModel]) async {
     if (offerString.value.isEmpty) {
       //throw error
       return;
     }
+
+    offerModel ??= OfferModel();
 
     offerModel.postId = model.id;
     offerModel.postTitle = model.title;

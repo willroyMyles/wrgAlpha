@@ -10,6 +10,14 @@ class OfferState extends GetxController with StateMixin {
   RxMap<int, Map<String, List<OfferModel>>> offerMap2 = RxMap({});
   RxInt currentIndex = 0.obs;
 
+  int getIncomingOffersLength() {
+    return models
+        .where((e) =>
+            e.recieverId == GF<ProfileState>().userModel!.value.email &&
+            e.status != OfferStatus.Declined)
+        .length;
+  }
+
   Future setup() async {
     try {
       models.clear();

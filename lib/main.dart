@@ -10,6 +10,7 @@ import 'package:wrg2/frontend/cars/state.cars.dart';
 import 'package:wrg2/frontend/home/view.home.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
+import 'package:wrg2/standalone/state.lifecycle.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,7 @@ void main() async {
   Get.put(GE());
   Get.put(ProfileState());
   Get.put(CarState());
+  Get.put(LifeCycleState());
 
   runApp(const MyApp());
 }

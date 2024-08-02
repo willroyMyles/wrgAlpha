@@ -15,42 +15,32 @@ class SBUtil {
     await _showSnackBar("Error", message, icon, color: Colors.red);
   }
 
-  static Future showSuccessSnackBar(String message) async {
+  static Future showSuccessSnackBar(String message, {Widget? extra}) async {
     // Show snackbar
     var icon = const Icon(
       Icons.check,
       // color: Colors.green,
       size: 30,
     );
-    await _showSnackBar("Success", message, icon, color: Colors.green);
+    await _showSnackBar("Success", message, icon,
+        color: Colors.green, extra: extra);
   }
 
-  static Future showInfoSnackBar(String message) async {
+  static Future showInfoSnackBar(String message, {Widget? extra}) async {
     // Show snackbar
     var icon = const Icon(
       Icons.info_outline,
       // color: Colors.blue,
       size: 30,
     );
-    await _showSnackBar("Info", message, icon, color: Colors.blue);
+    await _showSnackBar("Info", message, icon,
+        color: Colors.blue, extra: extra);
   }
 
   static _showSnackBar(String title, String msg, Widget icon,
-      {Color? color}) async {
+      {Color? color, Widget? extra}) async {
     // Show snackbar
     try {
-      // ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
-      //   content: Container(
-      //       child: Row(
-      //     children: [
-      //       icon,
-      //       const SizedBox(width: 5),
-      //       Expanded(child: Text(msg)),
-      //     ],
-      //   )),
-      //   backgroundColor: color?.withOpacity(.1),
-      //   clipBehavior: Clip.none,
-      // ));
       Get.showSnackbar(GetSnackBar(
         // title: "",
         titleText: Text(
@@ -67,9 +57,19 @@ class SBUtil {
         shouldIconPulse: false,
         padding: const EdgeInsets.only(top: 5),
         margin: EdgeInsets.zero,
-        messageText: Text(
-          msg,
-          style: TS.h4.white.bold,
+        messageText: Column(
+          children: [
+            Text(
+              msg,
+              style: TS.h4.white.bold,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (extra != null) extra,
+              ],
+            )
+          ],
         ),
         showProgressIndicator: false,
         borderWidth: 2,

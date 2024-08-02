@@ -173,7 +173,7 @@ class ProfileView extends GetView<ProfileState> {
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
-                  GF<OfferState>().models.length.toString() ?? "",
+                  GFI<OfferState>()?.getIncomingOffersLength().toString() ?? "",
                   textScaler: const TextScaler.linear(1.3),
                   style: TextStyle(
                       color: toc.textColor, fontWeight: FontWeight.w600),

@@ -14,6 +14,7 @@ import 'package:wrg2/backend/utils/util.promptHelper.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/stom.futureBuilder.dart';
+import 'package:wrg2/frontend/pages/post/details/atom.offerBottomComp.dart';
 import 'package:wrg2/frontend/pages/post/details/state.postDetails.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
@@ -28,7 +29,8 @@ class PostDetails extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: toc.scaffoldBackgroundColor.lighterF(20),
         centerTitle: true,
-        title: const Text("Post Details"),
+        // title: const Text("Post Details"),
+        leadingWidth: 70,
         leading: InkWell(
           onTap: () {
             Get.back();
@@ -58,50 +60,102 @@ class PostDetails extends StatelessWidget {
                           false)
                       ? const Text("Remove Bookmark")
                       : const Text("Add Bookmark"))),
-              TextButton(
-                  onPressed: () async {
-                    Get.close(1);
-                    await Get.bottomSheet(BottomSheet(
-                      onClosing: () {},
-                      builder: (context) {
-                        return Container(
-                          color: toc.scaffoldBackgroundColor,
-                          child: SafeArea(
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: Constants.br,
-                                    color: toc.scaffoldBackgroundColor),
-                                // alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: Constants.cardpadding,
-                                    vertical: Constants.cardVerticalMargin),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                        child: buildInput("Comment", (val) {
-                                      controller.commentString.value = val;
-                                    })),
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 15),
-                                      child: IconButton(
-                                          onPressed: () {
-                                            controller.sendComment();
-                                          },
-                                          icon: const Icon(
-                                            CupertinoIcons
-                                                .arrow_up_right_circle,
-                                            size: 25,
-                                          )),
-                                    )
-                                  ],
-                                )),
-                          ),
-                        );
-                      },
-                    ));
-                  },
-                  child: const Text("Add Comment")),
+              // TextButton(
+              //     onPressed: () async {
+              //       Get.close(1);
+              //       await Get.bottomSheet(BottomSheet(
+              //         onClosing: () {},
+              //         builder: (context) {
+              //           return Container(
+              //             color: toc.scaffoldBackgroundColor,
+              //             child: SafeArea(
+              //               child: Container(
+              //                   decoration: BoxDecoration(
+              //                       borderRadius: Constants.br,
+              //                       color: toc.scaffoldBackgroundColor),
+              //                   // alignment: Alignment.center,
+              //                   padding: EdgeInsets.symmetric(
+              //                       horizontal: Constants.cardpadding,
+              //                       vertical: Constants.cardVerticalMargin),
+              //                   child: Row(
+              //                     crossAxisAlignment: CrossAxisAlignment.center,
+              //                     children: [
+              //                       Expanded(
+              //                           child: buildInput("Comment", (val) {
+              //                         controller.commentString.value = val;
+              //                       })),
+              //                       Container(
+              //                         margin: const EdgeInsets.only(top: 15),
+              //                         child: IconButton(
+              //                             onPressed: () {
+              //                               controller.sendComment();
+              //                             },
+              //                             icon: const Icon(
+              //                               CupertinoIcons
+              //                                   .arrow_up_right_circle,
+              //                               size: 25,
+              //                             )),
+              //                       )
+              //                     ],
+              //                   )),
+              //             ),
+              //           );
+              //         },
+              //       ));
+              //     },
+              //     child: const Text("Add Comment")),
+              if (!controller.model.amIOwner() &&
+                  GF<ProfileState>().isSignedIn.value)
+                TextButton(
+                    onPressed: () async {
+                      Get.close(1);
+                      await Get.bottomSheet(BottomSheet(
+                        onClosing: () {},
+                        builder: (context) {
+                          return OfferBottomComp();
+                          return Container(
+                            color: toc.scaffoldBackgroundColor,
+                            child: SafeArea(
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: Constants.br,
+                                      color: toc.scaffoldBackgroundColor),
+                                  // alignment: Alignment.center,
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: Constants.cardpadding,
+                                      vertical: Constants.cardVerticalMargin),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                          child: buildInput("Offer", (val) {
+                                        controller.offerString.value = val;
+                                      })),
+                                      Container(
+                                        margin: const EdgeInsets.only(top: 15),
+                                        child: IconButton(
+                                            onPressed: () {
+                                              controller.sendOffers();
+                                            },
+                                            icon: const Icon(
+                                              CupertinoIcons
+                                                  .arrow_up_right_circle,
+                                              size: 25,
+                                            )),
+                                      )
+                                    ],
+                                  )),
+                            ),
+                          );
+                        },
+                      ));
+                    },
+                    child: const Row(
+                      children: [
+                        Text("Make Offer"),
+                      ],
+                    )),
               if (controller.model.amIOwner())
                 Column(
                   mainAxisSize: MainAxisSize.min,
@@ -181,13 +235,13 @@ class PostDetails extends StatelessWidget {
                   }
                 },
                 child: const Text("View Offers")),
-            TextButton(
-                onPressed: () {
-                  if (controller.bottomView.value != 1) {
-                    controller.updateBottomView(1);
-                  }
-                },
-                child: const Text("View Comments")),
+            // TextButton(
+            //     onPressed: () {
+            //       if (controller.bottomView.value != 1) {
+            //         controller.updateBottomView(1);
+            //       }
+            //     },
+            //     child: const Text("View Comments")),
           ],
         )
       ],

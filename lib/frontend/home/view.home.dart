@@ -165,9 +165,9 @@ class HomeView extends StatelessWidget {
                           Container(
                               padding:
                                   EdgeInsets.only(right: Constants.cardpadding),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.add_circle_outline,
-                                color: toc.primaryColor,
+                                // color: toc.primaryColor,
                               )),
                           [
                               TextButton(

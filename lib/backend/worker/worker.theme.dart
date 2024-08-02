@@ -12,52 +12,41 @@ extension TextColor on ThemeData {
       CupertinoTheme.of(Get.context!).textTheme.navLargeTitleTextStyle;
 }
 
-Color primaryOrg = const Color.fromARGB(255, 129, 87, 31);
-MaterialColor primarySwatch = generateMaterialColor(color: primaryOrg);
-
-MaterialColor primaryGreen = generateMaterialColor(color: primaryOrg);
-
-Color darkBackgroundColor = const Color.fromRGBO(30, 33, 30, 1);
-Color darkForegrounColor = const Color.fromRGBO(60, 63, 60, 1);
-
-// Color lightBackgroundColor = Color.fromRGBO(247, 248, 251, 1);
-Color lightBackgroundColor = const Color.fromARGB(255, 237, 233, 226);
-Color lightForegrounColor = Colors.white;
-
 WidgetStateProperty<T> mst<T>(T value) {
   return WidgetStateProperty.all(value);
 }
 
 class ThemeWorker {
-  final ThemeData _theme = ThemeData(
-    primaryColor: primaryOrg, // Change to your desired primary color
-    scaffoldBackgroundColor: Colors.white,
-    fontFamily: 'Roboto', // Change to your desired font family
-    appBarTheme: AppBarTheme(
-      color: primaryOrg, // Change to your desired app bar color
-      elevation: 0, // Change elevation as needed
-      iconTheme: const IconThemeData(
-        color: Colors.white, // Change to your desired app bar icon color
+  ThemeWorker() {
+    _theme = ThemeData(
+      primaryColor: primaryOrg, // Change to your desired primary color
+      scaffoldBackgroundColor: Colors.white,
+      fontFamily: 'Roboto', // Change to your desired font family
+      appBarTheme: AppBarTheme(
+        color: primaryOrg, // Change to your desired app bar color
+        elevation: 0, // Change elevation as needed
+        iconTheme: const IconThemeData(
+          color: Colors.white, // Change to your desired app bar icon color
+        ),
       ),
-    ),
-    colorScheme:
-        ColorScheme.fromSeed(seedColor: const Color.fromRGBO(239, 236, 233, 1)),
-    // colorScheme: ColorScheme(
-    //     background: lightBackgroundColor,
-    //     brightness: Brightness.light,
-    //     error: Colors.red,
-    //     onBackground: lightForegrounColor,
-    //     onError: Colors.black,
-    //     surface: lightBackgroundColor,
-    //     onSurface: lightForegrounColor,
-    //     onPrimary: lightForegrounColor,
-    //     primary: primaryOrg,
-    //     onSecondary: Colors.black,
-    //     secondary: lightBackgroundColor)
-    // Add more theme properties as needed
-  );
+      colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromRGBO(239, 236, 233, 1)),
+    );
+  }
+
+  Color primaryOrg = const Color.fromARGB(255, 234, 192, 107);
+// MaterialColor primarySwatch = generateMaterialColor(color: primaryOrg);
+
+  Color darkBackgroundColor = const Color.fromRGBO(30, 33, 30, 1);
+  Color darkForegrounColor = const Color.fromRGBO(60, 63, 60, 1);
+
+  Color lightBackgroundColor = const Color.fromARGB(255, 255, 255, 255);
+  Color lightForegrounColor = Colors.white;
+
+  late ThemeData _theme;
 
   ThemeData getDarkTheme() {
+    primaryOrg = const Color.fromARGB(255, 0, 81, 255);
     var brightness = Brightness.dark;
     var bg = darkBackgroundColor;
     var fg = darkForegrounColor;
@@ -67,6 +56,7 @@ class ThemeWorker {
   }
 
   ThemeData getLightTheme() {
+    primaryOrg = const Color.fromARGB(255, 49, 124, 78);
     var brightness = Brightness.light;
     var bg = lightBackgroundColor;
     var fg = lightForegrounColor;
