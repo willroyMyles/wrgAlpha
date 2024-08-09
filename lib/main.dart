@@ -2,7 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movements/support/widget.dart';
+import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
+import 'package:wrg2/backend/store/store.gm.dart';
+import 'package:wrg2/backend/store/store.storage.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/firebase_options.dart';
@@ -18,6 +21,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  Get.put(StorageService());
+  await GF<StorageService>().init();
+  Get.put(GlobalMap());
   authWorker.init();
   Get.lazyPut(() => OfferState(), fenix: true);
   Get.put(GE());
