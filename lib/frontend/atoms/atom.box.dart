@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
-import 'package:wrg2/backend/worker/worker.theme.dart';
+import 'package:wrg2/backend/utils/util.card.dart';
 
 class AtomBox<T extends dynamic> extends StatelessWidget {
   final T? value;
@@ -10,15 +9,8 @@ class AtomBox<T extends dynamic> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // height: 50,
+    return CardWidgetBG(
       constraints: const BoxConstraints(minWidth: 90, maxWidth: 95),
-      padding: EdgeInsets.all(Constants.cardpadding),
-      decoration: BoxDecoration(
-        color: toc.scaffoldBackgroundColor.darkerF(10),
-        borderRadius: Constants.br * 3,
-      ),
-      alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

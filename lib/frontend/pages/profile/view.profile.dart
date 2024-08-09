@@ -6,12 +6,14 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
+import 'package:wrg2/frontend/atoms/atom.box.dart';
 import 'package:wrg2/frontend/cars/view.cars.dart';
 import 'package:wrg2/frontend/pages/messages/view.messages.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/offers/view.offers.dart';
 import 'package:wrg2/frontend/pages/personal/view.personalPosts.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
+import 'package:wrg2/frontend/pages/watching/view.watching.dart';
 
 class ProfileView extends GetView<ProfileState> {
   final bool show;
@@ -125,6 +127,37 @@ class ProfileView extends GetView<ProfileState> {
           //         label: GF<CarState>().cars.length <= 1 ? 'Car' : 'Cars',
           //         value: GF<CarState>().cars.length)),
           // const Spacer(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                onTap: () {
+                  Get.to(() => WatchingView(), arguments: {
+                    "list": GFI<ProfileState>()?.userModel?.value.watching
+                  });
+                },
+                child: AtomBox(
+                  value:
+                      GFI<ProfileState>()?.userModel?.value.watching.length ??
+                          0,
+                  label: "Bookmarks",
+                ),
+              ),
+              GetBuilder<OfferState>(
+                builder: (__) {
+                  return InkWell(
+                    onTap: () {
+                      Get.to(() => const OffersView());
+                    },
+                    child: AtomBox(
+                      value: __.getIncomingOffersLength(),
+                      label: "Offers",
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
           ListTile(
             onTap: () {
               Get.to(() => CarsView());
@@ -185,6 +218,37 @@ class ProfileView extends GetView<ProfileState> {
               margin: const EdgeInsets.only(right: 15),
               child: Icon(
                 Icons.inbox,
+                color: toc.textColor,
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text("Bookmarks"),
+            trailing: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: toc.cardColor,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  GFI<ProfileState>()
+                          ?.userModel
+                          ?.value
+                          .watching
+                          .length
+                          .toString() ??
+                      "",
+                  textScaler: const TextScaler.linear(1.3),
+                  style: TextStyle(
+                      color: toc.textColor, fontWeight: FontWeight.w600),
+                )),
+            onTap: () {
+              Get.to(() => const OffersView());
+            },
+            leading: Container(
+              margin: const EdgeInsets.only(right: 15),
+              child: Icon(
+                Icons.bookmark,
                 color: toc.textColor,
               ),
             ),

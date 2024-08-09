@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.colorGenerator.dart';
 
@@ -79,7 +80,8 @@ class ThemeWorker {
         endIndent: 10,
       ),
       brightness: brightness,
-      scaffoldBackgroundColor: lightBackgroundColor,
+      primaryColor: primaryOrg,
+      scaffoldBackgroundColor: lightBackgroundColor.darkerF(20),
       cardColor: fg,
       canvasColor: bg,
       bottomNavigationBarTheme: th.bottomNavigationBarTheme.copyWith(

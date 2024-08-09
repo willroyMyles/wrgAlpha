@@ -1,12 +1,20 @@
 import 'package:get/get.dart';
-import 'package:wrg2/backend/models/post.model.dart';
+import 'package:wrg2/backend/models/model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 
-class PostState extends GetxController with ScrollMixin {
-  RxList<PostModel> posts = RxList([]);
+abstract class ListState<T extends Model> extends GetxController
+    with ScrollMixin {
+  RxList<T> list = RxList([]);
   RxInt lastLength = 0.obs;
   RxBool noMorePosts = false.obs;
-  final limit = 20;
+
+  Future<List<T>> getModel() async {
+    return [];
+  }
+
+  Future<List<T>> getMoreModel() async {
+    return [];
+  }
 
   @override
   void onInit() {
@@ -16,20 +24,19 @@ class PostState extends GetxController with ScrollMixin {
 
   setup() async {
     try {
-      posts.clear();
+      list.clear();
       noMorePosts.value = false;
-      var ans = await Get.find<GE>().posts_getPosts(limit: limit);
-      posts.addAll(ans);
-      if (ans.length < limit) noMorePosts.value = true;
-      lastLength.value = posts.length;
+      var ans = await getModel();
+      list.addAll(ans);
+      lastLength.value = list.length;
       refresh();
     } catch (e) {
       print(e);
     }
   }
 
-  addPost(PostModel model) {
-    posts.insert(0, model);
+  addPost(T model) {
+    list.insert(0, model);
     refresh();
   }
 
@@ -37,14 +44,13 @@ class PostState extends GetxController with ScrollMixin {
     try {
       if (noMorePosts.value) return;
       var ans = await Get.find<GE>().posts_getPosts(
-          id: posts.lastOrNull?.createdAt?.millisecondsSinceEpoch,
-          limit: limit);
-      posts.addAll(ans);
+          id: list.lastOrNull?.createdAt?.millisecondsSinceEpoch,
+          isService: true);
+      list.addAll(ans as List<T>);
 
-      noMorePosts.value = lastLength.value == posts.length;
-      if (ans.length < limit) noMorePosts.value = true;
+      noMorePosts.value = lastLength.value == list.length;
 
-      lastLength.value = posts.length;
+      lastLength.value = list.length;
       // posts.refresh();
       refresh();
     } catch (e) {

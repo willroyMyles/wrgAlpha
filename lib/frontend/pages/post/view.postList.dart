@@ -13,6 +13,14 @@ class PostList extends StatelessWidget {
     return GetBuilder<PostState>(
       initState: (_) {},
       builder: (_) {
+        // return FireList(
+        //     collection: "posts",
+        //     orderBy: "createdAt",
+        //     pageSize: 5,
+        //     itemBuilder: (context, item) {
+        //       var mod = PostModel.fromMap(item);
+        //       return PostItem(model: mod);
+        //     });
         return CustomListView(
             loadMore: _.loadMore,
             reset: _.setup,
@@ -35,7 +43,9 @@ class PostList extends StatelessWidget {
                 children: [
                   Hero(
                     tag: model.id,
-                    child: Material(child: PostItem(model: model)),
+                    child: Material(
+                        color: Colors.transparent,
+                        child: PostItem(model: model)),
                   ),
                   if (!hasMorePosts && index == _.posts.length - 1)
                     const SizedBox(

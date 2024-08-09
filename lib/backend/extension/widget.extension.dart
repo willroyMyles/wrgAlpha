@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
+import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 
 extension WidgetExt on Widget {
@@ -7,16 +8,8 @@ extension WidgetExt on Widget {
         alignment: Alignment.center,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              toc.colorScheme.surface,
-              toc.colorScheme.surface.withOpacity(.5),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: toc.colorScheme.surface.darker, width: 2),
+          color: toc.scaffoldBackgroundColor.lighterF(10),
+          borderRadius: Constants.br,
         ),
         child: this,
       );

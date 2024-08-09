@@ -3,9 +3,10 @@ import 'dart:convert';
 
 import 'package:wrg2/backend/enums/enum.post.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
+import 'package:wrg2/backend/models/model.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
-class PostModel {
+class PostModel extends Model {
   String title = "";
   String id = "";
   String content = "";

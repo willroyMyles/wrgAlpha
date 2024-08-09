@@ -88,8 +88,8 @@ class CommentModel extends Model {
             // padding: Constants.ePadding,
             // decoration: BoxDecoration(
             //   borderRadius: BorderRadius.only(
-            //     topLeft: Radius.circular(radii * 5),
-            //     bottomLeft: Radius.circular(radii * 5),
+            //     topLeft: Radius.circular(10 * 5),
+            //     bottomLeft: Radius.circular(10 * 5),
             //   ),
             //   color: toc.cardColor,
             // ),
@@ -101,10 +101,10 @@ class CommentModel extends Model {
           child: Container(
             padding: Constants.ePadding,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(radii),
-                bottomLeft: Radius.circular(radii),
-                bottomRight: Radius.circular(radii),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(10),
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10),
               ),
               color: toc.cardColor,
             ),

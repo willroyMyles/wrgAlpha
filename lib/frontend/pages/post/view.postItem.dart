@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wrg2/backend/extension/widget.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.card.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/post/details/view.postDetails.dart';
@@ -16,17 +16,12 @@ class PostItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return Text(model.title.capitalizeFirst!);
     return InkWell(
       onTap: () async {
         Get.to(() => PostDetails(), arguments: {"post": model}, opaque: false);
       },
-      child: Container(
-        margin: EdgeInsets.symmetric(
-          horizontal: Constants.cardMargin,
-          vertical: Constants.cardVerticalMargin,
-        ),
-        padding: Constants.ePadding,
-        decoration: (card as Container).decoration,
+      child: CardWidget(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             children: [

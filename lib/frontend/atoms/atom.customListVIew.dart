@@ -20,43 +20,46 @@ class CustomListView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        // await _.setup();
-        if (reset != null) {
-          await reset!();
-        }
-      },
-      child: Column(
-        children: [
-          if (header != null) header!,
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.zero,
-              itemCount: items.length + (items.isEmpty ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (items.isEmpty) {
-                  return Container(
-                    height: 300,
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "No items found\npull to refresh",
-                      textAlign: TextAlign.center,
-                    ),
-                  );
-                }
+    return Container(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          // await _.setup();
+          if (reset != null) {
+            await reset!();
+          }
+        },
+        child: Column(
+          children: [
+            if (header != null) header!,
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: items.length + (items.isEmpty ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (items.isEmpty) {
+                    return Container(
+                      height: 300,
+                      alignment: Alignment.center,
+                      child: const Text(
+                        "No items found\npull to refresh",
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }
 
-                var model = items.elementAt(index);
+                  var model = items.elementAt(index);
 
-                if (index == items.length - 1 && !hasMorePosts) {
-                  const SizedBox(
-                      height: 100, child: Center(child: Text("No more items")));
-                }
-                return builder(model);
-              },
+                  if (index == items.length - 1 && !hasMorePosts) {
+                    const SizedBox(
+                        height: 100,
+                        child: Center(child: Text("No more items")));
+                  }
+                  return builder(model);
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

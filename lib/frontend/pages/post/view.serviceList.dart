@@ -35,7 +35,9 @@ class ServiceList extends StatelessWidget {
                 children: [
                   Hero(
                     tag: model.id,
-                    child: Material(child: PostItem(model: model)),
+                    child: Material(
+                        color: Colors.transparent,
+                        child: PostItem(model: model)),
                   ),
                   if (!hasMorePosts && index == _.posts.length - 1)
                     const SizedBox(
