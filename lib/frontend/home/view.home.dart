@@ -240,12 +240,8 @@ class HomeView extends StatelessWidget {
           currentIndex.value = index;
         },
         children: [
-          Obx(() => PostList(
-                hasMorePosts: !postState.noMorePosts.value,
-              )),
-          ServiceList(
-            hasMorePosts: !serviceState.noMorePosts.value,
-          ),
+          const PostList(),
+          const ServiceList(),
           ProfileView(show: false)
         ],
       ),

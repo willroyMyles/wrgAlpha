@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomListView<T> extends StatelessWidget {
+class CustomListView<T> extends StatefulWidget {
   List<T> items;
   bool hasMorePosts;
   Function? loadMore;
@@ -19,24 +19,32 @@ class CustomListView<T> extends StatelessWidget {
       this.header});
 
   @override
+  State<CustomListView<T>> createState() => _CustomListViewState<T>();
+}
+
+class _CustomListViewState<T> extends State<CustomListView<T>>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
     return Container(
       child: RefreshIndicator(
         onRefresh: () async {
           // await _.setup();
-          if (reset != null) {
-            await reset!();
+          if (widget.reset != null) {
+            await widget.reset!();
           }
         },
         child: Column(
           children: [
-            if (header != null) header!,
+            if (widget.header != null) widget.header!,
             Expanded(
               child: ListView.builder(
+                key: UniqueKey(),
+                controller: widget.con,
                 padding: EdgeInsets.zero,
-                itemCount: items.length + (items.isEmpty ? 1 : 0),
+                itemCount: widget.items.length + (widget.items.isEmpty ? 1 : 0),
                 itemBuilder: (context, index) {
-                  if (items.isEmpty) {
+                  if (widget.items.isEmpty) {
                     return Container(
                       height: 300,
                       alignment: Alignment.center,
@@ -47,14 +55,15 @@ class CustomListView<T> extends StatelessWidget {
                     );
                   }
 
-                  var model = items.elementAt(index);
+                  var model = widget.items.elementAt(index);
 
-                  if (index == items.length - 1 && !hasMorePosts) {
+                  if (index == widget.items.length - 1 &&
+                      !widget.hasMorePosts) {
                     const SizedBox(
                         height: 100,
                         child: Center(child: Text("No more items")));
                   }
-                  return builder(model);
+                  return widget.builder(model);
                 },
               ),
             ),
@@ -63,4 +72,7 @@ class CustomListView<T> extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

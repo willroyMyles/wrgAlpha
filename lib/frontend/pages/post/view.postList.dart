@@ -5,22 +5,13 @@ import 'package:wrg2/frontend/pages/post/state.posts.dart';
 import 'package:wrg2/frontend/pages/post/view.postItem.dart';
 
 class PostList extends StatelessWidget {
-  final bool hasMorePosts;
-  const PostList({super.key, required this.hasMorePosts});
+  const PostList({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PostState>(
       initState: (_) {},
       builder: (_) {
-        // return FireList(
-        //     collection: "posts",
-        //     orderBy: "createdAt",
-        //     pageSize: 5,
-        //     itemBuilder: (context, item) {
-        //       var mod = PostModel.fromMap(item);
-        //       return PostItem(model: mod);
-        //     });
         return CustomListView(
             loadMore: _.loadMore,
             reset: _.setup,
@@ -36,7 +27,7 @@ class PostList extends StatelessWidget {
               ],
             ),
             builder: (model) {
-              var index = _.posts.indexOf(model);
+              var index = _.list.indexOf(model);
 
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -47,15 +38,22 @@ class PostList extends StatelessWidget {
                         color: Colors.transparent,
                         child: PostItem(model: model)),
                   ),
-                  if (!hasMorePosts && index == _.posts.length - 1)
+                  if (_.noMorePosts.value && index == _.list.length - 1)
                     const SizedBox(
-                        height: 100,
-                        child: Center(child: Text("No more posts"))),
+                        height: 250,
+                        child: Column(
+                          children: [
+                            Spacer(),
+                            Text("--- No More Items Available ---"),
+                            Spacer(),
+                            Spacer(),
+                          ],
+                        )),
                 ],
               );
             },
-            items: _.posts,
-            hasMorePosts: hasMorePosts,
+            items: _.list,
+            hasMorePosts: !_.noMorePosts.value,
             con: _.scroll);
       },
     );

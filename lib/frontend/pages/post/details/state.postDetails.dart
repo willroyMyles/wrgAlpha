@@ -23,9 +23,9 @@ class PostDetailsState extends GetxController {
     Get.find<GE>().posts_incrimentViews(model.id);
     model.views = model.views + 1;
     Future.delayed(const Duration(seconds: 3), () {
-      var idx = Get.find<PostState>().posts.indexOf(model);
+      var idx = Get.find<PostState>().list.indexOf(model);
 
-      Get.find<PostState>().posts[idx] = model;
+      Get.find<PostState>().list[idx] = model;
     });
   }
 
@@ -58,8 +58,8 @@ class PostDetailsState extends GetxController {
       } else {
         model.watching = model.watching + 1;
       }
-      var idx = state.posts.indexOf(model);
-      state.posts[idx] = model;
+      var idx = state.list.indexOf(model);
+      state.list[idx] = model;
       SBUtil.showSuccessSnackBar(isWatching
           ? "You no longer bookmark this post"
           : "You've bookmarked this post");
@@ -184,7 +184,7 @@ class PostDetailsState extends GetxController {
         await Get.find<GE>().posts_modifyPost(model.id, {"status": e.index});
     if (res) {
       model.status = e;
-      GF<PostState>().posts.where((e) => e.id == model.id).first.status = e;
+      GF<PostState>().list.where((e) => e.id == model.id).first.status = e;
       SBUtil.showSuccessSnackBar("Status updated");
       refresh();
     } else {
