@@ -128,5 +128,5 @@ class OfferModel {
 
   factory OfferModel.empty() => OfferModel();
 
-  bool amISender() => senderId == GF<ProfileState>().userModel?.value.email;
+  bool get amISender => senderId == GF<ProfileState>().userModel?.value.email;
 }

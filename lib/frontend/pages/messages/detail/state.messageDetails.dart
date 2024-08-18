@@ -24,28 +24,29 @@ class MessageDetailsState extends GetxController with StateMixin {
   bool initialStart = true;
   GlobalKey last = GlobalKey();
   StreamSubscription? sub;
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    setup();
+    await setup();
   }
 
-  setup() async {
+  Future setup() async {
     try {
       if ((Get.arguments as Map).containsKey("conversation")) {
         conversation = Get.arguments['conversation'];
-        var convo =
-            await GF<GE>().conversation_getConvarsation(conversation!.id);
-        messages.addAll(convo.messages);
+        // var convo = await ge.conversation_getConvarsation(conversation!.id);
+        messages = RxList(conversation!.messages);
         usersStream = FirebaseFirestore.instance
             .collection('conversations')
             .doc(conversation!.id)
             .snapshots();
         _startListen();
-        change("", status: RxStatus.success());
 
         _lastVisible();
-        _getInitial();
+        await _getInitial();
+        change("", status: RxStatus.success());
+
         return;
       }
 
@@ -78,9 +79,10 @@ class MessageDetailsState extends GetxController with StateMixin {
     _lastVisible();
   }
 
-  _getInitial() async {
+  _getInitial({String? id}) async {
     if (initial != null) return;
-    initial = await GF<GE>().offers_getOfferById(conversation!.offerId);
+    initial = await GF<GE>().offers_getOfferById(id ?? conversation!.offerId);
+    change("", status: RxStatus.success());
     refresh();
   }
 
@@ -118,6 +120,10 @@ class MessageDetailsState extends GetxController with StateMixin {
       List<MessagesModel> mess = List<MessagesModel>.from(
           data['messages'].map((e) => MessagesModel.fromMap(e)).toList());
       messages.add(mess.last);
+
+      if (conversation?.messages.last.content != mess.last.content) {
+        // conversation?.messages.add(mess.last);
+      }
       messages.refresh();
 
       _lastVisible();
@@ -150,6 +156,8 @@ class MessageDetailsState extends GetxController with StateMixin {
       );
 
       convo.messages = [m, mess];
+      conversation?.messages.add(m);
+      conversation?.messages.add(mess);
 
       var res = await GF<GE>().conversation_createConversation(convo);
       if (res) {
@@ -176,6 +184,7 @@ class MessageDetailsState extends GetxController with StateMixin {
       var res = await GF<GE>().conversation_addMesages(mess, conversation!.id);
       if (res) {
         // messages.add(mess);
+        conversation?.messages.add(mess);
         controller.clear();
       } else {
         // show error dialouge

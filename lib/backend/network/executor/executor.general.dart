@@ -18,3 +18,6 @@ class GE extends GetxController
         MessagesExecutor,
         ChatExecutor,
         CarsExecutor {}
+
+GE _ge = GE();
+GE get ge => _ge;

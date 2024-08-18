@@ -25,6 +25,8 @@ class ConversationModel {
   String postTitle;
   DateTime? lastMessage;
   DateTime? createdAt;
+  int senderMessageCount;
+  int recieverMessageCount;
   ConversationModel({
     this.messages = const [],
     this.locked = false,
@@ -37,6 +39,8 @@ class ConversationModel {
     this.postTitle = '',
     this.lastMessage,
     this.createdAt,
+    this.senderMessageCount = 0,
+    this.recieverMessageCount = 0,
   }) {
     if (id.isEmpty) {
       id = nanoid(length: 7);
@@ -77,7 +81,7 @@ class ConversationModel {
   factory ConversationModel.empty() => ConversationModel(messages: []);
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'messages': messages.map((x) => x.toMap()).toList(),
       'locked': locked,
       'newMessage': newMessage,
@@ -89,31 +93,31 @@ class ConversationModel {
       'postTitle': postTitle,
       'lastMessage': lastMessage?.millisecondsSinceEpoch,
       'createdAt': createdAt?.millisecondsSinceEpoch,
+      'senderMessageCount': senderMessageCount,
+      'recieverMessageCount': recieverMessageCount,
     };
   }
 
   factory ConversationModel.fromMap(Map<String, dynamic> map) {
     return ConversationModel(
       messages: List<MessagesModel>.from(
-        (map['messages']).map<MessagesModel>(
-          (x) => MessagesModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
-      locked: (map['locked'] ?? false) as bool,
-      newMessage: (map['newMessage'] ?? '') as String,
-      id: (map['id'] ?? '') as String,
-      offerId: (map['offerId'] ?? '') as String,
-      recieverId: (map['recieverId'] ?? '') as String,
-      senderId: (map['senderId'] ?? '') as String,
-      postId: (map['postId'] ?? '') as String,
-      postTitle: (map['postTitle'] ?? '') as String,
+          map['messages']?.map((x) => MessagesModel.fromMap(x)) ?? const []),
+      locked: map['locked'] ?? false,
+      newMessage: map['newMessage'] ?? '',
+      id: map['id'] ?? '',
+      offerId: map['offerId'] ?? '',
+      recieverId: map['recieverId'] ?? '',
+      senderId: map['senderId'] ?? '',
+      postId: map['postId'] ?? '',
+      postTitle: map['postTitle'] ?? '',
       lastMessage: map['lastMessage'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(
-              (map['lastMessage'] ?? 0) as int)
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastMessage'])
           : null,
       createdAt: map['createdAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0) as int)
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdAt'])
           : null,
+      senderMessageCount: map['senderMessageCount']?.toInt() ?? 0,
+      recieverMessageCount: map['recieverMessageCount']?.toInt() ?? 0,
     );
   }
 
