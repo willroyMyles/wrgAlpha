@@ -52,9 +52,23 @@ class CustomListView<T> extends StatelessWidget {
                   var model = items.elementAt(index);
 
                   if (index == items.length - 1 && !hasMorePosts) {
-                    const SizedBox(
-                        height: 100,
-                        child: Center(child: Text("No more items")));
+                    var noMore = const SizedBox(
+                        height: 300,
+                        child: Column(
+                          children: [
+                            Spacer(),
+                            Text("--- No more items ---"),
+                            Spacer(),
+                            Spacer(),
+                          ],
+                        ));
+
+                    return Column(
+                      children: [
+                        builder(model),
+                        noMore,
+                      ],
+                    );
                   }
                   return builder(model);
                 },

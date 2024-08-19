@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/frontend/atoms/atom.customListVIew.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
 import 'package:wrg2/frontend/pages/post/view.postItem.dart';
@@ -12,7 +13,7 @@ class PostList extends StatelessWidget {
     return GetBuilder<PostState>(
       initState: (_) {},
       builder: (_) {
-        return CustomListView(
+        return CustomListView<PostModel>(
             loadMore: _.loadMore,
             reset: _.setup,
             header: const Row(
@@ -27,7 +28,7 @@ class PostList extends StatelessWidget {
               ],
             ),
             builder: (model) {
-              var index = _.posts.indexOf(model);
+              var index = _.list.indexOf(model);
 
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -45,7 +46,8 @@ class PostList extends StatelessWidget {
                 ],
               );
             },
-            items: _.posts,
+            hasMorePosts: !_.noMorePosts.value,
+            items: _.list,
             con: _.scroll);
       },
     );

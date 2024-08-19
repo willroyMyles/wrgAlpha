@@ -6,6 +6,7 @@ abstract class ListState<T extends Model> extends GetxController
   RxList<T> list = RxList([]);
   RxInt lastLength = 0.obs;
   RxBool noMorePosts = false.obs;
+  int limit = 20;
 
   Future<List<T>> getModel() async {
     return [];
@@ -28,6 +29,7 @@ abstract class ListState<T extends Model> extends GetxController
       var ans = await getModel();
       list.addAll(ans);
       lastLength.value = list.length;
+      if (ans.length < 20) noMorePosts.value = true;
       refresh();
     } catch (e) {
       print(e);
@@ -45,10 +47,10 @@ abstract class ListState<T extends Model> extends GetxController
       var ans = await getMoreModel();
       list.addAll(ans);
 
-      noMorePosts.value = lastLength.value == list.length;
-
       lastLength.value = list.length;
-      // posts.refresh();
+      noMorePosts.value = lastLength.value == list.length;
+      if (ans.length < 20) noMorePosts.value = true;
+
       refresh();
     } catch (e) {
       print(e);
