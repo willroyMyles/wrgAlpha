@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:wrg2/backend/models/conversation.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 
@@ -10,6 +11,7 @@ class MessagesState extends GetxController with StateMixin {
   Stream<QuerySnapshot<Map<String, dynamic>>>? convoStream;
   bool initialStart = true;
   StreamSubscription? sub;
+  BehaviorSubject<List<ConversationModel>> stream = BehaviorSubject();
 
   @override
   void onInit() {
@@ -61,6 +63,7 @@ class MessagesState extends GetxController with StateMixin {
       }
       print("messageCount $messageCount");
     }
+    stream.add(conversations);
     refresh();
   }
 

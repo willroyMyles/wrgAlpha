@@ -8,6 +8,7 @@ class CustomListView<T> extends StatelessWidget {
   Widget Function(T) builder;
   ScrollController? con;
   Widget? header;
+  int limit;
   CustomListView(
       {super.key,
       this.items = const [],
@@ -16,6 +17,7 @@ class CustomListView<T> extends StatelessWidget {
       required this.reset,
       required this.builder,
       this.con,
+      this.limit = 20,
       this.header});
 
   @override
@@ -23,7 +25,6 @@ class CustomListView<T> extends StatelessWidget {
     return Container(
       child: RefreshIndicator(
         onRefresh: () async {
-          // await _.setup();
           if (reset != null) {
             await reset!();
           }
@@ -34,6 +35,7 @@ class CustomListView<T> extends StatelessWidget {
             Expanded(
               child: ListView.builder(
                 padding: EdgeInsets.zero,
+                controller: con,
                 itemCount: items.length + (items.isEmpty ? 1 : 0),
                 itemBuilder: (context, index) {
                   if (items.isEmpty) {

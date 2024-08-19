@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:wrg2/backend/models/model.dart';
-import 'package:wrg2/backend/network/executor/executor.general.dart';
 
 abstract class ListState<T extends Model> extends GetxController
     with ScrollMixin {
@@ -43,10 +42,8 @@ abstract class ListState<T extends Model> extends GetxController
   loadMore() async {
     try {
       if (noMorePosts.value) return;
-      var ans = await Get.find<GE>().posts_getPosts(
-          id: list.lastOrNull?.createdAt?.millisecondsSinceEpoch,
-          isService: true);
-      list.addAll(ans as List<T>);
+      var ans = await getMoreModel();
+      list.addAll(ans);
 
       noMorePosts.value = lastLength.value == list.length;
 

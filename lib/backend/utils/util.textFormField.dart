@@ -340,13 +340,17 @@ Widget buildChip(String text, {Color color = Colors.transparent}) {
   return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(.15),
+        color: color.withOpacity(.1),
         border: Border.all(color: color.withOpacity(.6), width: .6),
         borderRadius: Constants.br,
       ),
       child: Text(
-        text,
-        style: TextStyle(color: color.darker, fontSize: 12),
+        text.toUpperCase(),
+        style: TextStyle(
+            color: color.darker,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.2),
       ));
 }
 

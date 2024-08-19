@@ -5,8 +5,7 @@ import 'package:wrg2/frontend/pages/post/state.service.dart';
 import 'package:wrg2/frontend/pages/post/view.postItem.dart';
 
 class ServiceList extends StatelessWidget {
-  final bool hasMorePosts;
-  const ServiceList({super.key, required this.hasMorePosts});
+  const ServiceList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,15 +38,10 @@ class ServiceList extends StatelessWidget {
                         color: Colors.transparent,
                         child: PostItem(model: model)),
                   ),
-                  if (!hasMorePosts && index == _.posts.length - 1)
-                    const SizedBox(
-                        height: 100,
-                        child: Center(child: Text("No more posts"))),
                 ],
               );
             },
             items: _.posts,
-            hasMorePosts: hasMorePosts,
             con: _.scroll);
       },
     );

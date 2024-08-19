@@ -193,8 +193,9 @@ class HomeView extends StatelessWidget {
                 ))
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Obx(() => WrgNavBar(
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      extendBody: true,
+      bottomNavigationBar: Obx(() => WrgNavBar(
             selectedIndex: currentIndex.value,
             items: [
               WrgNavBarItem(
@@ -240,12 +241,8 @@ class HomeView extends StatelessWidget {
           currentIndex.value = index;
         },
         children: [
-          Obx(() => PostList(
-                hasMorePosts: !postState.noMorePosts.value,
-              )),
-          ServiceList(
-            hasMorePosts: !serviceState.noMorePosts.value,
-          ),
+          const PostList(),
+          const ServiceList(),
           ProfileView(show: false)
         ],
       ),

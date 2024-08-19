@@ -63,7 +63,8 @@ dependencies:
 
   firebase_pagination: ^4.0.1
   flutter_firebase_chat_core: ^1.6.8
-  firebase_ui_firestore: 
+  firebase_ui_firestore:
+  rxdart: ^0.28.0
 
 
   movements: 

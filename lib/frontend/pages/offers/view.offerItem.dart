@@ -29,10 +29,10 @@ class OfferItem extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.symmetric(
             // horizontal: Constants.cardMargin,
-            vertical: alt ? 2 : 0
+            vertical: alt ? 8 : 0
             // vertical: Constants.cardVerticalMargin / 4,
             ),
-        padding: EdgeInsets.all(Constants.cardpadding / 2),
+        padding: EdgeInsets.all(Constants.cardpadding),
         decoration: BoxDecoration(
           color:
               alt ? toc.scaffoldBackgroundColor.darkerF(0) : Colors.transparent,
@@ -44,7 +44,7 @@ class OfferItem extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Column(
@@ -54,12 +54,36 @@ class OfferItem extends StatelessWidget {
                       model.message.capitalizeFirst!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TS.h5,
+                      style: TS.h2,
+                    ),
+                    FittedBox(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "from: ",
+                            style: TS.h5,
+                          ),
+                          Text(
+                            model.senderId,
+                            overflow: TextOverflow.ellipsis,
+                            style: TS.h2,
+                          )
+                        ],
+                      ),
                     ),
                     if (model.offerPrice != null)
-                      Text(
-                        "Offer Price: ${model.offerPrice!.capitalizeFirst!}",
-                        style: TS.h5,
+                      Row(
+                        children: [
+                          Text(
+                            "Offer Price: ",
+                            style: TS.h5,
+                          ),
+                          Text(
+                            model.offerPrice!.capitalize!,
+                            style: TS.h2,
+                          )
+                        ],
                       ),
                     if (showPost)
                       Txt(
@@ -102,12 +126,12 @@ class OfferBundle extends StatelessWidget {
         ),
         padding: Constants.ePadding,
         decoration: BoxDecoration(
-          // border: Border.all(
-          //   width: 3,
-          //   color: toc.scaffoldBackgroundColor.darkerF(20),
-          // ),
-          borderRadius: Constants.br * 3,
-          color: toc.scaffoldBackgroundColor.darkerF(15),
+          border: Border.all(
+            width: 3,
+            color: toc.scaffoldBackgroundColor.darkerF(20),
+          ),
+          // borderRadius: Constants.br * 3,
+          color: toc.scaffoldBackgroundColor.darkerF(20),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

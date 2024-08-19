@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
+import 'package:wrg2/backend/models/conversation.dart';
 import 'package:wrg2/backend/models/messages.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
@@ -10,7 +11,7 @@ import 'package:wrg2/backend/utils/util.promptHelper.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/messages/detail/state.messageDetails.dart';
-import 'package:wrg2/frontend/pages/profile/state.profile.dart';
+import 'package:wrg2/frontend/pages/messages/state.messages.dart';
 
 class MessageDetailView extends StatelessWidget {
   OfferModel? initialOffer;
@@ -25,13 +26,18 @@ class MessageDetailView extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       extendBodyBehindAppBar: false,
+      // backgroundColor: Colors.black,
       bottomSheet: GetBuilder<MessageDetailsState>(
         init: controller,
         builder: (_) {
           initialOffer ??= controller.initial;
 
-          if (!((initialOffer?.amISender ?? true) &&
-              controller.messages.isEmpty)) {
+          var convo = GFI<MessagesState>()
+              ?.conversations
+              .firstWhereOrNull((e) => e.id == controller.conversation?.id);
+
+          if ((initialOffer?.amISender ?? true) ||
+              (convo != null && convo.messages.isNotEmpty)) {
             return BottomSheet(
               onClosing: () {},
               builder: (context) => Container(
@@ -63,7 +69,9 @@ class MessageDetailView extends StatelessWidget {
             );
           }
 
-          return Container();
+          return Container(
+            height: 0,
+          );
         },
       ),
       appBar: AppBar(
@@ -143,36 +151,59 @@ class MessageDetailView extends StatelessWidget {
                   },
                 ),
               )
-            : null,
+            : PreferredSize(
+                preferredSize: const Size(0, 0), child: Container()),
       ),
       body: controller.obx(
         (state) {
-          var state = GF<ProfileState>();
-          var imSender = (initialOffer?.amISender ?? false);
+          return StreamBuilder<List<ConversationModel>>(
+              stream: GFI<MessagesState>()?.stream,
+              builder: (context, snapshot) {
+                ConversationModel? convo;
 
-          return SingleChildScrollView(
-            controller: controller.scroll,
-            // physics: const ClampingScrollPhysics(),
-            child: Obx(() => Column(
-                  children: [
-                    SizedBox(height: Constants.cardMargin),
-                    _buildInitial(),
-                    if (controller.messages.isEmpty && !imSender)
-                      _buildEmpty()
-                    else
+                if (snapshot.hasData) {
+                  convo = GFI<MessagesState>()?.conversations.firstWhereOrNull(
+                      (e) => e.id == controller.conversation?.id);
+                }
+
+                return SingleChildScrollView(
+                  controller: controller.scroll,
+                  // physics: const ClampingScrollPhysics(),
+                  child: Column(
+                    children: [
+                      SizedBox(height: Constants.cardMargin),
+                      _buildInitial(),
                       _buildSender(),
-                    ...controller.messages.map((e) {
-                      return e.tile(e == controller.messages.last
-                          ? controller.last
-                          : null);
-                    }),
-                    SizedBox(height: Get.height * .2),
-                  ],
-                )),
-          );
+                      if (controller.conversation == null) _buildEmpty(),
+                      Builder(builder: (context) {
+                        if (convo != null) {
+                          return Container(
+                            child: Column(
+                                children: convo.messages.map((e) {
+                              return e.tile(e == convo!.messages.last
+                                  ? controller.last
+                                  : null);
+                            }).toList()),
+                          );
+                        }
+
+                        return Container(
+                          child: const Text("No conversation"),
+                        );
+                      }),
+                      SizedBox(height: Get.height * .2),
+                    ],
+                  ),
+                );
+              });
         },
         onEmpty: Constants.empty,
         onLoading: Constants.loading,
+        onError: (error) {
+          return Container(
+            child: const Text("error.toString()"),
+          );
+        },
       ),
     );
   }

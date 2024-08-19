@@ -27,96 +27,71 @@ class WrgNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 100,
       decoration: BoxDecoration(
-          color: toc.scaffoldBackgroundColor.withOpacity(.2),
+          color: toc.cardColor.withOpacity(.9),
           borderRadius: BorderRadius.circular(0)),
       // height: 60,
-      margin: const EdgeInsets.symmetric(horizontal: 0),
+      // margin: const EdgeInsets.symmetric(horizontal: 10),
       clipBehavior: Clip.antiAlias,
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: items.map((e) {
             var isSelected = items.indexOf(e) == selectedIndex;
             var dur = Constants.fastAnimationSpeed;
-            // var unSelected = Container(
-            //     // constraints: const BoxConstraints(maxWidth: 50, maxHeight: 50),
-            //     padding: const EdgeInsets.all(15),
-            //     decoration: BoxDecoration(
-            //         color: Colors.white, borderRadius: BorderRadius.circular(50)),
-            //     child: Icon(
-            //       e.icon,
-            //       size: 22,
-            //     ));
-            var selected = Container(
-                key: UniqueKey(),
-                width: isSelected ? 50 : 50,
-                // height: isSelected ? 50 : 50,
-                // padding:
-                //     const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
-                decoration: BoxDecoration(
-                    // color: Colors.white,
-                    borderRadius: BorderRadius.circular(50),
-                    boxShadow: [
-                      if (isSelected)
-                        BoxShadow(
-                            color: Colors.black.withOpacity(.05),
-                            blurRadius: 15,
-                            offset: const Offset(0, 2))
-                    ]),
-                child: Icon(
-                  e.icon,
-                  color: isSelected
-                      ? toc.primaryColor.darkerF(20)
-                      : toc.textColor.withOpacity(.55),
-                  size: isSelected ? 23 : 23,
-                  shadows: [
-                    if (isSelected)
-                      BoxShadow(
-                          color: toc.primaryColor.darkerF(30).withOpacity(.35),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2))
-                  ],
-                ));
 
-            return AnimatedSize(
-              duration: dur,
-              child: Container(
-                margin: const EdgeInsets.all(5),
-                child: GestureDetector(
-                    onTap: () {
-                      e.onTap();
-                    },
-                    child: Container(
+            return AnimatedOpacity(
+              duration: Constants.fastAnimationSpeed,
+              opacity: isSelected ? 1 : .8,
+              child: AnimatedSize(
+                duration: dur,
+                child: Container(
+                  margin: const EdgeInsets.all(5),
+                  height: 60,
+                  width: 60,
+                  child: GestureDetector(
+                      onTap: () {
+                        e.onTap();
+                      },
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          selected,
-                          AnimatedContainer(
-                            duration: dur,
-                            // constraints: BoxConstraints(
-                            //   maxWidth: isSelected ? 50 : 0,
-                            // ),
-                            height: 25,
-                            alignment: Alignment.centerLeft,
-                            child: FittedBox(
-                                fit: BoxFit.scaleDown,
-                                child: Text(
-                                  e.title,
-                                  style: TS.h4.copyWith(
-                                      color: isSelected
-                                          ? toc.primaryColor
-                                          : toc.textColor.withOpacity(.8),
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13.5),
-                                )),
+                          Icon(
+                            e.icon,
+                            color: isSelected
+                                ? toc.primaryColor.darkerF(20)
+                                : toc.textColor.withOpacity(.55),
+                            size: isSelected ? 23 : 23,
+                            shadows: [
+                              if (isSelected)
+                                BoxShadow(
+                                    color: toc.primaryColor
+                                        .darkerF(30)
+                                        .withOpacity(.35),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 2))
+                            ],
                           ),
+                          const SizedBox(height: 5),
+                          FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                e.title.toUpperCase(),
+                                style: TS.h4.copyWith(
+                                    color: isSelected
+                                        ? toc.primaryColor
+                                        : toc.textColor.withOpacity(.7),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12.5),
+                              )),
                         ],
-                      ),
-                    )),
+                      )),
+                ),
               ),
             );
           }).toList(),

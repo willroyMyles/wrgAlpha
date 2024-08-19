@@ -5,22 +5,13 @@ import 'package:wrg2/frontend/pages/post/state.posts.dart';
 import 'package:wrg2/frontend/pages/post/view.postItem.dart';
 
 class PostList extends StatelessWidget {
-  final bool hasMorePosts;
-  const PostList({super.key, required this.hasMorePosts});
+  const PostList({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PostState>(
       initState: (_) {},
       builder: (_) {
-        // return FireList(
-        //     collection: "posts",
-        //     orderBy: "createdAt",
-        //     pageSize: 5,
-        //     itemBuilder: (context, item) {
-        //       var mod = PostModel.fromMap(item);
-        //       return PostItem(model: mod);
-        //     });
         return CustomListView(
             loadMore: _.loadMore,
             reset: _.setup,
@@ -47,15 +38,14 @@ class PostList extends StatelessWidget {
                         color: Colors.transparent,
                         child: PostItem(model: model)),
                   ),
-                  if (!hasMorePosts && index == _.posts.length - 1)
-                    const SizedBox(
-                        height: 100,
-                        child: Center(child: Text("No more posts"))),
+                  // if (!hasMorePosts && index == _.posts.length - 1)
+                  //   const SizedBox(
+                  //       height: 100,
+                  //       child: Center(child: Text("--- No more posts ---"))),
                 ],
               );
             },
             items: _.posts,
-            hasMorePosts: hasMorePosts,
             con: _.scroll);
       },
     );

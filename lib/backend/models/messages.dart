@@ -130,19 +130,19 @@ class MessagesModel {
         constraints: BoxConstraints(maxWidth: Get.width * .7),
         margin: EdgeInsets.symmetric(
           horizontal: Constants.cardMargin,
-          vertical: Constants.cardVerticalMargin / 4,
+          vertical: Constants.cardVerticalMargin / 3,
         ),
         child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(5),
                 color: amISender()
-                    ? toc.scaffoldBackgroundColor.darker
+                    ? toc.scaffoldBackgroundColor.darkerF(10)
                     : toc.scaffoldBackgroundColor.lighterF(10)),
             child: Text(
               content.capitalizeFirst!,
               maxLines: 20,
-              style: TextStyle(color: toc.textColor),
+              style: TS.h4,
             )),
       ),
     );

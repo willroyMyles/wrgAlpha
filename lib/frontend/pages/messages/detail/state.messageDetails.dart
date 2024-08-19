@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nanoid2/nanoid2.dart';
@@ -11,15 +10,14 @@ import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
+import 'package:wrg2/frontend/pages/messages/state.messages.dart';
 
 class MessageDetailsState extends GetxController with StateMixin {
-  RxList<MessagesModel> messages = RxList([]);
   ConversationModel? conversation;
   String? messageString;
   OfferModel? initial;
   TextEditingController controller = TextEditingController();
 
-  Stream<DocumentSnapshot>? usersStream;
   ScrollController scroll = ScrollController();
   bool initialStart = true;
   GlobalKey last = GlobalKey();
@@ -35,16 +33,10 @@ class MessageDetailsState extends GetxController with StateMixin {
     try {
       if ((Get.arguments as Map).containsKey("conversation")) {
         conversation = Get.arguments['conversation'];
-        // var convo = await ge.conversation_getConvarsation(conversation!.id);
-        messages = RxList(conversation!.messages);
-        usersStream = FirebaseFirestore.instance
-            .collection('conversations')
-            .doc(conversation!.id)
-            .snapshots();
-        _startListen();
 
+        _startListen();
+        await _getInitial(id: conversation!.offerId);
         _lastVisible();
-        await _getInitial();
         change("", status: RxStatus.success());
 
         return;
@@ -55,20 +47,13 @@ class MessageDetailsState extends GetxController with StateMixin {
       }
 
       //below is null because no conversation is here as yet
-      var convo =
-          await GF<GE>().conversation_getConvarsationByOfferid(initial!.id);
-      conversation = convo;
-      if (convo != null) {
-        // SBUtil.showErrorSnackBar("Could not get conversation");
-        messages.addAll(convo.messages);
-      }
-      usersStream = FirebaseFirestore.instance
-          .collection('conversations')
-          .doc(conversation!.id)
-          .snapshots();
+      var state = Get.put(MessagesState());
+      await Future.delayed(const Duration(milliseconds: 250));
+      conversation = state.conversations
+          .firstWhereOrNull(((e) => e.offerId == initial!.id));
 
-      _startListen();
       _getInitial();
+      change("", status: RxStatus.success());
     } catch (e) {
       if ((Get.arguments as Map).containsKey("model")) {
         initial = Get.arguments['model'];
@@ -87,7 +72,7 @@ class MessageDetailsState extends GetxController with StateMixin {
   }
 
   _startListen() {
-    sub = usersStream!.listen(_onData);
+    // sub = usersStream!.listen(_onData);
   }
 
   onAccept() async {
@@ -108,32 +93,8 @@ class MessageDetailsState extends GetxController with StateMixin {
     }
   }
 
-  var messageCount = 0;
-  _onData(DocumentSnapshot event) async {
-    var data = event.data() as Map<String, dynamic>?;
-    if (data != null) {
-      messageCount++;
-      if (initialStart) {
-        initialStart = false;
-        return;
-      }
-      List<MessagesModel> mess = List<MessagesModel>.from(
-          data['messages'].map((e) => MessagesModel.fromMap(e)).toList());
-      messages.add(mess.last);
-
-      if (conversation?.messages.last.content != mess.last.content) {
-        // conversation?.messages.add(mess.last);
-      }
-      messages.refresh();
-
-      _lastVisible();
-
-      print("messageCount $messageCount");
-    }
-  }
-
   onSend() async {
-    if (messages.isEmpty) {
+    if (false) {
       //create conversation
       var convo = ConversationModel();
       convo.offerId = initial?.id ?? "";
@@ -161,15 +122,11 @@ class MessageDetailsState extends GetxController with StateMixin {
 
       var res = await GF<GE>().conversation_createConversation(convo);
       if (res) {
-        messages.add(m);
-        messages.add(mess);
+        // messages.add(m);
+        // messages.add(mess);
         // show success dialouge
         conversation = convo;
         controller.clear();
-        usersStream = FirebaseFirestore.instance
-            .collection('conversation')
-            .doc(conversation!.id)
-            .snapshots();
       } else {
         // show error dialouge
       }
@@ -186,6 +143,7 @@ class MessageDetailsState extends GetxController with StateMixin {
         // messages.add(mess);
         conversation?.messages.add(mess);
         controller.clear();
+        _lastVisible();
       } else {
         // show error dialouge
       }
@@ -200,7 +158,6 @@ class MessageDetailsState extends GetxController with StateMixin {
     super.onClose();
     sub?.cancel();
     sub = null;
-    usersStream = null;
     scroll.dispose();
   }
 
