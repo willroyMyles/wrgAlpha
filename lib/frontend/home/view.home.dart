@@ -80,11 +80,6 @@ class HomeView extends StatelessWidget {
         child: ProfileView(),
       ),
       appBar: AppBar(
-        // "Welcome",
-        // additional: Text(
-        //   GF<ProfileState>().userModel?.value.email ?? "",
-        //   textScaler: const TextScaler.linear(.5),
-        // ),
         leading: Builder(builder: (context) {
           return Obx(() => GF<ProfileState>().isSignedIn.value
               ? InkWell(
@@ -92,17 +87,17 @@ class HomeView extends StatelessWidget {
                     Scaffold.of(context).openDrawer();
                   },
                   child: Container(
+                      height: 50,
+                      width: 50,
                       margin: const EdgeInsets.all(5),
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
-                        color: Colors.red,
+                        // color: Colors.red,
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: Image.network(
                         GF<ProfileState>().userModel!.value.userImageUrl,
-                        fit: BoxFit.scaleDown,
-                        height: 20,
-                        width: 20,
+                        fit: BoxFit.cover,
                       )),
                 )
               : IconButton(

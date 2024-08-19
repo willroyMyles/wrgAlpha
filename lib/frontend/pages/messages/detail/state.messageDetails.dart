@@ -138,7 +138,8 @@ class MessageDetailsState extends GetxController with StateMixin {
         id: nanoid(length: 7),
       );
 
-      var res = await GF<GE>().conversation_addMesages(mess, conversation!.id);
+      var res = await GF<GE>().conversation_addMesages(mess, conversation!.id,
+          authWorker.user?.value.email == conversation!.senderId);
       if (res) {
         // messages.add(mess);
         conversation?.messages.add(mess);
@@ -155,6 +156,8 @@ class MessageDetailsState extends GetxController with StateMixin {
   @override
   void onClose() {
     // TODO: implement onClose
+    checkCount();
+
     super.onClose();
     sub?.cancel();
     sub = null;
@@ -167,5 +170,21 @@ class MessageDetailsState extends GetxController with StateMixin {
       Scrollable.ensureVisible(last.currentContext!,
           duration: const Duration(milliseconds: 200), curve: Curves.linear);
     });
+  }
+
+  checkCount() {
+    if (conversation!.iAmSender) {
+      if (conversation!.senderMessageCount > 0) {
+        GF<GE>().conversation_removeCount(conversation!.id, true);
+      }
+    } else {
+      if (conversation!.recieverMessageCount > 0) {
+        GF<GE>().conversation_removeCount(conversation!.id, false);
+      }
+    }
+  }
+
+  void ensureVisible() {
+    _lastVisible();
   }
 }

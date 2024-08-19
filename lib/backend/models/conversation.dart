@@ -9,6 +9,7 @@ import 'package:wrg2/backend/models/messages.dart';
 import 'package:wrg2/backend/models/userinfo.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
+import 'package:wrg2/frontend/atoms/atom.badge.dart';
 import 'package:wrg2/frontend/pages/messages/detail/view.messageDetails.dart';
 
 class ConversationModel {
@@ -60,6 +61,8 @@ class ConversationModel {
     // return isSender;
     return false;
   }
+
+  bool get iAmSender => senderId == authWorker.user?.value.email;
 
   getOthersId() {
     // final APIService ser = Get.find();
@@ -131,34 +134,47 @@ class ConversationModel {
       onTap: () {
         Get.to(() => MessageDetailView(), arguments: {"conversation": this});
       },
-      child: Container(
-        padding: Constants.ePadding,
-        margin: Constants.ePadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Wrap(
-              alignment: WrapAlignment.start,
-              crossAxisAlignment: WrapCrossAlignment.center,
+      child: Stack(
+        children: [
+          if (iAmSender && senderMessageCount > 0)
+            Positioned(
+                right: 10, top: 10, child: buildBadge(senderMessageCount)),
+          if (!iAmSender && recieverMessageCount > 0)
+            Positioned(
+              right: 10,
+              top: 10,
+              child: buildBadge(recieverMessageCount),
+            ),
+          Container(
+            padding: Constants.ePadding,
+            margin: Constants.ePadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Opacity(
-                    opacity: .7,
-                    child: Text(
-                      "your messages with ",
-                      style: TS.hint1,
-                    )),
-                Txt(getOthersName() ?? "no name").h2,
-                Opacity(
-                    opacity: .7,
-                    child: Text(
-                      " about: ",
-                      style: TS.hint1,
-                    )),
-                Txt(postTitle.capitalize!).h2,
+                Wrap(
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Opacity(
+                        opacity: .7,
+                        child: Text(
+                          "messages with ",
+                          style: TS.hint1,
+                        )),
+                    Txt(getOthersName() ?? "no name").h2,
+                    Opacity(
+                        opacity: .7,
+                        child: Text(
+                          " about ",
+                          style: TS.hint1,
+                        )),
+                    Txt(postTitle.capitalize!).h2,
+                  ],
+                )
               ],
-            )
-          ],
-        ),
+            ),
+          ),
+        ],
       ),
     );
   }

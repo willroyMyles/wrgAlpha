@@ -164,6 +164,7 @@ class MessageDetailView extends StatelessWidget {
                 if (snapshot.hasData) {
                   convo = GFI<MessagesState>()?.conversations.firstWhereOrNull(
                       (e) => e.id == controller.conversation?.id);
+                  controller.ensureVisible();
                 }
 
                 return SingleChildScrollView(

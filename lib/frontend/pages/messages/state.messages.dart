@@ -35,6 +35,7 @@ class MessagesState extends GetxController with StateMixin {
           .collection('conversations')
           .where(Filter.or(Filter("senderId", isEqualTo: myId),
               Filter("recieverId", isEqualTo: myId)))
+          .orderBy("lastMessage", descending: true)
           .snapshots();
       _startListen();
       change("", status: RxStatus.success());

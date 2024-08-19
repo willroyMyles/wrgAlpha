@@ -60,12 +60,42 @@ mixin MessagesExecutor {
     }
   }
 
+  Future conversation_removeCount(String converstionId, bool iAmSender) async {
+    Map<Object, Object?> m = {};
+    if (iAmSender) {
+      m = {
+        "senderMessageCount": 0,
+      };
+    } else {
+      m = {
+        "recieverMessageCount": 0,
+      };
+    }
+
+    await _fstor.collection(_col).doc(converstionId).update(m);
+  }
+
   Future<bool> conversation_addMesages(
-      MessagesModel model, String conversationId) async {
+      MessagesModel model, String conversationId, bool iAmSender) async {
     try {
       await _fstor.collection(_col).doc(conversationId).update({
         "messages": FieldValue.arrayUnion([model.toMap()])
       });
+
+      Map<Object, Object?> m = {};
+      if (iAmSender) {
+        m = {
+          "recieverMessageCount": FieldValue.increment(1),
+          "lastMessage": DateTime.now().millisecondsSinceEpoch,
+        };
+      } else {
+        m = {
+          "senderMessageCount": FieldValue.increment(1),
+          "lastMessage": DateTime.now().millisecondsSinceEpoch,
+        };
+      }
+
+      await _fstor.collection(_col).doc(conversationId).update(m);
       return true;
     } catch (e) {
       print(e);
