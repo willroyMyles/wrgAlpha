@@ -3,9 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
+import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
+import 'package:wrg2/frontend/atoms/atom.bottomSheet.dart';
 import 'package:wrg2/frontend/cars/state.cars.dart';
+import 'package:wrg2/frontend/cars/view.addCars.dart';
 import 'package:wrg2/frontend/pages/post/state.createPost.dart';
 
 class CreatePost extends StatelessWidget {
@@ -37,46 +41,59 @@ class CreatePost extends StatelessWidget {
                     actions: [
                       IconButton(
                           onPressed: () async {
-                            await Get.bottomSheet(DraggableScrollableSheet(
-                                builder: (context, con) {
-                              return Container(
-                                padding: const EdgeInsets.all(10),
-                                color: Colors.white,
-                                child: ListView(
-                                  controller: con,
-                                  children: [
-                                    Text(
-                                      "Your Cars",
-                                      style: TS.h2,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    if (GF<CarState>().cars.isEmpty)
-                                      Expanded(
-                                        child: Container(
-                                            alignment: Alignment.center,
-                                            child: const Text("No cars found")),
+                            await Get.bottomSheet(BottomSheetComponent(
+                              maxChildSize: .7,
+                              builder: (context, scrollController) {
+                                return Container(
+                                  padding: const EdgeInsets.all(10),
+                                  color: Colors.white,
+                                  child: ListView(
+                                    controller: scrollController,
+                                    children: [
+                                      Text(
+                                        "Your Cars",
+                                        style: TS.h2,
                                       ),
-                                    ...GF<CarState>().cars.map((e) => ListTile(
-                                          title: Container(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10),
-                                              child: Row(
-                                                children: [
-                                                  Text("${e.year} "),
-                                                  Text("${e.make} "),
-                                                  Text(e.model),
-                                                ],
-                                              )),
-                                          onTap: () {
-                                            controller.addCarModel(e);
-                                            Get.back(result: e);
-                                          },
-                                        ))
-                                  ],
-                                ),
-                              );
-                            }));
+                                      const SizedBox(height: 10),
+                                      if (GF<CarState>().cars.isEmpty)
+                                        Container(
+                                            alignment: Alignment.center,
+                                            child: Column(
+                                              children: [
+                                                Constants.emptyWidget(
+                                                    "No cars found"),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Get.to(() =>
+                                                          const ManageCarView());
+                                                    },
+                                                    child:
+                                                        const Text("Add Car"))
+                                              ],
+                                            )),
+                                      ...GF<CarState>().cars.map((e) =>
+                                          ListTile(
+                                            title: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 10),
+                                                child: Row(
+                                                  children: [
+                                                    Text("${e.year} "),
+                                                    Text("${e.make} "),
+                                                    Text(e.model),
+                                                  ],
+                                                )),
+                                            onTap: () {
+                                              controller.addCarModel(e);
+                                              Get.back(result: e);
+                                            },
+                                          ))
+                                    ],
+                                  ),
+                                );
+                              },
+                            ));
                           },
                           icon: const Icon(CupertinoIcons.car_detailed))
                     ],
@@ -231,6 +248,7 @@ class CreatePost extends StatelessWidget {
                                 // cps.onSubmit();
                                 controller.onSubmit();
                               },
+                              style: BS.defaultBtnStyle,
                               child: const Text("submit")),
                         ),
                       ),

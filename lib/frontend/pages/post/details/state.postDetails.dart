@@ -180,7 +180,8 @@ class PostDetailsState extends GetxController {
         await Get.find<GE>().posts_modifyPost(model.id, {"status": e.index});
     if (res) {
       model.status = e;
-      GF<PostState>().list.where((e) => e.id == model.id).first.status = e;
+      GF<PostState>().list.firstWhereOrNull((a) => a.id == model.id)?.status =
+          e;
       SBUtil.showSuccessSnackBar("Status updated");
       refresh();
     } else {

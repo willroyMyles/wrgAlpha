@@ -36,7 +36,9 @@ class WatchingView extends StatelessWidget {
                           children: [
                             Hero(
                               tag: model.id,
-                              child: Material(child: PostItem(model: model)),
+                              child: Material(
+                                  color: Colors.transparent,
+                                  child: PostItem(model: model)),
                             ),
                           ],
                         ));

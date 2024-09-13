@@ -360,7 +360,7 @@ Widget buildPopup(Widget child, List<Widget> children) {
       contentRadius: 5,
       showArrow: false,
       content: Container(
-        width: Get.width * .5,
+        width: Get.width * .6,
         padding: const EdgeInsets.all(5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

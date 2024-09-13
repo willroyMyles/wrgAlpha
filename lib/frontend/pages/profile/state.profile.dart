@@ -53,8 +53,6 @@ class ProfileState extends GetxController {
       SBUtil.showErrorSnackBar("Failed to send feedback");
       return false;
     }
-
-    return false;
   }
 
   remove() async {

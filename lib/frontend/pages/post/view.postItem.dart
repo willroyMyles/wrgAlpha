@@ -24,10 +24,13 @@ class PostItem extends StatelessWidget {
       child: CardWidget(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
                   child: Txt(
                 model.title.capitalizeFirst!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TS.h3,
               )),
               buildChip(model.status.name, color: model.status.color),
@@ -36,24 +39,31 @@ class PostItem extends StatelessWidget {
           Txt(
             model.content,
             maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: TS.h2,
           ),
           // const Divider(),
-          Opacity(
-            opacity: Constants.opacity,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text("${model.year} "),
-                Text("${model.make} "),
-                Text(model.model),
-              ],
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Opacity(
+                opacity: Constants.opacity,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text("${model.year} "),
+                    Text("${model.make} "),
+                    Text(model.model),
+                  ],
+                ),
+              ),
+              Opacity(
+                opacity: Constants.opacity,
+                child: Text(model.category),
+              ),
+            ],
           ),
-          Opacity(
-            opacity: Constants.opacity,
-            child: Text(model.category),
-          ),
+          Constants.verticalSpace,
 
           Obx(() {
             var state = GF<ProfileState>();

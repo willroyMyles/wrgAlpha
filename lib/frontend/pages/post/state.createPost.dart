@@ -22,7 +22,7 @@ class CreatePostState extends GetxController {
       model[element] = "";
     }
 
-    var arg = Get.arguments['isService'];
+    var arg = Get.arguments?['isService'];
     if (arg != null) {
       isService.value = arg;
     }

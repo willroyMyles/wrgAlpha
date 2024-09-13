@@ -145,7 +145,7 @@ class HomeView extends StatelessWidget {
                             children: [
                               Icon(Icons.room_service_outlined),
                               SizedBox(width: 5),
-                              Text("Request Service")
+                              Text("Request Car Service")
                             ],
                           )),
                     ])
