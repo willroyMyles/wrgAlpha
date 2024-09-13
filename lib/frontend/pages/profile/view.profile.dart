@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
@@ -50,14 +51,21 @@ class ProfileView extends GetView<ProfileState> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text("Feedback"),
-          const SizedBox(height: 20),
-          const Text("Please leave your feedback below"),
-          const SizedBox(height: 20),
+          Text(
+            "Feedback",
+            style: TS.h2,
+          ),
+          // Constants.verticalSpace,
+          Text(
+            "Leave your feedback below",
+            style: TS.h3,
+          ),
+          Constants.verticalSpace,
+          Constants.verticalSpace,
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(10)),
             child: TextField(
               maxLines: 5,
@@ -80,9 +88,10 @@ class ProfileView extends GetView<ProfileState> {
                   },
                   child: const Text("Close")),
               TextButton(
-                  onPressed: () {
-                    showFeedback.value = false;
-                    controller.onSendFeedback();
+                  onPressed: () async {
+                    if (await controller.onSendFeedback()) {
+                      showFeedback.value = false;
+                    }
                   },
                   child: const Text("Submit")),
             ],
@@ -295,7 +304,7 @@ class ProfileView extends GetView<ProfileState> {
               Hero(
                 tag: "feedback",
                 child: TextButton(
-                    onPressed: () {
+                    onPressed: () async {
                       showFeedback.value = true;
                     },
                     child: const Text("Feedback")),

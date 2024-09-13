@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:get/get.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:wrg2/backend/models/conversation.dart';
@@ -64,6 +65,12 @@ class MessagesState extends GetxController with StateMixin {
       }
       print("messageCount $messageCount");
     }
+    conversations.sortByCompare(
+        (mod) => mod.lastMessage,
+        (b, a) =>
+            a?.compareTo(
+                b ?? DateTime.now().subtract(const Duration(days: 360))) ??
+            1);
     stream.add(conversations);
     refresh();
   }

@@ -32,6 +32,9 @@ class Constants {
   static double cardpadding = 10.0;
   static Curve curve = Curves.fastLinearToSlowEaseIn;
 
+  static Widget verticalSpace = const SizedBox(height: 10);
+  static Widget horizontalSpace = const SizedBox(width: 10);
+
   static const double opacity = 0.7;
   static double lightOpacity = .5;
 

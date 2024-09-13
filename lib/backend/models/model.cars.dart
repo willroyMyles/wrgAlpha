@@ -1,13 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:wrg2/backend/mixin/mixin.get.dart';
-import 'package:wrg2/backend/mixin/mixin.text.dart';
-import 'package:wrg2/backend/utils/Constants.dart';
-import 'package:wrg2/frontend/pages/profile/state.profile.dart';
-
 enum Transmission {
   Automatic,
   Manual,
@@ -86,13 +78,10 @@ class CarModel {
     this.description,
     this.userEmail = '',
     this.userName = '',
-  }) {
-    userEmail = GF<ProfileState>().userModel?.value.email ?? "";
-    userName = GF<ProfileState>().userModel?.value.username ?? "";
-  }
+  });
 
   String getId() {
-    return "$userEmail$make-$model-$year";
+    return "$make-$model-$year-$userEmail";
   }
 
   Map<String, dynamic> toMap() {
@@ -135,83 +124,4 @@ class CarModel {
 
   factory CarModel.fromJson(String source) =>
       CarModel.fromMap(json.decode(source));
-
-  Widget tile() {
-    return Container(
-      padding: Constants.ePadding,
-      margin: Constants.ePadding,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "$alias",
-                    style: TS.h2,
-                  ),
-                  Text(
-                    "$make $model $year",
-                    style: TS.h2,
-                  ),
-                ],
-              ),
-              PopupMenuButton(
-                child: const Icon(CupertinoIcons.ellipsis_vertical),
-                itemBuilder: (context) {
-                  return [
-                    const PopupMenuItem(
-                      value: "edit",
-                      child: Text("Edit"),
-                    ),
-                    const PopupMenuItem(
-                      value: "delete",
-                      child: Text("Delete"),
-                    ),
-                  ];
-                },
-              ),
-            ],
-          ),
-          Text(
-            "${transmission?.name.capitalize}  ${type?.name.capitalize}  ${bodyType?.capitalize}",
-            style: TS.h3,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    "Engine: ",
-                    style: TS.h3,
-                  ),
-                  Text(
-                    "$engineNo",
-                    style: TS.h2,
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    "Chasis: ",
-                    style: TS.h3,
-                  ),
-                  Text(
-                    "$chasisNo",
-                    style: TS.h2,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }

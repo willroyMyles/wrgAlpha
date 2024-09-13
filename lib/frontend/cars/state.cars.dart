@@ -3,6 +3,8 @@ import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/model.cars.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/store/sotre.data.dart';
+import 'package:wrg2/backend/utils/util.snackbars.dart';
+import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class CarState extends GetxController with StateMixin {
   RxList<CarModel> cars = RxList();
@@ -20,9 +22,9 @@ class CarState extends GetxController with StateMixin {
 
     if (cars.isEmpty) {
       change("", status: RxStatus.empty());
+    } else {
+      change("", status: RxStatus.success());
     }
-
-    change("", status: RxStatus.success());
   }
 
   List<String> getMake() {
@@ -45,6 +47,16 @@ class CarState extends GetxController with StateMixin {
   }
 
   void addCar() async {
+    car.value.userEmail = GF<ProfileState>().userModel?.value.email ?? "";
+    car.value.userName = GF<ProfileState>().userModel?.value.username ?? "";
     await GF<GE>().cars_addCars(car.value);
+    cars.add(car.value);
+    change("newState", status: RxStatus.success());
+    SBUtil.showSuccessSnackBar("Created car information");
+  }
+
+  void updateCar() async {
+    await GF<GE>().cars_updateCars(car.value);
+    SBUtil.showSuccessSnackBar("Updated car information");
   }
 }

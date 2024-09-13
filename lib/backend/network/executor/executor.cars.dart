@@ -16,6 +16,15 @@ mixin CarsExecutor {
     }
   }
 
+  Future<bool> cars_updateCars(CarModel model) async {
+    try {
+      await _fstore.collection(_col).doc(model.getId()).update(model.toMap());
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<List<CarModel>> cars_getCars() async {
     try {
       var snap = await _fstore

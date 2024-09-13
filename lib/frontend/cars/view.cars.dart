@@ -4,6 +4,7 @@ import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/cars/state.cars.dart';
+import 'package:wrg2/frontend/cars/tile.car.dart';
 import 'package:wrg2/frontend/cars/view.addCars.dart';
 
 class CarsView extends StatelessWidget {
@@ -35,7 +36,7 @@ class CarsView extends StatelessWidget {
             itemCount: contorller.cars.length,
             itemBuilder: (context, index) {
               var item = contorller.cars.elementAt(index);
-              return item.tile();
+              return CarTile(car: item);
             },
           ),
           onEmpty: Constants.emptyWidget(

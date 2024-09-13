@@ -38,13 +38,9 @@ class PostDetailsState extends GetxController {
   }
 
   onWatching() async {
-    var user = Get.find<ProfileState>().userModel;
-    if (user == null) {
-      //throw error
-      SBUtil.showErrorSnackBar("You need to be sign in to watch this post");
-      return;
-    }
+    if (!SBUtil.signInGuardPrmopt()) return;
 
+    var user = GF<ProfileState>().userModel!;
     var isWatching = user.value.watching.contains(model.id);
 
     var res =
@@ -61,7 +57,7 @@ class PostDetailsState extends GetxController {
       var idx = state.list.indexOf(model);
       state.list[idx] = model;
       SBUtil.showSuccessSnackBar(isWatching
-          ? "You no longer bookmark this post"
+          ? "You're no longer bookmarking this post"
           : "You've bookmarked this post");
     } else {
       //throw error

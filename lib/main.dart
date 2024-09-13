@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movements/support/widget.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
@@ -24,6 +25,11 @@ void main() async {
   Get.put(ProfileState());
   Get.put(CarState());
   Get.put(LifeCycleState());
+
+  //initialize one signal
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  OneSignal.initialize("347f29ed-6636-469f-bc56-9feeefe1aaeb");
+  OneSignal.Notifications.requestPermission(true);
 
   runApp(const MyApp());
 }

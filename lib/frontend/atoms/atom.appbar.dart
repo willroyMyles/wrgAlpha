@@ -11,8 +11,14 @@ class WRGAppBar extends StatelessWidget {
   final PreferredSizeWidget? bottom;
   final List<Widget>? actions;
   final Widget? leading;
+  final Function? onBackPressed;
   const WRGAppBar(this.label,
-      {super.key, this.additional, this.bottom, this.actions, this.leading});
+      {super.key,
+      this.additional,
+      this.bottom,
+      this.actions,
+      this.leading,
+      this.onBackPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +42,9 @@ class WRGAppBar extends StatelessWidget {
               color: toc.primaryColor,
             ),
             onPressed: () {
+              if (onBackPressed != null) {
+                onBackPressed!();
+              }
               Get.back();
             },
           ),
