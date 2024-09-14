@@ -6,6 +6,11 @@ class TS {
   static const TextStyle _baseTextStyle =
       TextStyle(fontFamily: 'YourFontFamily');
 
+  static TextStyle get h0 => _baseTextStyle.copyWith(
+        fontSize: 30.0,
+        fontWeight: FontWeight.w700,
+        color: toc.textColor,
+      );
   static TextStyle get h1 => _baseTextStyle.copyWith(
         fontSize: 24.0,
         fontWeight: FontWeight.w700,
@@ -21,7 +26,7 @@ class TS {
   static TextStyle get h3 => _baseTextStyle.copyWith(
         fontSize: 18.0,
         color: toc.textColor,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
       );
 
   static TextStyle get h4 => _baseTextStyle.copyWith(

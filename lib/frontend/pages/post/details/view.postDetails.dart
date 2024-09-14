@@ -9,7 +9,9 @@ import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/comment.model.dart';
 import 'package:wrg2/backend/models/offer.dart';
+import 'package:wrg2/backend/store/store.logos.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.promptHelper.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
@@ -21,6 +23,16 @@ import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 class PostDetails extends StatelessWidget {
   PostDetails({super.key});
   final controller = Get.put(PostDetailsState());
+
+  String _getBookmarkText() {
+    var isWatching = GF<ProfileState>()
+            .userModel
+            ?.value
+            .watching
+            .contains(controller.model.id) ??
+        false;
+    return !isWatching ? "Bookmark" : "Bookmarked";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,21 +132,18 @@ class PostDetails extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             TextButton(
-                onPressed: () {
+                style: BS.plainBtnStyle,
+                onPressed: () async {
                   // Get.close(1);
-                  controller.onWatching();
+                  if (await guardPrompt()) {
+                    controller.onWatching();
+                  }
                 },
-                child: Obx(() => (GF<ProfileState>()
-                            .userModel
-                            ?.value
-                            .watching
-                            .contains(controller.model.id) ??
-                        false)
-                    ? const Text("Remove Bookmark")
-                    : const Text("Bookmark"))),
+                child: Text(_getBookmarkText())),
             if (!controller.model.amIOwner() &&
                 GF<ProfileState>().isSignedIn.value)
               TextButton(
+                  style: BS.defaultBtnStyle,
                   onPressed: () async {
                     await Get.bottomSheet(BottomSheet(
                       onClosing: () {},
@@ -143,11 +152,7 @@ class PostDetails extends StatelessWidget {
                       },
                     ));
                   },
-                  child: const Row(
-                    children: [
-                      Text("Make Offer"),
-                    ],
-                  )),
+                  child: const Text("Make Offer")),
             // TextButton(
             //     onPressed: () {
             //       if (controller.bottomView.value != 0) {
@@ -235,6 +240,8 @@ class PostDetails extends StatelessWidget {
                 //     child: child,
                 //   );
                 // }
+
+                var logo = logoHelper.getThumbnail(controller.model.make);
                 return Hero(
                   tag: controller.model.id,
                   child: Material(
@@ -263,12 +270,28 @@ class PostDetails extends StatelessWidget {
                                   // spacing: 10,
                                   // runAlignment: WrapAlignment.center,
                                   children: [
+                                    if (logo != null)
+                                      Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 15),
+                                        child: Builder(
+                                          builder: (context) {
+                                            return Image.network(
+                                              logo,
+                                              width: 50,
+                                              height: 30,
+                                              fit: BoxFit.contain,
+                                            );
+                                          },
+                                        ),
+                                      ),
                                     Text("${controller.model.year} "),
                                     Text("${controller.model.make} "),
                                     Text(controller.model.model),
+                                    const Spacer(),
+                                    Text(controller.model.category),
                                   ],
                                 ),
-                                Text(controller.model.category),
                                 SizedBox(height: Constants.cardMargin),
                                 Row(
                                   mainAxisAlignment:

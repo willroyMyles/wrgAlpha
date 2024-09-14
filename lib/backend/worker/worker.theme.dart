@@ -35,13 +35,13 @@ class ThemeWorker {
     );
   }
 
-  Color primaryOrg = const Color.fromARGB(255, 234, 192, 107);
+  Color primaryOrg = const Color.fromARGB(255, 220, 217, 212);
 // MaterialColor primarySwatch = generateMaterialColor(color: primaryOrg);
 
   Color darkBackgroundColor = const Color.fromRGBO(30, 33, 30, 1);
   Color darkForegrounColor = const Color.fromRGBO(60, 63, 60, 1);
 
-  Color lightBackgroundColor = const Color.fromARGB(255, 255, 255, 255);
+  Color lightBackgroundColor = const Color.fromARGB(255, 250, 247, 242);
   Color lightForegrounColor = Colors.white;
 
   late ThemeData _theme;
@@ -57,7 +57,7 @@ class ThemeWorker {
   }
 
   ThemeData getLightTheme() {
-    primaryOrg = const Color.fromARGB(255, 49, 124, 78);
+    primaryOrg = const Color.fromARGB(255, 234, 54, 54);
     var brightness = Brightness.light;
     var bg = lightBackgroundColor;
     var fg = lightForegrounColor;

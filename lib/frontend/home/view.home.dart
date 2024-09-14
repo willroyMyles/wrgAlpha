@@ -2,17 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
-import 'package:wrg2/backend/mixin/mixin.get.dart';
-import 'package:wrg2/backend/utils/Constants.dart';
-import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/home/view.navbar.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
 import 'package:wrg2/frontend/pages/post/state.service.dart';
-import 'package:wrg2/frontend/pages/post/view.createPost.dart';
 import 'package:wrg2/frontend/pages/post/view.postList.dart';
 import 'package:wrg2/frontend/pages/post/view.serviceList.dart';
-import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 import 'package:wrg2/frontend/pages/profile/view.profile.dart';
 
 class HomeView extends StatelessWidget {
@@ -79,114 +74,12 @@ class HomeView extends StatelessWidget {
       drawer: Drawer(
         child: ProfileView(),
       ),
+
       appBar: AppBar(
+        toolbarHeight: 10,
         leading: Builder(builder: (context) {
-          return Obx(() => GF<ProfileState>().isSignedIn.value
-              ? InkWell(
-                  onTap: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  child: Container(
-                      height: 50,
-                      width: 50,
-                      margin: const EdgeInsets.all(5),
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        // color: Colors.red,
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: Image.network(
-                        GF<ProfileState>().userModel!.value.userImageUrl,
-                        fit: BoxFit.cover,
-                      )),
-                )
-              : IconButton(
-                  icon: const Icon(
-                    CupertinoIcons.person_alt_circle,
-                    size: 35,
-                  ),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                ));
+          return Container();
         }),
-        actions: [
-          Obx(() => GF<ProfileState>().isSignedIn.value
-              ? buildPopup(
-                  Container(
-                      padding: EdgeInsets.only(right: Constants.cardpadding),
-                      child: const Icon(
-                        Icons.add_circle_outline,
-                        // color: toc.primaryColor,
-                      )),
-                  [
-                      TextButton(
-                          onPressed: () {
-                            Get.close(1);
-
-                            Get.to(() => CreatePost());
-                          },
-                          child: const Row(
-                            children: [
-                              Icon(Icons.post_add),
-                              SizedBox(width: 5),
-                              Text("Request Car Part")
-                            ],
-                          )),
-                      TextButton(
-                          onPressed: () {
-                            Get.close(1);
-
-                            Get.to(() => CreatePost(), arguments: {
-                              "isService": true,
-                            });
-                          },
-                          child: const Row(
-                            children: [
-                              Icon(Icons.room_service_outlined),
-                              SizedBox(width: 5),
-                              Text("Request Car Service")
-                            ],
-                          )),
-                    ])
-              : GetBuilder<ProfileState>(
-                  builder: (_) {
-                    if (_.userModel == null) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                              onTap: () {
-                                Scaffold.of(context).openDrawer();
-                              },
-                              child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: Constants.cardpadding,
-                                      vertical: Constants.cardpadding / 2),
-                                  decoration: BoxDecoration(
-                                      // color: toc.primaryColor.withOpacity(.1),
-                                      // border: Border.all(
-                                      //     color: toc.primaryColor, width: 1),
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Text(
-                                    "Sign In",
-                                    style: TextStyle(color: toc.primaryColor),
-                                  ))),
-                          const Text(" to view more options.")
-                        ],
-                      );
-                    }
-                    return Container(
-                      margin: EdgeInsets.only(
-                        left: Constants.cardMargin,
-                        right: Constants.cardMargin,
-                        top: Constants.cardMargin,
-                        bottom: Constants.cardMargin,
-                      ),
-                    );
-                  },
-                ))
-        ],
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,
@@ -202,7 +95,7 @@ class HomeView extends StatelessWidget {
                   }),
               WrgNavBarItem(
                   title: "Services",
-                  icon: CupertinoIcons.circle_grid_hex,
+                  icon: CupertinoIcons.tray,
                   onTap: () {
                     currentIndex.value = 1;
                     pg.jumpToPage(1);
@@ -216,16 +109,6 @@ class HomeView extends StatelessWidget {
                   }),
             ],
           )),
-      // floatingActionButton: SizedBox(
-      //   height: 63,
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       _buildIcon(CupertinoIcons.wrench, "Parts", 0),
-      //       _buildIcon(CupertinoIcons.circle_grid_hex, "Services", 1),
-      //     ],
-      //   ),
-      // ),
 
       body: PageView(
         // controller: PageController(),

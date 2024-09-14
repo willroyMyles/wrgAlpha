@@ -55,6 +55,28 @@ class ProfileView extends GetView<ProfileState> {
     );
   }
 
+  Widget _buildTile(
+      Function onPressed, IconData icon, String title, bool showChev,
+      [Widget? append]) {
+    return ListTile(
+      title: Text(title, style: TS.h3),
+      minLeadingWidth: 50,
+      leading: Icon(
+        icon,
+        size: 30,
+      ),
+      onTap: () {
+        onPressed();
+      },
+      trailing: showChev
+          ? const Icon(
+              Icons.chevron_right,
+              size: 32,
+            )
+          : append,
+    );
+  }
+
   Widget _feedbackPage(BuildContext context) {
     return Container(
       alignment: Alignment.center,
@@ -63,20 +85,19 @@ class ProfileView extends GetView<ProfileState> {
         children: [
           Text(
             "Feedback",
-            style: TS.h2,
+            style: TS.h1,
           ),
           // Constants.verticalSpace,
           Text(
             "Leave your feedback below",
-            style: TS.h3,
+            style: TS.h2,
           ),
           Constants.verticalSpace,
           Constants.verticalSpace,
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(10)),
+                color: toc.cardColor, borderRadius: BorderRadius.circular(10)),
             child: TextField(
               maxLines: 5,
               onChanged: (value) {
@@ -96,7 +117,7 @@ class ProfileView extends GetView<ProfileState> {
                   onPressed: () {
                     showFeedback.value = false;
                   },
-                  style: BS.defaultBtnStyle,
+                  style: BS.secondaryBtnStyle,
                   child: const Text("Close")),
               TextButton(
                   onPressed: () async {
@@ -116,31 +137,55 @@ class ProfileView extends GetView<ProfileState> {
   Widget _regularPage(BuildContext context) {
     if (controller.userModel != null) {
       return Container(
-        // alignment: Alignment.center,
+        alignment: Alignment.center,
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (show)
-                Container(
-                    height: 55,
-                    width: 55,
-                    clipBehavior: Clip.antiAlias,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                    child: InkWell(
-                      onTap: () {
-                        Scaffold.of(context).openDrawer();
-                      },
-                      child: CircleAvatar(
-                        radius: 35,
-                        child: Obx(() => Image.network(
-                            controller.userModel!.value.userImageUrl)),
-                      ),
-                    )),
-              if (show) const SizedBox(height: 5),
-              if (show) Text(controller.userModel!.value.email),
-              if (show) const SizedBox(height: 15),
+              // if (show)
+              Container(
+                  alignment: Alignment.center,
+                  child: InkWell(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 35,
+                          child: Obx(() => Container(
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.transparent),
+                                child: Image.network(
+                                  controller.userModel!.value.userImageUrl,
+                                  cacheHeight: 80,
+                                  cacheWidth: 80,
+                                ),
+                              )),
+                        ),
+                        if (controller.userModel != null)
+                          Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Text(
+                                controller.userModel!.value.username ?? "",
+                                style: TS.h0,
+                              )),
+                        if (controller.userModel != null)
+                          Opacity(
+                            opacity: .7,
+                            child: Container(
+                                margin: const EdgeInsets.only(bottom: 15),
+                                child: Text(
+                                  controller.userModel!.value.email ?? "",
+                                  style: TS.h3,
+                                )),
+                          ),
+                      ],
+                    ),
+                  )),
 
               // Row(
               //   mainAxisAlignment: MainAxisAlignment.center,
@@ -176,74 +221,50 @@ class ProfileView extends GetView<ProfileState> {
               //     ),
               //   ],
               // ),
-              ListTile(
-                onTap: () {
-                  Get.to(() => CarsView());
+              _buildTile(() {
+                Get.to(() => CarsView());
+              }, CupertinoIcons.car_detailed, "Cars", true),
+              _buildTile(() {
+                Get.to(() => MessagesView());
+              }, CupertinoIcons.chat_bubble_2, "Messages", true),
+              _buildTile(() {
+                Get.to(() => PersonalPosts());
+              }, CupertinoIcons.rectangle_on_rectangle_angled, "Yout Posts",
+                  true),
+              _buildTile(() {
+                Get.to(() => const OffersView());
+              },
+                  CupertinoIcons.rectangle_on_rectangle_angled,
+                  "Offers",
+                  false,
+                  Container(
+                      padding: const EdgeInsets.all(5),
+                      margin: const EdgeInsets.only(right: 5),
+                      decoration: BoxDecoration(
+                        color: toc.cardColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        GFI<OfferState>()
+                                ?.getIncomingOffersLength()
+                                .toString() ??
+                            "",
+                        textScaler: const TextScaler.linear(1.3),
+                        style: TextStyle(
+                            color: toc.textColor, fontWeight: FontWeight.w600),
+                      ))),
+
+              _buildTile(
+                () {
+                  Get.to(() => WatchingView(), arguments: {
+                    "list": GFI<ProfileState>()?.userModel?.value.watching
+                  });
                 },
-                title: const Text("Cars"),
-                leading: Container(
-                  margin: const EdgeInsets.only(right: 15),
-                  child: Icon(
-                    CupertinoIcons.car_detailed,
-                    color: toc.textColor,
-                  ),
-                ),
-              ),
-              ListTile(
-                onTap: () {
-                  Get.to(() => MessagesView());
-                },
-                title: const Text("Messages"),
-                leading: Container(
-                  margin: const EdgeInsets.only(right: 15),
-                  child: Icon(
-                    CupertinoIcons.chat_bubble,
-                    color: toc.textColor,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: const Text("Your Posts"),
-                onTap: () {
-                  Get.to(() => PersonalPosts());
-                },
-                leading: Container(
-                  margin: const EdgeInsets.only(right: 15),
-                  child: Icon(
-                    CupertinoIcons.rectangle_on_rectangle_angled,
-                    color: toc.textColor,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: const Text("Offers"),
-                trailing: Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: toc.cardColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Text(
-                      GFI<OfferState>()?.getIncomingOffersLength().toString() ??
-                          "",
-                      textScaler: const TextScaler.linear(1.3),
-                      style: TextStyle(
-                          color: toc.textColor, fontWeight: FontWeight.w600),
-                    )),
-                onTap: () {
-                  Get.to(() => const OffersView());
-                },
-                leading: Container(
-                  margin: const EdgeInsets.only(right: 15),
-                  child: Icon(
-                    Icons.inbox,
-                    color: toc.textColor,
-                  ),
-                ),
-              ),
-              ListTile(
-                title: const Text("Bookmarks"),
-                trailing: Container(
+                CupertinoIcons.bookmark,
+                "Your Bookmarks",
+                false,
+                Container(
+                    margin: const EdgeInsets.only(right: 5),
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       color: toc.cardColor,
@@ -261,44 +282,15 @@ class ProfileView extends GetView<ProfileState> {
                       style: TextStyle(
                           color: toc.textColor, fontWeight: FontWeight.w600),
                     )),
-                onTap: () {
-                  Get.to(() => WatchingView(), arguments: {
-                    "list": GFI<ProfileState>()?.userModel?.value.watching
-                  });
-                },
-                leading: Container(
-                  margin: const EdgeInsets.only(right: 15),
-                  child: Icon(
-                    Icons.bookmark,
-                    color: toc.textColor,
-                  ),
-                ),
               ),
-              // const Spacer(),
-              const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        Get.find<GE>().user_logout();
-                      },
-                      style: BS.defaultBtnStyle,
-                      child: const Text("Log out")),
-                  const SizedBox(width: 10),
-                  Hero(
-                    tag: "feedback",
-                    child: TextButton(
-                        onPressed: () {
-                          showFeedback.value = true;
-                        },
-                        style: BS.defaultBtnStyle,
-                        child: const Text("Feedback")),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 40),
-              const SizedBox(height: 40),
+
+              _buildTile(() {
+                showFeedback.value = true;
+              }, Icons.subdirectory_arrow_left, "Feedback", true),
+
+              _buildTile(() {
+                GF<GE>().user_logout();
+              }, Icons.exit_to_app, "Log Out", false),
             ]),
       );
     } else {

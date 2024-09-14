@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/frontend/atoms/atom.customListVIew.dart';
 import 'package:wrg2/frontend/pages/post/state.service.dart';
@@ -16,13 +17,13 @@ class ServiceList extends StatelessWidget {
         return CustomListView<PostModel>(
             loadMore: _.loadMore,
             reset: _.setup,
-            header: const Row(
+            header: Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Service Wanted",
-                    style: TextStyle(fontSize: 20),
+                    "Service Needed",
+                    style: TS.h1,
                   ),
                 )
               ],

@@ -66,6 +66,7 @@ dependencies:
   flutter_firebase_chat_core: ^1.6.8
   firebase_ui_firestore:
   rxdart: ^0.28.0
+  flutter_speed_dial: ^7.0.0
 
 
   movements: 

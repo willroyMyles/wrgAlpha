@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/model.cars.dart';
+import 'package:wrg2/backend/store/store.logos.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/frontend/cars/state.cars.dart';
 import 'package:wrg2/frontend/cars/view.addCars.dart';
@@ -13,6 +14,7 @@ class CarTile extends GetView<CarState> {
 
   @override
   Widget build(BuildContext context) {
+    var logo = logoHelper.getThumbnail(car.make);
     return Container(
       padding: Constants.ePadding,
       margin: Constants.ePadding,
@@ -23,6 +25,20 @@ class CarTile extends GetView<CarState> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (logo != null)
+                Container(
+                  margin: const EdgeInsets.only(right: 15),
+                  child: Builder(
+                    builder: (context) {
+                      return Image.network(
+                        logo,
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.contain,
+                      );
+                    },
+                  ),
+                ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -34,8 +50,26 @@ class CarTile extends GetView<CarState> {
                     "${car.make} ${car.model} ${car.year}",
                     style: TS.h2,
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${car.transmission?.name.capitalize}  ",
+                        style: TS.h3,
+                      ),
+                      Text(
+                        " ${car.bodyType?.capitalize}  ",
+                        style: TS.h3,
+                      ),
+                      Text(
+                        "  ${car.type?.name.capitalize} ",
+                        style: TS.h3,
+                      ),
+                    ],
+                  ),
                 ],
               ),
+              const Spacer(),
               PopupMenuButton(
                 child: const Icon(CupertinoIcons.ellipsis_vertical),
                 itemBuilder: (context) {
@@ -61,23 +95,7 @@ class CarTile extends GetView<CarState> {
             ],
           ),
           // Constants.verticalSpace,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "${car.transmission?.name.capitalize}  ",
-                style: TS.h3,
-              ),
-              Text(
-                " ${car.bodyType?.capitalize}  ",
-                style: TS.h3,
-              ),
-              Text(
-                "  ${car.type?.name.capitalize} ",
-                style: TS.h3,
-              ),
-            ],
-          ),
+
           Constants.verticalSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
