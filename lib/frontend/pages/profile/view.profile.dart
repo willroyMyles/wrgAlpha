@@ -229,7 +229,7 @@ class ProfileView extends GetView<ProfileState> {
               }, CupertinoIcons.chat_bubble_2, "Messages", true),
               _buildTile(() {
                 Get.to(() => PersonalPosts());
-              }, CupertinoIcons.rectangle_on_rectangle_angled, "Yout Posts",
+              }, CupertinoIcons.rectangle_on_rectangle_angled, "Your Posts",
                   true),
               _buildTile(() {
                 Get.to(() => const OffersView());
@@ -261,7 +261,7 @@ class ProfileView extends GetView<ProfileState> {
                   });
                 },
                 CupertinoIcons.bookmark,
-                "Your Bookmarks",
+                "Bookmarks",
                 false,
                 Container(
                     margin: const EdgeInsets.only(right: 5),

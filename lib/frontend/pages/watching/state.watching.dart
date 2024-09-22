@@ -16,7 +16,10 @@ class WatchingState extends GetxController with StateMixin {
         list.map((e) => FirebaseFirestore.instance.doc("posts/$e")).toList();
 
     var docs = await Future.wait(refs.map((e) => e.get()));
-    posts = docs.map((e) => PostModel.fromMap(e.data() as dynamic)).toList();
+    posts = docs
+        .where((e) => e.exists)
+        .map((e) => PostModel.fromMap(e.data() as dynamic))
+        .toList();
     change(docs, status: RxStatus.success());
   }
 }

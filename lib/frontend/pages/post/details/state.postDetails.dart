@@ -9,15 +9,18 @@ import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/frontend/pages/post/state.posts.dart';
+import 'package:wrg2/frontend/pages/post/state.service.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
+import 'package:wrg2/standalone/state.listState.dart';
 
 class PostDetailsState extends GetxController {
   late PostModel model;
-  List<OfferModel> offers = [];
+  RxList<OfferModel> offers = RxList([]);
   RxString commentString = "".obs;
   RxString offerString = "".obs;
   List<CommentModel> comments = [];
   RxInt bottomView = 0.obs;
+  RxBool postBookmarked = false.obs;
 
   onView() {
     Get.find<GE>().posts_incrimentViews(model.id);
@@ -48,11 +51,18 @@ class PostDetailsState extends GetxController {
 
     //add to watching
     if (res) {
-      var state = Get.find<PostState>();
+      ListState state;
+      if (model.isService) {
+        state = GF<ServiceState>();
+      } else {
+        state = Get.find<PostState>();
+      }
       if (isWatching) {
         model.watching = model.watching - 1;
+        postBookmarked.value = false;
       } else {
         model.watching = model.watching + 1;
+        postBookmarked.value = true;
       }
       var idx = state.list.indexOf(model);
       state.list[idx] = model;
@@ -73,11 +83,20 @@ class PostDetailsState extends GetxController {
   void onInit() {
     super.onInit();
     getArgs();
+    checkWatching();
+  }
+
+  checkWatching() {
+    var user = GF<ProfileState>().userModel;
+    if (user == null) return;
+    postBookmarked.value = user.value.watching.contains(model.id);
   }
 
   getArgs() {
     var args = Get.arguments ?? Get.rawRoute?.settings.arguments ?? {};
-    var post = args['post'];
+    var post = args?['post'];
+    if (post == null) return;
+
     model = post;
     getOffers();
   }
@@ -85,8 +104,9 @@ class PostDetailsState extends GetxController {
   Future<List<OfferModel>> getOffers() async {
     try {
       var res = await GF<GE>().offers_getOfferByPostId(model.id);
+      offers.addAll(res);
+      // refresh();
       return res;
-      // offers.addAll(res);
       // return offers;
     } catch (e) {
       return [];
@@ -123,18 +143,21 @@ class PostDetailsState extends GetxController {
 
     if (res) {
       //success
-      SBUtil.showSuccessSnackBar("Offer was sent");
+      // SBUtil.showSuccessSnackBar("Offer was sent");
 
       if (Get.isBottomSheetOpen ?? false) {
         Get.close(1);
         GF<ProfileState>().setup();
+        // add offer to post
+        offers.add(offerModel);
+        refresh();
       } else {
         //show error
         SBUtil.showErrorSnackBar("Offer was not created successfully");
       }
     }
 
-    refresh();
+    // refresh();
   }
 
   sendComment({bool offer = false}) async {

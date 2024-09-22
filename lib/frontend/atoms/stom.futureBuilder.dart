@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
@@ -14,12 +14,14 @@ class AtomFutureBuilder<T> extends StatefulWidget {
   final FutureOr<List<T>> onCall;
   final AtomFutureTileBuilder<T> builder;
   final bool showCount;
+  final Widget? additional;
   const AtomFutureBuilder({
     super.key,
     required this.builder,
     required this.onCall,
     this.title,
     this.showCount = true,
+    this.additional,
   });
 
   @override
@@ -33,9 +35,9 @@ class _AtomFutureBuilderState<T> extends State<AtomFutureBuilder<T>> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(future: () async {
-      if (called) {
-        return Future.value([]);
-      }
+      // if (called) {
+      //   return Future.value([]);
+      // }
 
       return widget.onCall;
     }(), builder: (context, snapshot) {
@@ -56,6 +58,7 @@ class _AtomFutureBuilderState<T> extends State<AtomFutureBuilder<T>> {
       if (snapshot.hasData) {
         if (snapshot.data is List) {
           if (snapshot.data!.isNotEmpty) {
+            list.clear();
             list.addAll(snapshot.data as List<T>);
           } else {
             return Constants.emptyWidget(
@@ -67,10 +70,22 @@ class _AtomFutureBuilderState<T> extends State<AtomFutureBuilder<T>> {
       return Column(
         children: [
           if (widget.title != null)
-            Text(
-              " ${widget.showCount ? list.length : ''} ${widget.title!}",
-              style: TS.h2,
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    " ${widget.showCount ? list.length : ''} ${widget.title!}",
+                    style: TS.h2,
+                  ),
+                ),
+                if (widget.additional != null) widget.additional!,
+              ],
             ),
+          const Divider(
+            endIndent: 20,
+            indent: 20,
+            thickness: 2,
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: list.length,

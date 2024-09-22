@@ -15,6 +15,12 @@ import 'package:wrg2/frontend/pages/post/state.createPost.dart';
 class CreatePost extends StatelessWidget {
   CreatePost({super.key});
   final controller = Get.put(CreatePostState());
+  Map<String, TextEditingController> textControllers = {
+    "make": TextEditingController(),
+    "model": TextEditingController(),
+    "year": TextEditingController(),
+    "category": TextEditingController(),
+  };
 
   double divider = 3.4;
   var space = const SizedBox(
@@ -137,17 +143,24 @@ class CreatePost extends StatelessWidget {
                                       children: [
                                         SizedBox(
                                           width: Get.width / divider,
-                                          child: buildDropdownInput(
+                                          child: buildDropdownInputAhead(
                                             "make",
                                             requireInput: true,
+                                            ctrl: textControllers,
                                             items: [
                                               ...controller.getMakeList(),
-                                              ""
+                                              // ""
                                             ],
                                             (val) {
                                               controller.model['make'] = val;
                                               controller.model['model'] = "";
                                               controller.model.refresh();
+                                              textControllers['make']?.text =
+                                                  val;
+                                              textControllers['model']?.text =
+                                                  "";
+
+                                              print(val);
                                             },
                                             initialValue:
                                                 controller.model['make'] ?? "",
@@ -157,11 +170,14 @@ class CreatePost extends StatelessWidget {
                                           return SizedBox(
                                             key: UniqueKey(),
                                             width: Get.width / divider,
-                                            child: buildDropdownInput(
+                                            child: buildDropdownInputAhead(
                                               "model",
+                                              ctrl: textControllers,
                                               requireInput: true,
                                               (val) {
                                                 controller.model['model'] = val;
+                                                textControllers['model']?.text =
+                                                    val;
                                               },
                                               items: [
                                                 ...controller.getModelList(),
@@ -177,15 +193,19 @@ class CreatePost extends StatelessWidget {
                                             width: Get.width / divider,
                                             child: SizedBox(
                                               width: Get.width / 2.2,
-                                              child: buildDropdownInput(
+                                              child: buildDropdownInputAhead(
                                                 "year",
                                                 (val) {
                                                   controller.model['year'] =
                                                       val;
+                                                  controller.model.refresh();
+                                                  textControllers['year']
+                                                      ?.text = val;
                                                 },
                                                 initialValue: controller
                                                         .model.value['year'] ??
                                                     "",
+                                                ctrl: textControllers,
                                                 items: [
                                                   "",
                                                   ...List.generate(
@@ -208,17 +228,38 @@ class CreatePost extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    child: buildDropdownInput(
+                                    child: buildDropdownInputAhead(
                                       "category",
                                       (val) {
                                         controller.model['category'] = val;
                                         controller.model['sub'] = "";
                                         controller.model.refresh();
+                                        textControllers['category']?.text = val;
                                       },
+                                      ctrl: textControllers,
                                       items: [
                                         ...controller.getCategoryList(),
                                         ""
                                       ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            space,
+                            Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: buildInput(
+                                      "mobile",
+                                      (val) {
+                                        controller.model['mobile'] = val;
+
+                                        textControllers['mobile']?.text = val;
+                                      },
                                     ),
                                   ),
                                 ],

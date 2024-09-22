@@ -36,6 +36,7 @@ class OfferModel {
   String? condition;
   String? policy;
   bool anonymous;
+  String? mobile;
 
   //enum
   OfferStatus? status;
@@ -59,6 +60,7 @@ class OfferModel {
     this.logistics,
     this.condition,
     this.policy,
+    this.mobile,
     this.anonymous = false,
     this.status = OfferStatus.Open,
   });
@@ -84,6 +86,7 @@ class OfferModel {
       'condition': condition,
       'policy': policy,
       'anonymous': anonymous,
+      'mobile': mobile,
       'status': status?.index,
     };
   }
@@ -103,6 +106,7 @@ class OfferModel {
       snederName: (map['snederName'] ?? '') as String,
       senderPhoto: (map['senderPhoto'] ?? '') as String,
       recieverId: (map['recieverId'] ?? '') as String,
+      mobile: map['mobile'],
       createdAt: map['createdAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch((map['createdAt'] ?? 0) as int)
           : null,

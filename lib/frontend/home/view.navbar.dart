@@ -1,12 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.promptHelper.dart';
-import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/post/view.createPost.dart';
 
@@ -122,53 +122,122 @@ class WrgNavBar extends StatelessWidget {
           child: InkWell(
             onTap: () {},
             child: Container(
-                height: 70,
-                width: 70,
-                decoration: BoxDecoration(
-                    color: toc.textColor,
-                    borderRadius: BorderRadius.circular(110)),
-                child: buildPopup(
-                    Container(
-                        child: Icon(
-                      Icons.add,
-                      color: toc.cardColor,
-                      size: 35,
-                    )),
-                    [
-                      TextButton(
-                          onPressed: () async {
-                            Get.close(1);
-                            if (await guardPrompt()) {
-                              Get.to(() => CreatePost());
-                            }
-                          },
-                          child: const Row(
-                            children: [
-                              Icon(Icons.post_add),
-                              SizedBox(width: 5),
-                              Text("Request Car Part")
-                            ],
-                          )),
-                      TextButton(
-                          onPressed: () async {
-                            Get.close(1);
-                            if (await guardPrompt()) {
-                              Get.to(() => CreatePost(), arguments: {
-                                "isService": true,
-                              });
-                            }
-                          },
-                          child: const Row(
-                            children: [
-                              Icon(Icons.room_service_outlined),
-                              SizedBox(width: 5),
-                              Text("Request Car Service")
-                            ],
-                          )),
-                    ])),
+              height: 70,
+              width: 70,
+              decoration: BoxDecoration(
+                  color: toc.textColor,
+                  borderRadius: BorderRadius.circular(110)),
+              child: SpeedDial(
+                backgroundColor: bgc,
+                foregroundColor: fgc,
+                overlayColor: fgc,
+                overlayOpacity: .7,
+                icon: Icons.add,
+                activeIcon: Icons.close,
+                elevation: 0,
+                spaceBetweenChildren: 8,
+                buttonSize: const Size(75, 75),
+                childrenButtonSize: const Size(75, 80),
+                children: <SpeedDialChild>[
+                  _createChild(() async {
+                    if (await guardPrompt()) {
+                      Get.to(() => CreatePost(), arguments: {
+                        "isService": true,
+                      });
+                    }
+                  }, Icons.room_service, "Request vehicle service"),
+                  _createChild(() async {
+                    if (await guardPrompt()) {
+                      Get.to(() => CreatePost());
+                    }
+                  }, Icons.post_add_rounded, "Request vehicle Part"),
+
+                  //  Your other SpeedDialChildren go here.
+                ],
+                child: const Icon(Icons.add),
+              ),
+              // child: buildPopup(
+              //     Container(
+              //         child: Icon(
+              //       Icons.add,
+              //       color: toc.cardColor,
+              //       size: 35,
+              //     )),
+              //     [
+              //       TextButton(
+              //           onPressed: () async {
+              //             Get.close(1);
+              //             if (await guardPrompt()) {
+              //               Get.to(() => CreatePost());
+              //             }
+              //           },
+              //           child: const Row(
+              //             children: [
+              //               Icon(Icons.post_add),
+              //               SizedBox(width: 5),
+              //               Text("Request Car Part")
+              //             ],
+              //           )),
+              //       TextButton(
+              //           onPressed: () async {
+              //             Get.close(1);
+              //             if (await guardPrompt()) {
+              //               Get.to(() => CreatePost(), arguments: {
+              //                 "isService": true,
+              //               });
+              //             }
+              //           },
+              //           child: const Row(
+              //             children: [
+              //               Icon(Icons.room_service_outlined),
+              //               SizedBox(width: 5),
+              //               Text("Request Car Service")
+              //             ],
+              //           )),
+              //     ]),
+            ),
           ),
         )
       ],
+    );
+  }
+
+  SpeedDialChild _createChild(Function onTap, IconData icon, String text) {
+    return SpeedDialChild(
+      foregroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      child: Container(
+        height: 70,
+        width: 70,
+        margin: const EdgeInsets.only(bottom: 0, right: 0),
+        padding: const EdgeInsets.all(0),
+        decoration: BoxDecoration(
+            color: toc.textColor, borderRadius: BorderRadius.circular(100)),
+        child: Icon(
+          icon,
+          color: toc.cardColor,
+        ),
+      ),
+      labelWidget: Container(
+        // height: 45,
+        margin: const EdgeInsets.only(bottom: 0, right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        decoration: BoxDecoration(
+            color: toc.textColor, borderRadius: BorderRadius.circular(100)),
+        child: Row(
+          children: [
+            const SizedBox(width: 10),
+            Text(
+              text,
+              style: TS.h2.copyWith(color: toc.cardColor),
+            )
+          ],
+        ),
+      ),
+      onTap: () async {
+        await onTap();
+      },
     );
   }
 }

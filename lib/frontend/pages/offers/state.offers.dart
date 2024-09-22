@@ -20,9 +20,9 @@ class OfferState extends GetxController with StateMixin {
 
   Future setup() async {
     try {
+      var offers = await GF<GE>().offers_getAllOffers();
       models.clear();
       offerMap2.clear();
-      var offers = await GF<GE>().offers_getAllOffers();
       models.value = offers;
       _updateMap();
       change("", status: RxStatus.success());

@@ -7,32 +7,20 @@ import 'package:wrg2/backend/enums/enum.post.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
-import 'package:wrg2/backend/models/comment.model.dart';
-import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/store/store.logos.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.promptHelper.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
-import 'package:wrg2/frontend/atoms/stom.futureBuilder.dart';
 import 'package:wrg2/frontend/pages/post/details/atom.offerBottomComp.dart';
+import 'package:wrg2/frontend/pages/post/details/atom.offerItem.dart';
 import 'package:wrg2/frontend/pages/post/details/state.postDetails.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class PostDetails extends StatelessWidget {
   PostDetails({super.key});
   final controller = Get.put(PostDetailsState());
-
-  String _getBookmarkText() {
-    var isWatching = GF<ProfileState>()
-            .userModel
-            ?.value
-            .watching
-            .contains(controller.model.id) ??
-        false;
-    return !isWatching ? "Bookmark" : "Bookmarked";
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +127,9 @@ class PostDetails extends StatelessWidget {
                     controller.onWatching();
                   }
                 },
-                child: Text(_getBookmarkText())),
+                child: Obx(() => Text(controller.postBookmarked.value
+                    ? "Undo Bookmark"
+                    : "Boormark"))),
             if (!controller.model.amIOwner() &&
                 GF<ProfileState>().isSignedIn.value)
               TextButton(
@@ -153,103 +143,31 @@ class PostDetails extends StatelessWidget {
                     ));
                   },
                   child: const Text("Make Offer")),
-            // TextButton(
-            //     onPressed: () {
-            //       if (controller.bottomView.value != 0) {
-            //         controller.updateBottomView(0);
-            //       }
-            //     },
-            //     child: const Text("View Offers")),
-            // TextButton(
-            //     onPressed: () {
-            //       if (controller.bottomView.value != 1) {
-            //         controller.updateBottomView(1);
-            //       }
-            //     },
-            //     child: const Text("View Comments")),
           ],
         )
       ],
-      // bottomNavigationBar: SafeArea(
-      //   child: GetBuilder<PostDetailsState>(
-      //     init: controller,
-      //     initState: (_) {},
-      //     builder: (_) {
-      //       return Container(
-      //         decoration: BoxDecoration(
-      //           color: toc.scaffoldBackgroundColor,
-      //         ),
-      //         height: 50,
-      //         child: Row(
-      //           mainAxisAlignment: MainAxisAlignment.center,
-      //           children: [
-      //             _buildIconsInfo(
-      //                 CupertinoIcons.eyeglasses, controller.model.watching,
-      //                 () {
-      //               Get.snackbar("Info",
-      //                   "${controller.model.watching} persons are currently watching this post");
-      //             }),
-      //             _buildIconsInfo(CupertinoIcons.eye, controller.model.views,
-      //                 () {
-      //               Get.snackbar("Info",
-      //                   "${controller.model.views} persons have viewed this post");
-      //             }),
-      //             _buildIconsInfo(
-      //                 CupertinoIcons.chat_bubble, controller.model.comments,
-      //                 () async {
-      //               await showWrgBottomSheet(Container(
-      //                 alignment: Alignment.center,
-      //                 child: FutureBuilder<dynamic>(
-      //                     future: controller.getCommentsForPost(),
-      //                     builder: (context, snapshot) {
-      //                       return Column(
-      //                         children: [
-      //                           const Text("Comments"),
-      //                           const Divider(),
-      //                           Expanded(
-      //                             child: ListView.builder(
-      //                               itemCount: controller.comments.length,
-      //                               itemBuilder: (context, index) {
-      //                                 var item = controller.comments[index];
-      //                                 return item.tile();
-      //                               },
-      //                             ),
-      //                           ),
-      //                         ],
-      //                       );
-      //                     }),
-      //               ));
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            GetBuilder<PostDetailsState>(
+                init: controller,
+                builder: (_) {
+                  // var child = movementUtil.lookUp(controller.model.id);
+                  // if (child != null) {
+                  //   return Hero(
+                  //     tag: controller.model.id,
+                  //     child: child,
+                  //   );
+                  // }
 
-      //               controller.comments = [];
-      //             }),
-      //           ],
-      //         ),
-      //       );
-      //     },
-      //   ),
-      // ),
-      body: Column(
-        children: [
-          GetBuilder<PostDetailsState>(
-              init: controller,
-              builder: (_) {
-                // var child = movementUtil.lookUp(controller.model.id);
-                // if (child != null) {
-                //   return Hero(
-                //     tag: controller.model.id,
-                //     child: child,
-                //   );
-                // }
-
-                var logo = logoHelper.getThumbnail(controller.model.make);
-                return Hero(
-                  tag: controller.model.id,
-                  child: Material(
-                    child: Container(
-                      padding: Constants.ePadding,
-                      color: toc.scaffoldBackgroundColor.lighterF(20),
-                      child: SafeArea(
-                        child: SingleChildScrollView(
+                  var logo = logoHelper.getThumbnail(controller.model.make);
+                  return Hero(
+                    tag: controller.model.id,
+                    child: Material(
+                      child: Container(
+                        padding: Constants.ePadding,
+                        color: toc.scaffoldBackgroundColor.lighterF(20),
+                        child: SafeArea(
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -309,231 +227,57 @@ class PostDetails extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ),
-                );
-              }),
-          // if (GF<ProfileState>().isSignedIn.value)
-          //   Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //     children: [
-          //       TextButton(
-          //         onPressed: () {
-          //           controller.onWatching();
-          //         },
-          //         child: Obx(() {
-          //           var isWatching = GF<ProfileState>()
-          //                   .userModel
-          //                   ?.value
-          //                   .watching
-          //                   .contains(controller.model.id) ??
-          //               false;
-          //           return !isWatching
-          //               ? const Text("Bookmark")
-          //               : const Text("Bookmarked");
-          //         }),
-          //       ),
-          //       if (!controller.model.amIOwner())
-          //         TextButton(
-          //             onPressed: () async {
-          //               await Get.bottomSheet(BottomSheet(
-          //                 onClosing: () {},
-          //                 builder: (context) {
-          //                   return OfferBottomComp();
-          //                 },
-          //               ));
-          //             },
-          //             child: const Text("Offer")),
-          //       TextButton(
-          //           onPressed: () async {
-          //             //show bottom sheet with comment input
-          //             await Get.bottomSheet(BottomSheet(
-          //               onClosing: () {},
-          //               builder: (context) {
-          //                 return Container(
-          //                   color: toc.scaffoldBackgroundColor,
-          //                   child: SafeArea(
-          //                     child: Container(
-          //                         decoration: BoxDecoration(
-          //                             borderRadius: Constants.br,
-          //                             color: toc.scaffoldBackgroundColor),
-          //                         // alignment: Alignment.center,
-          //                         padding: EdgeInsets.symmetric(
-          //                             horizontal: Constants.cardpadding,
-          //                             vertical:
-          //                                 Constants.cardVerticalMargin),
-          //                         child: Row(
-          //                           crossAxisAlignment:
-          //                               CrossAxisAlignment.center,
-          //                           children: [
-          //                             Expanded(
-          //                                 child:
-          //                                     buildInput("Comment", (val) {
-          //                               controller.commentString.value =
-          //                                   val;
-          //                             })),
-          //                             Container(
-          //                               margin:
-          //                                   const EdgeInsets.only(top: 15),
-          //                               child: IconButton(
-          //                                   onPressed: () {
-          //                                     controller.sendComment();
-          //                                   },
-          //                                   icon: const Icon(
-          //                                     CupertinoIcons
-          //                                         .arrow_up_right_circle,
-          //                                     size: 25,
-          //                                   )),
-          //                             )
-          //                           ],
-          //                         )),
-          //                   ),
-          //                 );
-          //               },
-          //             ));
-          //           },
-          //           child: const Text("Comment")),
-          //     ],
-          //   ),
-          // const Spacer(),
-          SizedBox(height: Constants.cardMargin),
-          SizedBox(height: Constants.cardMargin),
-          SizedBox(height: Constants.cardMargin),
-          Expanded(
-            child: GetBuilder<PostDetailsState>(
-                init: controller,
-                builder: (_) {
-                  if (controller.bottomView.value == 0) {
-                    return AtomFutureBuilder<OfferModel>(
-                        title: "Offers",
-                        showCount: false,
-                        // list: controller.offers,
-                        builder: (context, item) {
-                          return Container(
-                              padding: Constants.ePadding,
-                              margin: const EdgeInsets.only(top: 5),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(item.message),
-                                  Text(item.offerPrice ?? ""),
-                                  Text(item.condition ?? ""),
-                                  Text(item.paymentMethod ?? ""),
-                                  Text(item.logistics ?? ""),
-                                  Text(item.policy ?? ""),
-                                ],
-                              ));
-                        },
-                        onCall: controller.getOffers());
-                  } else {
-                    return AtomFutureBuilder<CommentModel>(
-                        // list: controller.comments,
-                        title: "Comment",
-                        builder: (context, item) {
-                          return Container(
-                              padding: Constants.ePadding,
-                              margin: const EdgeInsets.only(top: 5),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(item.content),
-                                  Text(item.username ?? ""),
-                                ],
-                              ));
-                        },
-                        onCall: controller.getCommentsForPost());
-                  }
-
-                  return Obx(() {
-                    if (controller.bottomView.value == 0 &&
-                        controller.offers.isEmpty) {
-                      return Container(
-                        height: 300,
-                        alignment: Alignment.center,
-                        child: Constants.emptyWidget("No Offers available"),
-                      );
-                    }
-                    if (controller.bottomView.value == 1 &&
-                        controller.comments.isEmpty) {
-                      return Container(
-                        height: 300,
-                        alignment: Alignment.center,
-                        child: Constants.emptyWidget("No comments"),
-                      );
-                    }
-                    if (controller.bottomView.value == 0) {
-                      return Expanded(
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                  "${controller.offers.length} ${controller.offers.length > 1 ? 'Offers' : 'Offer'} Available",
-                                  style: TS.h2),
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: controller.offers.length,
-                                  itemBuilder: (context, index) {
-                                    var item =
-                                        controller.offers.elementAt(index);
-                                    return Container(
-                                        padding: Constants.ePadding,
-                                        margin: const EdgeInsets.only(top: 5),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(item.message),
-                                            Text(item.offerPrice ?? ""),
-                                          ],
-                                        ));
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Expanded(
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                  "${controller.comments.length} ${controller.comments.length > 1 ? 'Comments' : 'Comment'} Available",
-                                  style: TS.h2),
-                              Expanded(
-                                child: ListView.builder(
-                                  itemCount: controller.comments.length,
-                                  itemBuilder: (context, index) {
-                                    var item =
-                                        controller.comments.elementAt(index);
-                                    return Container(
-                                        padding: Constants.ePadding,
-                                        margin: const EdgeInsets.only(top: 5),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(item.content),
-                                            Text(item.username ?? ""),
-                                          ],
-                                        ));
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                  });
+                  );
                 }),
-          ),
-          const SizedBox(height: 50),
-        ],
+            SizedBox(height: Constants.cardMargin),
+            SizedBox(height: Constants.cardMargin),
+            SizedBox(height: Constants.cardMargin),
+            Obx(() => _buildOfferSection()),
+            const SizedBox(height: 50),
+          ],
+        ),
       ),
     );
+  }
+
+  Widget _buildOfferSection() {
+    return Container(
+        padding: Constants.ePadding,
+        alignment: Alignment.topCenter,
+        decoration: const BoxDecoration(
+            // border: Border.all(
+            //   width: 3,
+            //   color: toc.scaffoldBackgroundColor.darkerF(20),
+            // ),
+            // // borderRadius: Constants.br * 3,
+            // color: toc.scaffoldBackgroundColor.darkerF(20),
+            ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Opacity(
+                    opacity: .6,
+                    child: Text(
+                      "${controller.offers.length} Offers",
+                      style: TS.h3,
+                    )),
+                const Spacer(),
+                if (controller.offers.length > 3)
+                  TextButton(
+                      onPressed: () {}, child: const Text("View all offers"))
+              ],
+            ),
+            const SizedBox(height: 5),
+            ...controller.offers.take(3).map((e) => OfferItemAtom(
+                  model: e,
+                )),
+          ],
+        ));
   }
 
   Widget _buildLabel(String label, String value) {

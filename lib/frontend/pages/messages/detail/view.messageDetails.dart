@@ -7,8 +7,8 @@ import 'package:wrg2/backend/models/conversation.dart';
 import 'package:wrg2/backend/models/messages.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.promptHelper.dart';
-import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/messages/detail/state.messageDetails.dart';
 import 'package:wrg2/frontend/pages/messages/state.messages.dart';
@@ -32,42 +32,42 @@ class MessageDetailView extends StatelessWidget {
         builder: (_) {
           initialOffer ??= controller.initial;
 
-          var convo = GFI<MessagesState>()
-              ?.conversations
-              .firstWhereOrNull((e) => e.id == controller.conversation?.id);
+          // var convo = GFI<MessagesState>()
+          //     ?.conversations
+          //     .firstWhereOrNull((e) => e.id == controller.conversation?.id);
 
-          if ((initialOffer?.amISender ?? true) ||
-              (convo != null && convo.messages.isNotEmpty)) {
-            return BottomSheet(
-              onClosing: () {},
-              builder: (context) => Container(
-                color: toc.scaffoldBackgroundColor,
-                child: SafeArea(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: Constants.cardpadding),
-                    //remove marge on keyboard visibility
-                    margin: const EdgeInsets.only(bottom: 40),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            child: buildInput("message", (val) {},
-                                showHelper: false,
-                                height: 45,
-                                tec: controller.controller)),
-                        TextButton(
-                            onPressed: () {
-                              controller.onSend();
-                            },
-                            child: const Text("send"))
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }
+          // if ((initialOffer?.amISender ?? true) ||
+          //     (convo != null && convo.messages.isNotEmpty)) {
+          //   return BottomSheet(
+          //     onClosing: () {},
+          //     builder: (context) => Container(
+          //       color: toc.scaffoldBackgroundColor,
+          //       child: SafeArea(
+          //         child: Container(
+          //           padding:
+          //               EdgeInsets.symmetric(horizontal: Constants.cardpadding),
+          //           //remove marge on keyboard visibility
+          //           margin: const EdgeInsets.only(bottom: 40),
+          //           child: Row(
+          //             crossAxisAlignment: CrossAxisAlignment.center,
+          //             children: [
+          //               Expanded(
+          //                   child: buildInput("message", (val) {},
+          //                       showHelper: false,
+          //                       height: 45,
+          //                       tec: controller.controller)),
+          //               TextButton(
+          //                   onPressed: () {
+          //                     controller.onSend();
+          //                   },
+          //                   child: const Text("send"))
+          //             ],
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   );
+          // }
 
           return Container(
             height: 0,
@@ -100,12 +100,17 @@ class MessageDetailView extends StatelessWidget {
                   init: controller,
                   initState: (_) {},
                   builder: (_) {
-                    if (_.initial?.status == OfferStatus.Accepted ||
-                        _.initial?.status == OfferStatus.Declined) {
+                    if (initialOffer?.status == OfferStatus.Accepted ||
+                        initialOffer?.status == OfferStatus.Declined) {
                       return Container(
+                        color: initialOffer?.status?.color.withOpacity(.15),
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Text(
-                          "This offer was ${_.initial!.status!.displayName.toLowerCase()}",
-                          style: TS.h3.copyWith(color: toc.primaryColor),
+                          "This offer was ${initialOffer!.status!.displayName.toLowerCase()}"
+                              .capitalize!,
+                          style: TS.h3.copyWith(
+                              color: initialOffer?.status?.color.darker),
                         ),
                       );
                     }
@@ -174,24 +179,52 @@ class MessageDetailView extends StatelessWidget {
                     children: [
                       SizedBox(height: Constants.cardMargin),
                       _buildInitial(),
-                      _buildSender(),
-                      if (controller.conversation == null) _buildEmpty(),
-                      Builder(builder: (context) {
-                        if (convo != null) {
-                          return Container(
-                            child: Column(
-                                children: convo.messages.map((e) {
-                              return e.tile(e == convo!.messages.last
-                                  ? controller.last
-                                  : null);
-                            }).toList()),
-                          );
-                        }
+                      if (!(initialOffer?.amISender ?? false)) _buildEmpty(),
+                      // _buildSender(),
+                      // if (controller.conversation == null) _buildEmpty(),
+                      // Builder(builder: (context) {
+                      //   if (convo != null) {
+                      //     return Container(
+                      //       child: Column(
+                      //           children: convo.messages.map((e) {
+                      //         return e.tile(e == convo!.messages.last
+                      //             ? controller.last
+                      //             : null);
+                      //       }).toList()),
+                      //     );
+                      //   }
 
-                        return Container(
-                          child: const Text("No conversation"),
-                        );
-                      }),
+                      //   return Container(
+                      //     child: const Text("No conversation"),
+                      //   );
+                      // }),
+                      const SizedBox(height: 20),
+                      if (!(initialOffer?.amISender ?? false))
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            if (initialOffer?.mobile?.isNotEmpty ?? false)
+                              TextButton(
+                                style: BS.defaultBtnStyle,
+                                onPressed: () {},
+                                child: const Text("Whatsapp"),
+                              ),
+                            TextButton(
+                              style: BS.defaultBtnStyle,
+                              onPressed: () {},
+                              child: const Text("Email"),
+                            ),
+                          ],
+                        )
+                      else
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            TextButton(
+                                onPressed: () {},
+                                child: const Text("Delete Offer"))
+                          ],
+                        ),
                       SizedBox(height: Get.height * .2),
                     ],
                   ),
@@ -230,7 +263,11 @@ class MessageDetailView extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text("initial Offer"),
+                  Text(
+                    "Initial Offer",
+                    style: TS.h3,
+                  ),
+                  const SizedBox(height: 10),
                   _buildChip(
                     "Sender:",
                     " ${initialOffer?.senderId ?? ""}",
@@ -281,9 +318,9 @@ class MessageDetailView extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(s, style: TS.h4.copyWith(color: toc.textColor.withOpacity(.7))),
+          Text(s, style: TS.h4.copyWith(color: toc.textColor.withOpacity(.8))),
           const SizedBox(width: 5),
-          Expanded(child: Text(t, style: TS.h4)),
+          Expanded(child: Text(t, style: TS.h3)),
         ],
       ),
     );
@@ -302,7 +339,7 @@ class MessageDetailView extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Here you can message the person who sent you the offer to discuss details. You can also accept or decline the offer, this will update the original post letting everyone know that your request has been answered. Below is the chat box where you can type and send your message. send your first message to get started. ",
+            "This is where you can review the details of the offer, you are able to contact the person making the offer via email or whatsapp. Remember to update the offer status to allow others to make more offers. ",
             style: TS.h4,
           ),
         ],
@@ -310,24 +347,25 @@ class MessageDetailView extends StatelessWidget {
     );
   }
 
-  _buildSender() {
-    return Container(
-      padding: Constants.ePadding,
-      margin: Constants.ePadding,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: toc.cardColor.withOpacity(1),
-        borderRadius: Constants.br * 2,
-        border: Border.all(color: toc.primaryColor.lighter, width: 1.5),
-      ),
-      child: Column(
-        children: [
-          Text(
-            "This is a chat that will be populated once you have received a message from the person who you sent the offer.",
-            style: TS.h4,
-          ),
-        ],
-      ),
-    );
-  }
+  // _buildSender() {
+  //   if (initialOffer?.amISender ?? false) return Container();
+  //   return Container(
+  //     padding: Constants.ePadding,
+  //     margin: Constants.ePadding,
+  //     alignment: Alignment.center,
+  //     decoration: BoxDecoration(
+  //       color: toc.cardColor.withOpacity(1),
+  //       borderRadius: Constants.br * 2,
+  //       border: Border.all(color: toc.primaryColor.lighter, width: 1.5),
+  //     ),
+  //     child: Column(
+  //       children: [
+  //         Text(
+  //           "This is a chat that will be populated once you have received a message from the person who you sent the offer.",
+  //           style: TS.h4,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

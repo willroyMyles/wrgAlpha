@@ -173,6 +173,7 @@ class MessageDetailsState extends GetxController with StateMixin {
   }
 
   checkCount() {
+    if (conversation == null) return;
     if (conversation!.iAmSender) {
       if (conversation!.senderMessageCount > 0) {
         GF<GE>().conversation_removeCount(conversation!.id, true);

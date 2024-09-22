@@ -40,7 +40,7 @@ class ManageCarView extends GetView<CarState> {
                   Row(
                     children: [
                       Expanded(
-                        child: buildDropdownInput("Make", (v) {
+                        child: buildDropdownInputAhead("Make", (v) {
                           controller.car.value.make = v;
                           controller.car.refresh();
                         },
@@ -51,7 +51,7 @@ class ManageCarView extends GetView<CarState> {
                       Expanded(
                         child: Obx(() => Container(
                               key: UniqueKey(),
-                              child: buildDropdownInput("Model", (v) {
+                              child: buildDropdownInputAhead("Model", (v) {
                                 controller.car.value.model = v;
                               },
                                   initialValue: controller.car.value.model,
@@ -60,7 +60,7 @@ class ManageCarView extends GetView<CarState> {
                       ),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: buildDropdownInput(
+                        child: buildDropdownInputAhead(
                           "Year",
                           (v) {
                             controller.car.value.year = v;
@@ -107,7 +107,7 @@ class ManageCarView extends GetView<CarState> {
                   Row(
                     children: [
                       Expanded(
-                        child: buildDropdownInput("Transmission", (v) {
+                        child: buildDropdownInputAhead("Transmission", (v) {
                           controller.car.value.transmission =
                               Transmission.fromName(v);
                         },
@@ -119,7 +119,7 @@ class ManageCarView extends GetView<CarState> {
                       ),
                       const SizedBox(width: 10),
                       Expanded(
-                        child: buildDropdownInput("Engine", (v) {
+                        child: buildDropdownInputAhead("Engine", (v) {
                           controller.car.value.type = CarType.fromName(v);
                         },
                             items: CarType.values.map((e) => e.name).toList(),

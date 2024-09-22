@@ -1,9 +1,21 @@
+import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
+
+TextStyle _style = TextStyle(color: toc.textColor.withOpacity(.9));
+InputDecoration _decoration = InputDecoration(
+    fillColor: Colors.white,
+    filled: true,
+    contentPadding: const EdgeInsets.only(left: 8, top: 2),
+
+    // labelText: this.labelText,
+    focusedBorder: border,
+    enabledBorder: border,
+    border: border);
 
 Widget buildLargeInput(String label, onChange,
     {bool obscure = false,
@@ -49,7 +61,7 @@ Widget buildInput(String label, onChange,
               children: [
                 Text(
                   label.capitalize!,
-                  style: const TextStyle(color: Colors.grey),
+                  style: _style,
                 ),
                 if (requireInput)
                   Text(
@@ -63,30 +75,20 @@ Widget buildInput(String label, onChange,
           ),
         Expanded(
           child: TextFormField(
-            controller: tec,
-            validator: validator,
-            minLines: lines,
-            maxLines: lines,
-            expands: lines == null,
-            onChanged: onChange,
-            initialValue: initialValue,
-            textAlign: TextAlign.justify,
-            textAlignVertical:
-                largeInput ? TextAlignVertical.top : TextAlignVertical.center,
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-            decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                alignLabelWithHint: true,
-                // labelText: label,
-                focusedBorder: border,
-                enabledBorder: border,
-                border: border),
-          ),
+              controller: tec,
+              validator: validator,
+              minLines: lines,
+              maxLines: lines,
+              expands: lines == null,
+              onChanged: onChange,
+              initialValue: initialValue,
+              textAlign: TextAlign.justify,
+              textAlignVertical:
+                  largeInput ? TextAlignVertical.top : TextAlignVertical.center,
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+              decoration: _decoration),
         ),
       ],
     ),
@@ -136,43 +138,35 @@ Widget buildInputHorizontal(String label, onChange,
         Expanded(
           flex: 2,
           child: TextFormField(
-            controller: tec,
-            validator: validator,
-            minLines: lines,
-            maxLines: lines,
-            expands: lines == null,
-            onChanged: onChange,
-            initialValue: initialValue,
-            textAlign: TextAlign.justify,
-            textAlignVertical:
-                largeInput ? TextAlignVertical.top : TextAlignVertical.center,
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-            decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                alignLabelWithHint: true,
-                // labelText: label,
-                focusedBorder: border,
-                enabledBorder: border,
-                border: border),
-          ),
+              controller: tec,
+              validator: validator,
+              minLines: lines,
+              maxLines: lines,
+              expands: lines == null,
+              onChanged: onChange,
+              initialValue: initialValue,
+              textAlign: TextAlign.justify,
+              textAlignVertical:
+                  largeInput ? TextAlignVertical.top : TextAlignVertical.center,
+              style: const TextStyle(
+                color: Colors.black,
+              ),
+              decoration: _decoration),
         ),
       ],
     ),
   );
 }
 
-Widget buildDropdownInput(String label, onChange,
+Widget buildDropdownInputAhead(String label, onChange,
     {List<String> items = const [],
     double height = 80,
     bool showHelper = true,
     bool requireInput = false,
     bool dense = false,
-    String? initialValue}) {
+    String? initialValue,
+    Map<String, TextEditingController>? ctrl}) {
+  FocusNode fn = FocusNode();
   return Container(
     height: height,
     decoration: const BoxDecoration(),
@@ -186,7 +180,7 @@ Widget buildDropdownInput(String label, onChange,
               children: [
                 Text(
                   label.capitalize!,
-                  style: const TextStyle(color: Colors.grey),
+                  style: _style,
                 ),
                 if (requireInput)
                   Text(
@@ -199,39 +193,42 @@ Widget buildDropdownInput(String label, onChange,
             ),
           ),
         Expanded(
-            child: DropdownButtonFormField<String>(
-          value: initialValue,
-          onChanged: (String? value) {
-            onChange(value);
-          },
-          menuMaxHeight: Get.height * 0.5,
-          items: items.map((String value) {
-            var isFirst = value == items.first;
-            var isLast = value == items.last;
-            return DropdownMenuItem<String>(
-              value: value.trim(),
-              child: Container(
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                  child: Text(value)),
-            );
-          }).toList(),
-          isExpanded: true,
-          elevation: 30,
-          dropdownColor: toc.cardColor,
-          isDense: dense,
-          enableFeedback: true,
-          padding: const EdgeInsets.all(0),
-          decoration: InputDecoration(
-              fillColor: Colors.white,
-              filled: true,
-              contentPadding: const EdgeInsets.only(left: 8, top: 2),
-
-              // labelText: this.labelText,
-              focusedBorder: border,
-              enabledBorder: border,
-              border: border),
-        )),
+          child: EasyAutocomplete(
+            debounceDuration: 10.milliseconds,
+            controller: ctrl?[label.toLowerCase()],
+            focusNode: fn,
+            suggestionBuilder: (value) {
+              return InkWell(
+                onTap: () {
+                  onChange(value);
+                  fn.unfocus();
+                },
+                child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
+                    child: Text(value)),
+              );
+            },
+            asyncSuggestions: (searchValue) {
+              return Future.value(items
+                  .where((element) =>
+                      element.toLowerCase().contains(searchValue.toLowerCase()))
+                  .toList());
+            },
+            decoration: _decoration,
+            progressIndicatorBuilder: Container(),
+            onChanged: (value) {
+              // onChange(value);
+            },
+            onSubmitted: (p0) {
+              onChange(p0);
+            },
+          ),
+        ),
       ],
     ),
   );
