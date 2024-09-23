@@ -1,5 +1,6 @@
 import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
@@ -47,6 +48,7 @@ Widget buildInput(String label, onChange,
     bool showHelper = true,
     bool largeInput = false,
     bool requireInput = false,
+    TextInputFormatter? formatter,
     String? initialValue}) {
   return Container(
     height: height,
@@ -83,6 +85,9 @@ Widget buildInput(String label, onChange,
               onChanged: onChange,
               initialValue: initialValue,
               textAlign: TextAlign.justify,
+              inputFormatters: [
+                if (formatter != null) formatter,
+              ],
               textAlignVertical:
                   largeInput ? TextAlignVertical.top : TextAlignVertical.center,
               style: const TextStyle(

@@ -131,11 +131,11 @@ class WrgNavBar extends StatelessWidget {
                 backgroundColor: bgc,
                 foregroundColor: fgc,
                 overlayColor: fgc,
-                overlayOpacity: .7,
+                overlayOpacity: 1,
                 icon: Icons.add,
                 activeIcon: Icons.close,
                 elevation: 0,
-                spaceBetweenChildren: 8,
+                spaceBetweenChildren: 0,
                 buttonSize: const Size(75, 75),
                 childrenButtonSize: const Size(75, 80),
                 children: <SpeedDialChild>[
@@ -156,45 +156,6 @@ class WrgNavBar extends StatelessWidget {
                 ],
                 child: const Icon(Icons.add),
               ),
-              // child: buildPopup(
-              //     Container(
-              //         child: Icon(
-              //       Icons.add,
-              //       color: toc.cardColor,
-              //       size: 35,
-              //     )),
-              //     [
-              //       TextButton(
-              //           onPressed: () async {
-              //             Get.close(1);
-              //             if (await guardPrompt()) {
-              //               Get.to(() => CreatePost());
-              //             }
-              //           },
-              //           child: const Row(
-              //             children: [
-              //               Icon(Icons.post_add),
-              //               SizedBox(width: 5),
-              //               Text("Request Car Part")
-              //             ],
-              //           )),
-              //       TextButton(
-              //           onPressed: () async {
-              //             Get.close(1);
-              //             if (await guardPrompt()) {
-              //               Get.to(() => CreatePost(), arguments: {
-              //                 "isService": true,
-              //               });
-              //             }
-              //           },
-              //           child: const Row(
-              //             children: [
-              //               Icon(Icons.room_service_outlined),
-              //               SizedBox(width: 5),
-              //               Text("Request Car Service")
-              //             ],
-              //           )),
-              //     ]),
             ),
           ),
         )
@@ -208,10 +169,8 @@ class WrgNavBar extends StatelessWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       child: Container(
-        height: 70,
-        width: 70,
-        margin: const EdgeInsets.only(bottom: 0, right: 0),
-        padding: const EdgeInsets.all(0),
+        height: 60,
+        width: 60,
         decoration: BoxDecoration(
             color: toc.textColor, borderRadius: BorderRadius.circular(100)),
         child: Icon(
@@ -221,8 +180,8 @@ class WrgNavBar extends StatelessWidget {
       ),
       labelWidget: Container(
         // height: 45,
-        margin: const EdgeInsets.only(bottom: 0, right: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        margin: const EdgeInsets.only(bottom: 0, right: 0),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
             color: toc.textColor, borderRadius: BorderRadius.circular(100)),
         child: Row(
@@ -230,7 +189,7 @@ class WrgNavBar extends StatelessWidget {
             const SizedBox(width: 10),
             Text(
               text,
-              style: TS.h2.copyWith(color: toc.cardColor),
+              style: TS.h3.copyWith(color: toc.cardColor),
             )
           ],
         ),

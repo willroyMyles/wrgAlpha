@@ -1,19 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:wrg2/backend/models/conversation.dart';
 import 'package:wrg2/backend/models/post.model.dart';
+import 'package:wrg2/backend/models/rating.model.dart';
 
 class UserInfoModel {
   String username;
   String userImageUrl;
   String userId;
   String email;
-  String alias;
+  String? alias;
+  String? mobile;
 
   List<String> watching;
-  List<String> incomings;
-  List<String> outgoings;
+  List<RatingModel> ratings;
 
   UserInfoModel({
     this.username = '',
@@ -21,48 +21,43 @@ class UserInfoModel {
     this.userId = '',
     this.email = '',
     this.alias = '',
+    this.mobile,
     this.watching = const [],
-    this.incomings = const [],
-    this.outgoings = const [],
+    this.ratings = const [],
   });
   Map<String, String> watchingMap = {};
 
   factory UserInfoModel.empty() => UserInfoModel();
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'username': username,
       'userImageUrl': userImageUrl,
       'userId': userId,
       'email': email,
       'alias': alias,
+      'mobile': mobile,
       'watching': watching,
-      'incomings': incomings,
-      'outgoings': outgoings,
+      'ratings': ratings.map((x) => x.toMap()).toList(),
     };
   }
 
   factory UserInfoModel.fromMapForConvo(Map<String, dynamic> json) {
     var userinfo = UserInfoModel.empty();
-
-    userinfo.incomings =
-        json["incomings"].map((e) => ConversationModel.fromMap(e)).toList();
-    userinfo.outgoings =
-        json["outgoings"].map((e) => ConversationModel.fromMap(e)).toList();
-
     return userinfo;
   }
 
   factory UserInfoModel.fromMap(Map<String, dynamic> map) {
     return UserInfoModel(
-      username: (map['username'] ?? '') as String,
-      userImageUrl: (map['userImageUrl'] ?? '') as String,
-      userId: (map['userId'] ?? '') as String,
-      email: (map['email'] ?? '') as String,
-      alias: (map['alias'] ?? '') as String,
-      watching: List<String>.from((map['watching'] ?? const <String>[])),
-      incomings: List<String>.from((map['incomings'] ?? const <String>[])),
-      outgoings: List<String>.from((map['outgoings'] ?? const <String>[])),
+      username: map['username'] ?? '',
+      userImageUrl: map['userImageUrl'] ?? '',
+      userId: map['userId'] ?? '',
+      email: map['email'] ?? '',
+      alias: map['alias'],
+      mobile: map['mobile'],
+      watching: List<String>.from(map['watching'] ?? const []),
+      ratings: List<RatingModel>.from(
+          map['ratings']?.map((x) => RatingModel.fromMap(x)) ?? const []),
     );
   }
 

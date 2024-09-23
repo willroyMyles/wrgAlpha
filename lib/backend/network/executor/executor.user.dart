@@ -25,6 +25,21 @@ mixin UserExecutor {
     }
   }
 
+  Future<UserInfoModel?> user_getUserById(String id) async {
+    try {
+      return _fstore.collection(_col).doc(id).get().then((value) {
+        if (value.exists) {
+          return UserInfoModel.fromMap(value.data()!);
+        } else {
+          return null;
+        }
+      });
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<UserInfoModel?> user_getUser() async {
     try {
       var user = FirebaseAuth.instance.currentUser;
@@ -36,6 +51,18 @@ mixin UserExecutor {
     } catch (e) {
       print(e);
       return null;
+    }
+  }
+
+  Future<bool> user_updateProfile(Map<String, dynamic> map) async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      if (user == null) return false;
+      var userDoc = _fstore.collection(_col).doc(user.email);
+      await userDoc.update(map);
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 

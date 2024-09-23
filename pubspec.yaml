@@ -62,6 +62,7 @@ dependencies:
   iconsax: ^0.0.8
   onesignal_flutter: ^5.1.2
   easy_autocomplete: ^1.6.0
+  url_launcher: ^6.3.0
 
   firebase_pagination: ^4.0.1
   flutter_firebase_chat_core: ^1.6.8
@@ -72,6 +73,7 @@ dependencies:
 
   movements: 
     path: "./movements/"
+  mask_text_input_formatter: ^2.9.0
 
 
 dev_dependencies:

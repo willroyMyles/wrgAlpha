@@ -65,4 +65,14 @@ class ProfileState extends GetxController {
     userModel!.refresh();
     refresh();
   }
+
+  updateProfile(Map<String, String> map) async {
+    print(map);
+    var res = await Get.find<GE>().user_updateProfile(map);
+    if (res) {
+      SBUtil.showSuccessSnackBar("Profile updated");
+    } else {
+      SBUtil.showErrorSnackBar("Failed to update profile");
+    }
+  }
 }

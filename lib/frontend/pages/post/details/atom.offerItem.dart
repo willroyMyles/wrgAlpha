@@ -1,10 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
+import 'package:wrg2/backend/utils/util.whatsapp.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/atom.bottomSheet.dart';
+import 'package:wrg2/frontend/pages/personal/view.personalItem.dart';
 
 class OfferItemAtom extends StatelessWidget {
   final OfferModel model;
@@ -25,28 +28,11 @@ class OfferItemAtom extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                  alignment: Alignment.center,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      border: Border.all(color: Colors.transparent, width: 2)),
-                  child: CircleAvatar(
-                    minRadius: 25,
-                    backgroundImage: Image.network(model.senderPhoto).image,
-                  )),
-              const SizedBox(width: 10),
-              Column(
-                children: [
-                  Text(
-                    model.snederName,
-                    style: TS.h4,
-                  ),
-                  Text(
-                    model.mobile ?? "--No Contact--",
-                    style: TS.h4,
-                  ),
-                ],
+              PersonalProfileItem(
+                name: model.snederName ?? "",
+                photo: model.senderPhoto,
+                id: model.senderId,
+                mobile: model.mobile,
               ),
               const Spacer(),
               TextButton(
@@ -97,6 +83,59 @@ class OfferItemAtom extends StatelessWidget {
                                 "Refund Policy:",
                                 " ${model.policy ?? ""}",
                               ),
+                              if (model.mobile != null)
+                                Container(
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.only(
+                                      top: 40, bottom: 40),
+                                  child: TextButton(
+                                    style: BS.defaultBtnStyle,
+                                    onPressed: () async {
+                                      try {
+                                        await openWhatsApp(
+                                          phone: '${model.mobile}',
+                                          text: 'Initial text',
+                                        );
+                                      } on Exception catch (e) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) =>
+                                                CupertinoAlertDialog(
+                                                  title:
+                                                      const Text("Attention!"),
+                                                  content: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 5),
+                                                    child: Text(
+                                                      'We did not find the «SMS Messenger» application on your phone, please install it and try again»',
+                                                      style: context.theme
+                                                          .textTheme.labelSmall
+                                                          ?.copyWith(
+                                                        height: 1.1,
+                                                        color: context
+                                                            .theme
+                                                            .textTheme
+                                                            .bodyLarge
+                                                            ?.color,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  actions: [
+                                                    CupertinoDialogAction(
+                                                      child:
+                                                          const Text('Close'),
+                                                      onPressed: () =>
+                                                          Navigator.of(context)
+                                                              .pop(),
+                                                    ),
+                                                  ],
+                                                ));
+                                      }
+                                    },
+                                    child: const Text("WhatsApp"),
+                                  ),
+                                )
                             ],
                           ),
                         ),

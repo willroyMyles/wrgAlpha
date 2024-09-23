@@ -14,6 +14,7 @@ import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/offers/view.offers.dart';
 import 'package:wrg2/frontend/pages/personal/view.personalPosts.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
+import 'package:wrg2/frontend/pages/profile/view.editProfile.dart';
 import 'package:wrg2/frontend/pages/watching/view.watching.dart';
 
 class ProfileView extends GetView<ProfileState> {
@@ -26,32 +27,41 @@ class ProfileView extends GetView<ProfileState> {
     return Theme(
       data: Theme.of(context),
       child: Scaffold(
+          appBar: AppBar(
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Get.to(() => EditProfile());
+                  },
+                  child: const Text("Edit Profile"))
+            ],
+          ),
           body: SafeArea(
-        child: Container(
-          padding: Constants.ePadding,
-          // alignment: Alignment.bottomCenter,
-          child: GetBuilder<ProfileState>(
-              init: controller,
-              initState: (_) {},
-              builder: (_) {
-                return Obx(() => AnimatedSwitcher(
-                    duration: 150.milliseconds,
-                    layoutBuilder: (currentChild, previousChildren) {
-                      return Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: <Widget>[
-                          ...previousChildren,
-                          if (currentChild != null) currentChild,
-                        ],
-                      );
-                    },
-                    child: showFeedback.value
-                        ? Container(
-                            key: UniqueKey(), child: _feedbackPage(context))
-                        : _regularPage(context)));
-              }),
-        ),
-      )),
+            child: Container(
+              padding: Constants.ePadding,
+              // alignment: Alignment.bottomCenter,
+              child: GetBuilder<ProfileState>(
+                  init: controller,
+                  initState: (_) {},
+                  builder: (_) {
+                    return Obx(() => AnimatedSwitcher(
+                        duration: 150.milliseconds,
+                        layoutBuilder: (currentChild, previousChildren) {
+                          return Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: <Widget>[
+                              ...previousChildren,
+                              if (currentChild != null) currentChild,
+                            ],
+                          );
+                        },
+                        child: showFeedback.value
+                            ? Container(
+                                key: UniqueKey(), child: _feedbackPage(context))
+                            : _regularPage(context)));
+                  }),
+            ),
+          )),
     );
   }
 
