@@ -9,7 +9,7 @@ WidgetStatePropertyAll<T> wst<T>(T value) {
 
 class BS {
   static ButtonStyle get defaultBtnStyle => ButtonStyle(
-      minimumSize: wst(Size(Get.width * .4, 50)),
+      minimumSize: wst(Size(Get.width * .1, 50)),
       maximumSize: wst(Size(Get.width * .5, 50)),
       backgroundColor:
           WidgetStateProperty.all(toc.primaryColor.withOpacity(.9)),
@@ -22,6 +22,21 @@ class BS {
       padding: mst(const EdgeInsets.symmetric(horizontal: 30, vertical: 5)),
       shape:
           mst(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))));
+  static ButtonStyle get defaultEmpty => ButtonStyle(
+      minimumSize: wst(Size(Get.width * .1, 50)),
+      maximumSize: wst(Size(Get.width * .5, 50)),
+      backgroundColor:
+          WidgetStateProperty.all(toc.primaryColor.withOpacity(.0)),
+      foregroundColor: WidgetStateProperty.all(toc.primaryColor),
+      textStyle:
+          mst(const TextStyle(fontWeight: FontWeight.w600, fontSize: 16)),
+      elevation: mst(0),
+      shadowColor: mst(toc.scaffoldBackgroundColor),
+      // animationDuration: Constants.fastAnimationSpeed,
+      padding: mst(const EdgeInsets.symmetric(horizontal: 30, vertical: 5)),
+      shape: mst(RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(color: toc.primaryColor, width: 2))));
 
   static ButtonStyle get secondaryBtnStyle => ButtonStyle(
       minimumSize: wst(Size(Get.width * .4, 50)),

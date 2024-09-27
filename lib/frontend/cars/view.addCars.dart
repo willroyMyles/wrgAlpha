@@ -28,124 +28,154 @@ class ManageCarView extends GetView<CarState> {
           onTap: () {
             FocusManager.instance.primaryFocus?.unfocus();
           },
-          child: Container(
-            padding: Constants.ePadding,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  buildInput("Alias", (v) {
-                    controller.car.value.alias = v;
-                  }, initialValue: car?.alias),
-                  Constants.verticalSpace,
-                  Row(
-                    children: [
-                      Expanded(
-                        child: buildDropdownInputAhead("Make", (v) {
-                          controller.car.value.make = v;
-                          controller.car.refresh();
-                        },
-                            items: controller.getMake(),
-                            initialValue: car?.make),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Obx(() => Container(
+          child: Form(
+            key: controller.formKey,
+            child: Container(
+              padding: Constants.ePadding,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    buildInput("Alias", (v) {
+                      controller.car.value.alias = v;
+                    }, initialValue: car?.alias),
+                    Constants.verticalSpace,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: buildDropdownInputAhead("Make", (v) {
+                            controller.car.value.make = v;
+                            controller.car.refresh();
+                          },
+                              items: controller.getMake(),
+                              initialValue: car?.make,
+                              requireInput: true),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Obx(
+                            () => Container(
                               key: UniqueKey(),
                               child: buildDropdownInputAhead("Model", (v) {
                                 controller.car.value.model = v;
                               },
                                   initialValue: controller.car.value.model,
-                                  items: ["", ...controller.getModelList()]),
-                            )),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: buildDropdownInputAhead(
-                          "Year",
-                          (v) {
-                            controller.car.value.year = v;
-                          },
-                          initialValue: controller.car.value.year,
-                          items: [
-                            "",
-                            ...List.generate(
-                                60, (idx) => (2024 - idx).toString())
-                          ],
+                                  items: ["", ...controller.getModelList()],
+                                  requireInput: true),
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Constants.verticalSpace,
-                  Row(
-                    children: [
-                      Expanded(
-                          child: buildInput("Engine No.", (v) {
-                        controller.car.value.engineNo = v;
-                      }, initialValue: controller.car.value.chasisNo)),
-                      const SizedBox(width: 10),
-                      Expanded(
-                          child: buildInput("Chassie No.", (v) {
-                        controller.car.value.chasisNo = v;
-                      }, initialValue: controller.car.value.chasisNo)),
-                    ],
-                  ),
-                  Constants.verticalSpace,
-                  Row(
-                    children: [
-                      Expanded(
-                          child: buildInput("Color", (v) {
-                        controller.car.value.color = v;
-                      }, initialValue: controller.car.value.color)),
-                      const SizedBox(width: 10),
-                      Expanded(
-                          child: buildInput("Body", (v) {
-                        controller.car.value.bodyType = v;
-                      }, initialValue: controller.car.value.bodyType)),
-                    ],
-                  ),
-                  Constants.verticalSpace,
-                  Row(
-                    children: [
-                      Expanded(
-                        child: buildDropdownInputAhead("Transmission", (v) {
-                          controller.car.value.transmission =
-                              Transmission.fromName(v);
-                        },
-                            initialValue:
-                                controller.car.value.transmission?.name,
-                            items: Transmission.values
-                                .map((e) => e.name)
-                                .toList()),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: buildDropdownInputAhead("Engine", (v) {
-                          controller.car.value.type = CarType.fromName(v);
-                        },
-                            items: CarType.values.map((e) => e.name).toList(),
-                            initialValue: controller.car.value.type?.name),
-                      ),
-                    ],
-                  ),
-                  Constants.verticalSpace,
-                  buildInput("Description", (v) {
-                    controller.car.value.description = v;
-                  }, initialValue: controller.car.value.description),
-                  const SizedBox(height: 30),
-                  Constants.verticalSpace,
-                  if (edit)
-                    TextButton(
-                        onPressed: () {
-                          controller.updateCar();
-                        },
-                        child: const Text("Update"))
-                  else
-                    TextButton(
-                        onPressed: () {
-                          controller.addCar();
-                        },
-                        child: const Text("Submit")),
-                ],
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: buildDropdownInputAhead(
+                            "Year",
+                            (v) {
+                              controller.car.value.year = v;
+                            },
+                            initialValue: controller.car.value.year,
+                            requireInput: true,
+                            items: [
+                              "",
+                              ...List.generate(
+                                  60, (idx) => (2024 - idx).toString())
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Constants.verticalSpace,
+                    Row(
+                      children: [
+                        Expanded(
+                            child: buildInput(
+                          "Engine No.",
+                          (v) {
+                            controller.car.value.engineNo = v;
+                          },
+                          initialValue: controller.car.value.chasisNo,
+                          requireInput: true,
+                          validator: (value) {
+                            if (value == null || value.isEmail) {
+                              return "Engine No. cannot be empty";
+                            }
+                            return null;
+                          },
+                        )),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            child: buildInput(
+                          "Chassie No.",
+                          (v) {
+                            controller.car.value.chasisNo = v;
+                          },
+                          initialValue: controller.car.value.chasisNo,
+                          requireInput: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Chassie No. cannot be empty";
+                            }
+                            return null;
+                          },
+                        )),
+                      ],
+                    ),
+                    Constants.verticalSpace,
+                    Row(
+                      children: [
+                        Expanded(
+                            child: buildInput("Color", (v) {
+                          controller.car.value.color = v;
+                        }, initialValue: controller.car.value.color)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            child: buildInput("Body", (v) {
+                          controller.car.value.bodyType = v;
+                        }, initialValue: controller.car.value.bodyType)),
+                      ],
+                    ),
+                    Constants.verticalSpace,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: buildDropdownInputAhead("Transmission", (v) {
+                            controller.car.value.transmission =
+                                Transmission.fromName(v);
+                          },
+                              initialValue:
+                                  controller.car.value.transmission?.name,
+                              items: Transmission.values
+                                  .map((e) => e.name)
+                                  .toList()),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: buildDropdownInputAhead("Engine", (v) {
+                            controller.car.value.type = CarType.fromName(v);
+                          },
+                              items: CarType.values.map((e) => e.name).toList(),
+                              initialValue: controller.car.value.type?.name),
+                        ),
+                      ],
+                    ),
+                    Constants.verticalSpace,
+                    buildInput("Description", (v) {
+                      controller.car.value.description = v;
+                    }, initialValue: controller.car.value.description),
+                    const SizedBox(height: 30),
+                    Constants.verticalSpace,
+                    if (edit)
+                      TextButton(
+                          onPressed: () {
+                            controller.updateCar();
+                          },
+                          child: const Text("Update"))
+                    else
+                      TextButton(
+                          onPressed: () {
+                            controller.addCar();
+                          },
+                          child: const Text("Submit")),
+                  ],
+                ),
               ),
             ),
           ),

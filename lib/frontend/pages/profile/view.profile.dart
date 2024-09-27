@@ -9,7 +9,6 @@ import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/cars/view.cars.dart';
-import 'package:wrg2/frontend/pages/messages/view.messages.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/offers/view.offers.dart';
 import 'package:wrg2/frontend/pages/personal/view.personalPosts.dart';
@@ -29,11 +28,13 @@ class ProfileView extends GetView<ProfileState> {
       child: Scaffold(
           appBar: AppBar(
             actions: [
-              TextButton(
-                  onPressed: () {
-                    Get.to(() => EditProfile());
-                  },
-                  child: const Text("Edit Profile"))
+              Obx(() => controller.isSignedIn.value
+                  ? TextButton(
+                      onPressed: () {
+                        Get.to(() => EditProfile());
+                      },
+                      child: const Text("Edit Profile"))
+                  : Container())
             ],
           ),
           body: SafeArea(
@@ -234,9 +235,9 @@ class ProfileView extends GetView<ProfileState> {
               _buildTile(() {
                 Get.to(() => CarsView());
               }, CupertinoIcons.car_detailed, "Cars", true),
-              _buildTile(() {
-                Get.to(() => MessagesView());
-              }, CupertinoIcons.chat_bubble_2, "Messages", true),
+              // _buildTile(() {
+              //   Get.to(() => MessagesView());
+              // }, CupertinoIcons.chat_bubble_2, "Messages", true),
               _buildTile(() {
                 Get.to(() => PersonalPosts());
               }, CupertinoIcons.rectangle_on_rectangle_angled, "Your Posts",

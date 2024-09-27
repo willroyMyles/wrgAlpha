@@ -29,6 +29,8 @@ class MessageDetailsState extends GetxController with StateMixin {
     await setup();
   }
 
+  removeFromList(String id) {}
+
   Future setup() async {
     try {
       if ((Get.arguments as Map).containsKey("conversation")) {
@@ -76,7 +78,7 @@ class MessageDetailsState extends GetxController with StateMixin {
   }
 
   onAccept() async {
-    var res = await GF<GE>().offer_acceptOffer(initial!.id, initial!.postId);
+    var res = await GF<GE>().offer_acceptOffer(initial!);
     if (res) {
       SBUtil.showSuccessSnackBar("Offer Accepted");
     } else {
@@ -85,7 +87,7 @@ class MessageDetailsState extends GetxController with StateMixin {
   }
 
   onDecline() async {
-    var res = await GF<GE>().offer_declineOffer(initial!.id);
+    var res = await GF<GE>().offer_declineOffer(initial!);
     if (res) {
       SBUtil.showSuccessSnackBar("Offer Declined");
     } else {

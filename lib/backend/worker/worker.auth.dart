@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class AuthWorker {
@@ -17,6 +18,8 @@ class AuthWorker {
         user = u.obs;
         user!.refresh();
         Get.find<ProfileState>().setup();
+        OneSignal.login(user!.value.email!);
+        OneSignal.User.addTagWithKey("emailTag", user!.value.email!);
       }
     });
   }

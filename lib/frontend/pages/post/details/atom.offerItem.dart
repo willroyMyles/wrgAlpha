@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
@@ -96,42 +95,7 @@ class OfferItemAtom extends StatelessWidget {
                                           phone: '${model.mobile}',
                                           text: 'Initial text',
                                         );
-                                      } on Exception catch (e) {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) =>
-                                                CupertinoAlertDialog(
-                                                  title:
-                                                      const Text("Attention!"),
-                                                  content: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 5),
-                                                    child: Text(
-                                                      'We did not find the «SMS Messenger» application on your phone, please install it and try again»',
-                                                      style: context.theme
-                                                          .textTheme.labelSmall
-                                                          ?.copyWith(
-                                                        height: 1.1,
-                                                        color: context
-                                                            .theme
-                                                            .textTheme
-                                                            .bodyLarge
-                                                            ?.color,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  actions: [
-                                                    CupertinoDialogAction(
-                                                      child:
-                                                          const Text('Close'),
-                                                      onPressed: () =>
-                                                          Navigator.of(context)
-                                                              .pop(),
-                                                    ),
-                                                  ],
-                                                ));
-                                      }
+                                      } on Exception catch (e) {}
                                     },
                                     child: const Text("WhatsApp"),
                                   ),

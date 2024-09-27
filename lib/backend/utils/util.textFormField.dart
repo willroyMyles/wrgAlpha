@@ -39,9 +39,31 @@ Widget buildLargeInput(String label, onChange,
       initialValue: initialValue);
 }
 
+Widget _buildTopText(String text, bool require) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 8, bottom: 4),
+    child: Row(
+      children: [
+        Text(
+          text.capitalize!,
+          style: _style,
+        ),
+        if (require)
+          Text(
+            "*".capitalize!,
+            textScaler: const TextScaler.linear(1.3),
+            style: TextStyle(
+                color: Colors.red.withOpacity(0.5),
+                fontWeight: FontWeight.w700),
+          ),
+      ],
+    ),
+  );
+}
+
 Widget buildInput(String label, onChange,
     {bool obscure = false,
-    FormFieldValidator? validator,
+    FormFieldValidator<String>? validator,
     int? lines,
     double height = 80,
     TextEditingController? tec,
@@ -56,25 +78,7 @@ Widget buildInput(String label, onChange,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showHelper)
-          Padding(
-            padding: const EdgeInsets.only(left: 3, bottom: 05),
-            child: Row(
-              children: [
-                Text(
-                  label.capitalize!,
-                  style: _style,
-                ),
-                if (requireInput)
-                  Text(
-                    "*".capitalize!,
-                    style: TextStyle(
-                        color: Colors.red.withOpacity(0.5),
-                        fontWeight: FontWeight.w700),
-                  ),
-              ],
-            ),
-          ),
+        if (showHelper) _buildTopText(label, requireInput),
         Expanded(
           child: TextFormField(
               controller: tec,
@@ -119,26 +123,7 @@ Widget buildInputHorizontal(String label, onChange,
         if (showHelper)
           Expanded(
             flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 3, bottom: 05),
-              child: Row(
-                children: [
-                  Text(
-                    label.capitalize!,
-                    style: TextStyle(
-                        color: toc.textColor.withOpacity(.8),
-                        fontWeight: FontWeight.w600),
-                  ),
-                  if (requireInput)
-                    Text(
-                      "*".capitalize!,
-                      style: TextStyle(
-                          color: Colors.red.withOpacity(0.5),
-                          fontWeight: FontWeight.w700),
-                    ),
-                ],
-              ),
-            ),
+            child: _buildTopText(label, requireInput),
           ),
         Expanded(
           flex: 2,
@@ -178,25 +163,7 @@ Widget buildDropdownInputAhead(String label, onChange,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showHelper)
-          Padding(
-            padding: const EdgeInsets.only(left: 3, bottom: 05),
-            child: Row(
-              children: [
-                Text(
-                  label.capitalize!,
-                  style: _style,
-                ),
-                if (requireInput)
-                  Text(
-                    "*".capitalize!,
-                    style: TextStyle(
-                        color: Colors.red.withOpacity(0.5),
-                        fontWeight: FontWeight.w700),
-                  ),
-              ],
-            ),
-          ),
+        if (showHelper) _buildTopText(label, requireInput),
         Expanded(
           child: EasyAutocomplete(
             debounceDuration: 10.milliseconds,

@@ -6,12 +6,16 @@ import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/conversation.dart';
 import 'package:wrg2/backend/models/messages.dart';
 import 'package:wrg2/backend/models/offer.dart';
+import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.promptHelper.dart';
+import 'package:wrg2/backend/utils/util.snackbars.dart';
+import 'package:wrg2/backend/utils/util.whatsapp.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/messages/detail/state.messageDetails.dart';
 import 'package:wrg2/frontend/pages/messages/state.messages.dart';
+import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 
 class MessageDetailView extends StatelessWidget {
   OfferModel? initialOffer;
@@ -206,7 +210,9 @@ class MessageDetailView extends StatelessWidget {
                             if (initialOffer?.mobile?.isNotEmpty ?? false)
                               TextButton(
                                 style: BS.defaultBtnStyle,
-                                onPressed: () {},
+                                onPressed: () {
+                                  openWhatsApp(phone: initialOffer!.mobile!);
+                                },
                                 child: const Text("Whatsapp"),
                               ),
                             TextButton(
@@ -221,9 +227,54 @@ class MessageDetailView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             TextButton(
-                                onPressed: () {},
+                                style: BS.defaultEmpty,
+                                onPressed: () async {
+                                  var ans = await showBinaryPrompt(
+                                      "This cannot be undone",
+                                      title: "Delete Offer?",
+                                      confirm: "Delete",
+                                      cancel: "Cancel");
+                                  if (ans) {
+                                    var res = await GF<GE>()
+                                        .offer_deleteOffer(initialOffer!.id);
+                                    if (res) {
+                                      SBUtil.showSuccessSnackBar(
+                                          "Offer deleted");
+                                      GF<OfferState>().setup();
+                                    } else {
+                                      SBUtil.showErrorSnackBar(
+                                          "Failed to delete offer");
+                                    }
+                                  }
+                                },
                                 child: const Text("Delete Offer"))
                           ],
+                        ),
+                      SizedBox(height: Get.height * .05),
+                      if (!(initialOffer?.amISender ?? false))
+                        Padding(
+                          padding: EdgeInsets.all(Constants.cardVerticalMargin),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                    style: BS.defaultEmpty,
+                                    onPressed: () async {
+                                      var res = await GF<GE>()
+                                          .offer_archiveOffer(initialOffer!.id);
+                                      if (res) {
+                                        SBUtil.showSuccessSnackBar(
+                                            "Post archived");
+                                        GF<OfferState>().setup();
+                                      } else {
+                                        SBUtil.showErrorSnackBar(
+                                            "Failed to archive post");
+                                      }
+                                    },
+                                    child: const Text("Archive Offer")),
+                              ),
+                            ],
+                          ),
                         ),
                       SizedBox(height: Get.height * .2),
                     ],
