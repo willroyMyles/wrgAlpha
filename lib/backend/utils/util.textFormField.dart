@@ -1,6 +1,7 @@
 import 'package:easy_autocomplete/easy_autocomplete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
@@ -80,7 +81,8 @@ Widget buildInput(String label, onChange,
       children: [
         if (showHelper) _buildTopText(label, requireInput),
         Expanded(
-          child: TextFormField(
+          child: FormBuilderTextField(
+              name: label,
               controller: tec,
               validator: validator,
               minLines: lines,
@@ -127,7 +129,8 @@ Widget buildInputHorizontal(String label, onChange,
           ),
         Expanded(
           flex: 2,
-          child: TextFormField(
+          child: FormBuilderTextField(
+              name: label,
               controller: tec,
               validator: validator,
               minLines: lines,
@@ -155,6 +158,7 @@ Widget buildDropdownInputAhead(String label, onChange,
     bool requireInput = false,
     bool dense = false,
     String? initialValue,
+    FormFieldValidator? validator,
     Map<String, TextEditingController>? ctrl}) {
   FocusNode fn = FocusNode();
   return Container(
@@ -165,41 +169,47 @@ Widget buildDropdownInputAhead(String label, onChange,
       children: [
         if (showHelper) _buildTopText(label, requireInput),
         Expanded(
-          child: EasyAutocomplete(
-            debounceDuration: 10.milliseconds,
-            controller: ctrl?[label.toLowerCase()],
-            focusNode: fn,
-            suggestionBuilder: (value) {
-              return InkWell(
-                onTap: () {
-                  onChange(value);
-                  fn.unfocus();
-                },
-                child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                    child: Text(value)),
-              );
-            },
-            asyncSuggestions: (searchValue) {
-              return Future.value(items
-                  .where((element) =>
-                      element.toLowerCase().contains(searchValue.toLowerCase()))
-                  .toList());
-            },
-            decoration: _decoration,
-            progressIndicatorBuilder: Container(),
-            onChanged: (value) {
-              // onChange(value);
-            },
-            onSubmitted: (p0) {
-              onChange(p0);
-            },
-          ),
+          child: FormBuilderField(
+              name: label,
+              validator: validator,
+              builder: (field) {
+                return EasyAutocomplete(
+                  debounceDuration: 10.milliseconds,
+                  controller: ctrl?[label.toLowerCase()],
+                  focusNode: fn,
+                  suggestionBuilder: (value) {
+                    return InkWell(
+                      onTap: () {
+                        onChange(value);
+                        fn.unfocus();
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 4),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 7),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(value)),
+                    );
+                  },
+                  asyncSuggestions: (searchValue) {
+                    return Future.value(items
+                        .where((element) => element
+                            .toLowerCase()
+                            .contains(searchValue.toLowerCase()))
+                        .toList());
+                  },
+                  decoration: _decoration,
+                  progressIndicatorBuilder: Container(),
+                  onChanged: (value) {
+                    // onChange(value);
+                  },
+                  onSubmitted: (p0) {
+                    onChange(p0);
+                  },
+                );
+              }),
         ),
       ],
     ),
@@ -210,6 +220,7 @@ Widget buildDropdownInputHorizontal(String label, onChange,
     {List<String> items = const [],
     double height = 60,
     bool showHelper = true,
+    FormFieldValidator? validator,
     bool requireInput = false,
     bool dense = false,
     String? additional,

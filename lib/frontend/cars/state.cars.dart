@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/model.cars.dart';
@@ -11,7 +12,7 @@ class CarState extends GetxController with StateMixin {
   RxList<CarModel> cars = RxList();
   Rx<CarModel> car = Rx(CarModel());
 
-  GlobalObjectKey<FormState> formKey = const GlobalObjectKey("manage car");
+  final formKey = GlobalKey<FormBuilderState>();
 
   @override
   void onInit() {
@@ -50,10 +51,17 @@ class CarState extends GetxController with StateMixin {
   }
 
   void addCar() async {
-    if (formKey.currentState?.validate() ?? false) {
+    formKey.currentState?.validate();
+    var errors = formKey.currentState?.errors ?? {};
+    if (errors.isNotEmpty) {
+      await SBUtil.showErrorSnackBar(errors.values.reduce((e, v) => "$e\n$v"));
+
+      for (var e in errors.keys) {
+        formKey.currentState?.fields[e]!.reset();
+      }
+
       return;
     }
-    formKey.currentState?.validate();
     car.value.userEmail = GF<ProfileState>().userModel?.value.email ?? "";
     car.value.userName = GF<ProfileState>().userModel?.value.username ?? "";
     await GF<GE>().cars_addCars(car.value);

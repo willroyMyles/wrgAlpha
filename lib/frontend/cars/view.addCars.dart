@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/models/model.cars.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
@@ -28,7 +29,7 @@ class ManageCarView extends GetView<CarState> {
           onTap: () {
             FocusManager.instance.primaryFocus?.unfocus();
           },
-          child: Form(
+          child: FormBuilder(
             key: controller.formKey,
             child: Container(
               padding: Constants.ePadding,
@@ -42,11 +43,19 @@ class ManageCarView extends GetView<CarState> {
                     Row(
                       children: [
                         Expanded(
-                          child: buildDropdownInputAhead("Make", (v) {
-                            controller.car.value.make = v;
-                            controller.car.refresh();
-                          },
+                          child: buildDropdownInputAhead(
+                              "Make",
+                              (v) {
+                                controller.car.value.make = v;
+                                controller.car.refresh();
+                              },
                               items: controller.getMake(),
+                              validator: (value) {
+                                if (value == null || value.isEmail) {
+                                  return "Make is required";
+                                }
+                                return null;
+                              },
                               initialValue: car?.make,
                               requireInput: true),
                         ),
@@ -55,10 +64,18 @@ class ManageCarView extends GetView<CarState> {
                           child: Obx(
                             () => Container(
                               key: UniqueKey(),
-                              child: buildDropdownInputAhead("Model", (v) {
-                                controller.car.value.model = v;
-                              },
+                              child: buildDropdownInputAhead(
+                                  "Model",
+                                  (v) {
+                                    controller.car.value.model = v;
+                                  },
                                   initialValue: controller.car.value.model,
+                                  validator: (value) {
+                                    if (value == null || value.isEmail) {
+                                      return "Model is required";
+                                    }
+                                    return null;
+                                  },
                                   items: ["", ...controller.getModelList()],
                                   requireInput: true),
                             ),
@@ -73,6 +90,12 @@ class ManageCarView extends GetView<CarState> {
                             },
                             initialValue: controller.car.value.year,
                             requireInput: true,
+                            validator: (value) {
+                              if (value == null || value.isEmail) {
+                                return "Year is required";
+                              }
+                              return null;
+                            },
                             items: [
                               "",
                               ...List.generate(

@@ -70,7 +70,7 @@ dependencies:
   firebase_ui_firestore:
   rxdart: ^0.28.0
   flutter_speed_dial: ^7.0.0
-
+  flutter_form_builder: ^9.3.0
 
   movements: 
     path: "./movements/"
