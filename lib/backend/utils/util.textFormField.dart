@@ -175,13 +175,15 @@ Widget buildDropdownInputAhead(String label, onChange,
               builder: (field) {
                 return EasyAutocomplete(
                   debounceDuration: 10.milliseconds,
-                  controller: ctrl?[label.toLowerCase()],
+                  // controller: ctrl?[label.toLowerCase()],
                   focusNode: fn,
+                  initialValue: initialValue,
+                  // validator: validator,
                   suggestionBuilder: (value) {
                     return InkWell(
                       onTap: () {
                         onChange(value);
-                        fn.unfocus();
+                        // fn.unfocus();
                       },
                       child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -199,6 +201,70 @@ Widget buildDropdownInputAhead(String label, onChange,
                             .toLowerCase()
                             .contains(searchValue.toLowerCase()))
                         .toList());
+                  },
+                  decoration: _decoration,
+                  progressIndicatorBuilder: Container(),
+                  onChanged: (value) {
+                    // onChange(value);
+                  },
+                  onSubmitted: (p0) {
+                    onChange(p0);
+                  },
+                );
+              }),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buildDropdownInput(String label, onChange,
+    {List<String> items = const [],
+    double height = 80,
+    bool showHelper = true,
+    bool requireInput = false,
+    bool dense = false,
+    String? initialValue,
+    FormFieldValidator? validator,
+    Map<String, TextEditingController>? ctrl}) {
+  FocusNode fn = FocusNode();
+  return Container(
+    height: height,
+    decoration: const BoxDecoration(),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showHelper) _buildTopText(label, requireInput),
+        Expanded(
+          child: FormBuilderField(
+              key: UniqueKey(),
+              name: label,
+              validator: validator,
+              builder: (field) {
+                return EasyAutocomplete(
+                  debounceDuration: 10.milliseconds,
+                  // controller: ctrl?[label.toLowerCase()],
+                  focusNode: fn,
+                  initialValue: initialValue,
+                  // validator: validator,
+                  suggestionBuilder: (value) {
+                    return InkWell(
+                      onTap: () {
+                        onChange(value);
+                        // fn.unfocus();
+                      },
+                      child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 4),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 5, vertical: 7),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Text(value)),
+                    );
+                  },
+                  asyncSuggestions: (searchValue) async {
+                    return items;
                   },
                   decoration: _decoration,
                   progressIndicatorBuilder: Container(),

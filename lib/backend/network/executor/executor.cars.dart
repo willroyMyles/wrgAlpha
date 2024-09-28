@@ -8,8 +8,19 @@ mixin CarsExecutor {
   final _col = "cars";
   Future<bool> cars_addCars(CarModel model) async {
     try {
-      await _fstore.collection(_col).doc(model.getId()).set(model.toMap());
+      model.setId();
+      await _fstore.collection(_col).doc(model.id).set(model.toMap());
 
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //delete car
+  Future<bool> cars_deleteCars(CarModel model) async {
+    try {
+      await _fstore.collection(_col).doc(model.id).delete();
       return true;
     } catch (e) {
       return false;
@@ -18,7 +29,7 @@ mixin CarsExecutor {
 
   Future<bool> cars_updateCars(CarModel model) async {
     try {
-      await _fstore.collection(_col).doc(model.getId()).update(model.toMap());
+      await _fstore.collection(_col).doc(model.id).update(model.toMap());
       return true;
     } catch (e) {
       return false;

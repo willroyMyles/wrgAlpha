@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/models/model.cars.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/cars/state.cars.dart';
@@ -43,21 +44,23 @@ class ManageCarView extends GetView<CarState> {
                     Row(
                       children: [
                         Expanded(
-                          child: buildDropdownInputAhead(
-                              "Make",
-                              (v) {
-                                controller.car.value.make = v;
-                                controller.car.refresh();
-                              },
-                              items: controller.getMake(),
-                              validator: (value) {
-                                if (value == null || value.isEmail) {
-                                  return "Make is required";
-                                }
-                                return null;
-                              },
-                              initialValue: car?.make,
-                              requireInput: true),
+                          child: Obx(() => Container(
+                                key: UniqueKey(),
+                                child: buildDropdownInputAhead(
+                                    "Make",
+                                    (v) {
+                                      controller.setMake(v);
+                                    },
+                                    items: controller.getMake(),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "Make is required";
+                                      }
+                                      return null;
+                                    },
+                                    initialValue: controller.car.value.make,
+                                    requireInput: true),
+                              )),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
@@ -67,11 +70,11 @@ class ManageCarView extends GetView<CarState> {
                               child: buildDropdownInputAhead(
                                   "Model",
                                   (v) {
-                                    controller.car.value.model = v;
+                                    controller.setModel(v);
                                   },
                                   initialValue: controller.car.value.model,
                                   validator: (value) {
-                                    if (value == null || value.isEmail) {
+                                    if (value == null || value.isEmpty) {
                                       return "Model is required";
                                     }
                                     return null;
@@ -83,25 +86,28 @@ class ManageCarView extends GetView<CarState> {
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: buildDropdownInputAhead(
-                            "Year",
-                            (v) {
-                              controller.car.value.year = v;
-                            },
-                            initialValue: controller.car.value.year,
-                            requireInput: true,
-                            validator: (value) {
-                              if (value == null || value.isEmail) {
-                                return "Year is required";
-                              }
-                              return null;
-                            },
-                            items: [
-                              "",
-                              ...List.generate(
-                                  60, (idx) => (2024 - idx).toString())
-                            ],
-                          ),
+                          child: Obx(() => Container(
+                                key: UniqueKey(),
+                                child: buildDropdownInputAhead(
+                                  "Year",
+                                  (v) {
+                                    controller.setYear(v);
+                                  },
+                                  initialValue: controller.car.value.year,
+                                  requireInput: true,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Year is required";
+                                    }
+                                    return null;
+                                  },
+                                  items: [
+                                    "",
+                                    ...List.generate(
+                                        60, (idx) => (2024 - idx).toString())
+                                  ],
+                                ),
+                              )),
                         ),
                       ],
                     ),
@@ -117,7 +123,7 @@ class ManageCarView extends GetView<CarState> {
                           initialValue: controller.car.value.chasisNo,
                           requireInput: true,
                           validator: (value) {
-                            if (value == null || value.isEmail) {
+                            if (value == null || value.isEmpty) {
                               return "Engine No. cannot be empty";
                             }
                             return null;
@@ -159,23 +165,32 @@ class ManageCarView extends GetView<CarState> {
                     Row(
                       children: [
                         Expanded(
-                          child: buildDropdownInputAhead("Transmission", (v) {
-                            controller.car.value.transmission =
-                                Transmission.fromName(v);
-                          },
-                              initialValue:
-                                  controller.car.value.transmission?.name,
-                              items: Transmission.values
-                                  .map((e) => e.name)
-                                  .toList()),
+                          child: Obx(() => Container(
+                                key: UniqueKey(),
+                                child: buildDropdownInput("Transmission", (v) {
+                                  controller.setTransmission(
+                                      Transmission.fromName(v));
+                                },
+                                    initialValue:
+                                        controller.car.value.transmission?.name,
+                                    items: Transmission.values
+                                        .map((e) => e.name)
+                                        .toList()),
+                              )),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: buildDropdownInputAhead("Engine", (v) {
-                            controller.car.value.type = CarType.fromName(v);
-                          },
-                              items: CarType.values.map((e) => e.name).toList(),
-                              initialValue: controller.car.value.type?.name),
+                          child: Obx(() => Container(
+                                key: UniqueKey(),
+                                child: buildDropdownInput("Engine", (v) {
+                                  controller.setEngineGas(CarType.fromName(v));
+                                },
+                                    items: CarType.values
+                                        .map((e) => e.name)
+                                        .toList(),
+                                    initialValue:
+                                        controller.car.value.type?.name),
+                              )),
                         ),
                       ],
                     ),
@@ -193,6 +208,7 @@ class ManageCarView extends GetView<CarState> {
                           child: const Text("Update"))
                     else
                       TextButton(
+                          style: BS.defaultBtnStyle,
                           onPressed: () {
                             controller.addCar();
                           },

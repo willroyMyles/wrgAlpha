@@ -23,9 +23,10 @@ void main() async {
   FirebaseFunctions.instance.useFunctionsEmulator("127.0.0.1", 5001);
 
   authWorker.init();
+  Get.put(ProfileState());
+
   Get.lazyPut(() => OfferState(), fenix: true);
   Get.put(GE());
-  Get.put(ProfileState());
   Get.put(CarState());
   Get.put(LifeCycleState());
 

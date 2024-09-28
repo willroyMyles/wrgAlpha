@@ -5,12 +5,14 @@ import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/model.cars.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/store/sotre.data.dart';
+import 'package:wrg2/backend/utils/util.promptHelper.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class CarState extends GetxController with StateMixin {
   RxList<CarModel> cars = RxList();
   Rx<CarModel> car = Rx(CarModel());
+  bool firstRun = true;
 
   final formKey = GlobalKey<FormBuilderState>();
 
@@ -21,7 +23,12 @@ class CarState extends GetxController with StateMixin {
   }
 
   Future setup() async {
+    if (firstRun) {
+      firstRun = false;
+      await Future.delayed(const Duration(seconds: 2));
+    }
     var c = await GF<GE>().cars_getCars();
+    cars.clear();
     cars.addAll(c);
 
     if (cars.isEmpty) {
@@ -50,28 +57,84 @@ class CarState extends GetxController with StateMixin {
     return modelList;
   }
 
+  void setMake(String str) {
+    car.value.make = str;
+    car.value.model = "";
+    formKey.currentState!.fields["Make"]!.setValue(str);
+    car.refresh();
+  }
+
+  void setModel(String str) {
+    car.value.model = str;
+    formKey.currentState!.fields["Model"]!.setValue(str);
+    car.refresh();
+  }
+
+  void setYear(String str) {
+    car.value.year = str;
+    formKey.currentState!.fields["Year"]!.setValue(str);
+    car.refresh();
+  }
+
+  void setTransmission(Transmission v) {
+    car.value.transmission = v;
+    car.refresh();
+  }
+
+  void setEngineGas(CarType type) {
+    car.value.type = type;
+    car.refresh();
+  }
+
   void addCar() async {
     formKey.currentState?.validate();
-    var errors = formKey.currentState?.errors ?? {};
-    if (errors.isNotEmpty) {
-      await SBUtil.showErrorSnackBar(errors.values.reduce((e, v) => "$e\n$v"));
-
+    var errors = formKey.currentState?.errors;
+    if (errors != null && errors.keys.isNotEmpty) {
+      var str = errors.values.reduce((a, b) => "$a\n$b");
       for (var e in errors.keys) {
-        formKey.currentState?.fields[e]!.reset();
+        formKey.currentState!.fields[e]!.reset();
       }
-
+      SBUtil.showErrorSnackBar(str);
       return;
     }
+
     car.value.userEmail = GF<ProfileState>().userModel?.value.email ?? "";
     car.value.userName = GF<ProfileState>().userModel?.value.username ?? "";
     await GF<GE>().cars_addCars(car.value);
     cars.add(car.value);
     change("newState", status: RxStatus.success());
+    Get.back();
     SBUtil.showSuccessSnackBar("Created car information");
+    car.value = CarModel();
+    // formKey.currentState?.fields.clear();
   }
 
   void updateCar() async {
-    await GF<GE>().cars_updateCars(car.value);
-    SBUtil.showSuccessSnackBar("Updated car information");
+    var res = await GF<GE>().cars_updateCars(car.value);
+    if (res) {
+      SBUtil.showSuccessSnackBar("Updated car information");
+    } else {
+      SBUtil.showErrorSnackBar("Failed to update car information");
+    }
+  }
+
+  void removeCar(CarModel carModel) async {
+    var ans = await showBinaryPrompt("This cannot be undone",
+        title: "Confirm Delete?");
+    if (ans) {
+      var res = await GF<GE>().cars_deleteCars(carModel);
+      if (res) {
+        cars.remove(car);
+        cars.refresh();
+        refresh();
+        SBUtil.showSuccessSnackBar("Car Successfully Deleted");
+      }
+    }
+  }
+
+  void refreshCar() {
+    WidgetsBinding.instance.addPostFrameCallback((v) {
+      car.refresh();
+    });
   }
 }

@@ -53,18 +53,21 @@ class CarTile extends GetView<CarState> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        "${car.transmission?.name.capitalize}  ",
-                        style: TS.h3,
-                      ),
-                      Text(
-                        " ${car.bodyType?.capitalize}  ",
-                        style: TS.h3,
-                      ),
-                      Text(
-                        "  ${car.type?.name.capitalize} ",
-                        style: TS.h3,
-                      ),
+                      if (car.transmission != null)
+                        Text(
+                          "${car.transmission?.name.capitalize}  ",
+                          style: TS.h3,
+                        ),
+                      if (car.bodyType != null)
+                        Text(
+                          " ${car.bodyType?.capitalize}  ",
+                          style: TS.h3,
+                        ),
+                      if (car.type != null)
+                        Text(
+                          "  ${car.type?.name.capitalize} ",
+                          style: TS.h3,
+                        ),
                     ],
                   ),
                 ],
@@ -85,9 +88,12 @@ class CarTile extends GetView<CarState> {
                       value: "edit",
                       child: const Text("Edit"),
                     ),
-                    const PopupMenuItem(
+                    PopupMenuItem(
+                      onTap: () async {
+                        controller.removeCar(car);
+                      },
                       value: "delete",
-                      child: Text("Delete"),
+                      child: const Text("Delete"),
                     ),
                   ];
                 },

@@ -32,15 +32,32 @@ class CarsView extends StatelessWidget {
           ),
         ],
         body: contorller.obx(
-          (state) => ListView.builder(
-            itemCount: contorller.cars.length,
-            itemBuilder: (context, index) {
-              var item = contorller.cars.elementAt(index);
-              return CarTile(car: item);
+          (state) => RefreshIndicator(
+            onRefresh: () async {
+              await contorller.setup();
             },
+            child: ListView.builder(
+              itemCount: contorller.cars.length,
+              itemBuilder: (context, index) {
+                var item = contorller.cars.elementAt(index);
+                return CarTile(car: item);
+              },
+            ),
           ),
-          onEmpty: Constants.emptyWidget(
-              "No Cars Present", "Tap add button to add your first car"),
+          onEmpty: RefreshIndicator(
+            onRefresh: () async {
+              await contorller.setup();
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Constants.emptyWidget("No Cars Present",
+                      "Tap add button to add your first car"),
+                ],
+              ),
+            ),
+          ),
           onLoading: Constants.loading,
         ),
       ),

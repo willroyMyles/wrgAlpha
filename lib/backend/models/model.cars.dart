@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:nanoid2/nanoid2.dart';
+
 enum Transmission {
   Automatic,
   Manual,
@@ -49,6 +51,7 @@ enum CarType {
 }
 
 class CarModel {
+  String id;
   String make;
   String model;
   String year;
@@ -65,6 +68,7 @@ class CarModel {
   String userEmail;
   String userName;
   CarModel({
+    this.id = '',
     this.make = '',
     this.model = '',
     this.year = '',
@@ -80,12 +84,13 @@ class CarModel {
     this.userName = '',
   });
 
-  String getId() {
-    return "$make-$model-$year-$userEmail";
+  String get getId {
+    return "$userEmail-${nanoid(length: 7)}";
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'make': make,
       'model': model,
       'year': year,
@@ -104,6 +109,7 @@ class CarModel {
 
   factory CarModel.fromMap(Map<String, dynamic> map) {
     return CarModel(
+      id: map['id'] ?? '',
       make: map['make'] ?? '',
       model: map['model'] ?? '',
       year: map['year'] ?? '',
@@ -124,4 +130,8 @@ class CarModel {
 
   factory CarModel.fromJson(String source) =>
       CarModel.fromMap(json.decode(source));
+
+  void setId() {
+    id = getId;
+  }
 }
