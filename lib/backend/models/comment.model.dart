@@ -7,9 +7,11 @@ import 'package:wrg2/backend/worker/worker.theme.dart';
 
 class CommentModel extends Model {
   String content;
+  @override
   String id;
   bool isOffer;
   String postId;
+  @override
   DateTime? createdAt;
   String userId;
   String userImageUrl;

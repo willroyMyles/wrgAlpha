@@ -1,5 +1,4 @@
 import 'package:cloud_functions/cloud_functions.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:wrg2/backend/models/offer.dart';
 
 class FBFunctions {
@@ -17,8 +16,7 @@ class FBFunctions {
         "offerId": offerId,
         "accepted": accepted,
         "postName": postName ?? "",
-        "ext": email,
-        "id": await OneSignal.User.getOnesignalId()
+        "ext": email
       });
     } catch (e) {
       print(e);

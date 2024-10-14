@@ -181,6 +181,12 @@ class MessageDetailView extends StatelessWidget {
                   // physics: const ClampingScrollPhysics(),
                   child: Column(
                     children: [
+                      TextButton(
+                          child: const Text("press"),
+                          onPressed: () {
+                            controller.onAccept();
+                          }),
+
                       SizedBox(height: Constants.cardMargin),
                       _buildInitial(),
                       if (!(initialOffer?.amISender ?? false)) _buildEmpty(),

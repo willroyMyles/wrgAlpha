@@ -41,6 +41,11 @@ abstract class ListState<T extends Model> extends GetxController
     refresh();
   }
 
+  removePostById(String id) {
+    list.removeWhere((element) => element.id == id);
+    refresh();
+  }
+
   loadMore() async {
     try {
       if (noMorePosts.value) return;

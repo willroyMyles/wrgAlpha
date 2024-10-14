@@ -103,30 +103,32 @@ class CarTile extends GetView<CarState> {
           // Constants.verticalSpace,
 
           Constants.verticalSpace,
-          Row(
+          Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "${car.engineNo}",
-                    style: TS.h2,
-                  ),
                   Text(
                     "Engine: ",
                     style: TS.h3,
                   ),
-                ],
-              ),
-              Column(
-                children: [
                   Text(
-                    "${car.chasisNo}",
+                    "${car.engineNo}",
                     style: TS.h2,
                   ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text(
                     "Chasis: ",
                     style: TS.h3,
+                  ),
+                  Text(
+                    "${car.chasisNo}",
+                    style: TS.h2,
                   ),
                 ],
               ),

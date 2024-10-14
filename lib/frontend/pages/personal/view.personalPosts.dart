@@ -29,7 +29,7 @@ class PersonalPosts extends StatelessWidget {
               },
             ),
           ),
-          onEmpty: Constants.empty,
+          onEmpty: Constants.emptyWidget("No Posts"),
           onLoading: Constants.loading,
         ),
       ),

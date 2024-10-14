@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.btns.dart';
+import 'package:wrg2/backend/utils/util.cdnicons.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/cars/state.cars.dart';
@@ -39,7 +42,7 @@ class CarsView extends StatelessWidget {
             child: ListView.builder(
               itemCount: contorller.cars.length,
               itemBuilder: (context, index) {
-                var item = contorller.cars.elementAt(index);
+                var item = contorller.cars.values.elementAt(index);
                 return CarTile(car: item);
               },
             ),
@@ -49,12 +52,37 @@ class CarsView extends StatelessWidget {
               await contorller.setup();
             },
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Constants.emptyWidget("No Cars Present",
-                      "Tap add button to add your first car"),
-                ],
+              child: Container(
+                height: Get.height * .6,
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AssetrService.empty.displayl,
+                    const SizedBox(height: 10),
+
+                    Text(
+                      "No Cars Found",
+                      style: TS.h1,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "Add a car to easily fill out your car information on forms with a click!",
+                      style: TS.h3,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+
+                    TextButton(
+                        style: BS.defaultBtnStyle,
+                        onPressed: () {
+                          Get.to(() => const ManageCarView());
+                        },
+                        child: const Text("Add Car")),
+                    // Constants.emptyWidget("No Cars Present",
+                    //     "Tap add button to add your first car"),
+                  ],
+                ),
               ),
             ),
           ),

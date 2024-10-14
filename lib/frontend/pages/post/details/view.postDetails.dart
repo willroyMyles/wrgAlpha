@@ -52,9 +52,6 @@ class PostDetails extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Divider(
-                      color: Colors.black.withOpacity(.1),
-                    ),
                     buildPopup(
                         Container(
                           margin: const EdgeInsets.only(

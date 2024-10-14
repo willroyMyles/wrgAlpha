@@ -100,8 +100,8 @@ class ProfileView extends GetView<ProfileState> {
           ),
           // Constants.verticalSpace,
           Text(
-            "Leave your feedback below",
-            style: TS.h2,
+            "Leave your feedback below for us!",
+            style: TS.h3,
           ),
           Constants.verticalSpace,
           Constants.verticalSpace,
@@ -268,7 +268,7 @@ class ProfileView extends GetView<ProfileState> {
               _buildTile(
                 () {
                   Get.to(() => WatchingView(), arguments: {
-                    "list": GFI<ProfileState>()?.userModel?.value.watching
+                    // "list": GFI<ProfileState>()?.userModel?.value.watching
                   });
                 },
                 CupertinoIcons.bookmark,
@@ -281,18 +281,19 @@ class ProfileView extends GetView<ProfileState> {
                       color: toc.cardColor,
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: Text(
-                      GFI<ProfileState>()
-                              ?.userModel
-                              ?.value
-                              .watching
-                              .length
-                              .toString() ??
-                          "",
-                      textScaler: const TextScaler.linear(1.3),
-                      style: TextStyle(
-                          color: toc.textColor, fontWeight: FontWeight.w600),
-                    )),
+                    child: Obx(() => Text(
+                          GFI<ProfileState>()
+                                  ?.userModel
+                                  ?.value
+                                  .watching
+                                  .length
+                                  .toString() ??
+                              "",
+                          textScaler: const TextScaler.linear(1.3),
+                          style: TextStyle(
+                              color: toc.textColor,
+                              fontWeight: FontWeight.w600),
+                        ))),
               ),
 
               _buildTile(() {

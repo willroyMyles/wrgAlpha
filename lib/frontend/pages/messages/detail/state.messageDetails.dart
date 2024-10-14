@@ -79,6 +79,7 @@ class MessageDetailsState extends GetxController with StateMixin {
 
   onAccept() async {
     var res = await GF<GE>().offer_acceptOffer(initial!);
+
     if (res) {
       SBUtil.showSuccessSnackBar("Offer Accepted");
     } else {

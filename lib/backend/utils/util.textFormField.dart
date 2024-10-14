@@ -115,6 +115,7 @@ Widget buildInputHorizontal(String label, onChange,
     bool showHelper = true,
     bool largeInput = false,
     bool requireInput = false,
+    TextInputFormatter? formatter,
     String? initialValue}) {
   return Container(
     height: height,
@@ -139,6 +140,9 @@ Widget buildInputHorizontal(String label, onChange,
               onChanged: onChange,
               initialValue: initialValue,
               textAlign: TextAlign.justify,
+              inputFormatters: [
+                if (formatter != null) formatter,
+              ],
               textAlignVertical:
                   largeInput ? TextAlignVertical.top : TextAlignVertical.center,
               style: const TextStyle(

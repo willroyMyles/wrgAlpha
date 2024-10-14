@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomListView<T> extends StatelessWidget {
   List<T> items;
@@ -40,11 +41,17 @@ class CustomListView<T> extends StatelessWidget {
                 itemBuilder: (context, index) {
                   if (items.isEmpty) {
                     return Container(
-                      height: 300,
+                      height: Get.height,
                       alignment: Alignment.center,
-                      child: const Text(
-                        "No items found\npull to refresh",
-                        textAlign: TextAlign.center,
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "No items found\npull to refresh",
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 300)
+                        ],
                       ),
                     );
                   }

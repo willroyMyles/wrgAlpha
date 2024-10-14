@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:wrg2/backend/enums/enum.post.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/offer.dart';
+import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/network/executor/executor.functions.dart';
 import 'package:wrg2/backend/utils/util.formatter.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
@@ -11,26 +13,26 @@ mixin offersExecutor {
 
   Future<bool> offer_acceptOffer(OfferModel model) async {
     try {
-      // var post = await _fstore.collection("posts").doc(postId).get();
-      // var postData = PostModel.fromMap(post.data()!);
-      // List<String> offerIds = postData.offers;
-      // offerIds.remove(offerId);
-      // await _fstore
-      //     .collection(_col)
-      //     .doc(offerId)
-      //     .update({"accepted": true, "status": OfferStatus.Accepted.index});
+      var post = await _fstore.collection("posts").doc(model.postId).get();
+      var postData = PostModel.fromMap(post.data()!);
+      List<String> offerIds = postData.offers;
+      offerIds.remove(model.id);
+      await _fstore
+          .collection(_col)
+          .doc(model.id)
+          .update({"accepted": true, "status": OfferStatus.Accepted.index});
 
-      // await _fstore
-      //     .collection("posts")
-      //     .doc(postId)
-      //     .update({"status": Status.PROCESSING.index});
+      await _fstore
+          .collection("posts")
+          .doc(model.postId)
+          .update({"status": Status.PROCESSING.index});
 
-      // for (var element in offerIds) {
-      //   _fstore
-      //       .collection(_col)
-      //       .doc(element)
-      //       .update({"status": OfferStatus.Declined.index});
-      // }
+      for (var element in offerIds) {
+        _fstore
+            .collection(_col)
+            .doc(element)
+            .update({"status": OfferStatus.Declined.index});
+      }
       FBFunctions.function_triggerOfferUpdatedNotification(
           offerId: model.id,
           accepted: true,

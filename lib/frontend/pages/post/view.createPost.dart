@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wrg2/backend/mixin/mixin.get.dart';
-import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
+import 'package:wrg2/backend/utils/util.formatter.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/atoms/atom.bottomSheet.dart';
@@ -40,7 +39,7 @@ class CreatePost extends StatelessWidget {
                         : "Seek your parts",
                     additional: Text(
                       controller.isService.value
-                          ? "Reequest which service you're looking for"
+                          ? "Request which service you're looking for"
                           : "post what parts you're looking for",
                       textScaler: const TextScaler.linear(.5),
                     ),
@@ -50,54 +49,58 @@ class CreatePost extends StatelessWidget {
                             await Get.bottomSheet(BottomSheetComponent(
                               maxChildSize: .7,
                               builder: (context, scrollController) {
-                                return Container(
-                                  padding: const EdgeInsets.all(10),
-                                  color: Colors.white,
-                                  child: ListView(
-                                    controller: scrollController,
-                                    children: [
-                                      Text(
-                                        "Your Cars",
-                                        style: TS.h2,
-                                      ),
-                                      const SizedBox(height: 10),
-                                      if (GF<CarState>().cars.isEmpty)
-                                        Container(
-                                            alignment: Alignment.center,
-                                            child: Column(
-                                              children: [
-                                                Constants.emptyWidget(
-                                                    "No cars found"),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Get.to(() =>
-                                                          const ManageCarView());
-                                                    },
-                                                    child:
-                                                        const Text("Add Car"))
-                                              ],
-                                            )),
-                                      ...GF<CarState>().cars.map((e) =>
-                                          ListTile(
-                                            title: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10),
-                                                child: Row(
-                                                  children: [
-                                                    Text("${e.year} "),
-                                                    Text("${e.make} "),
-                                                    Text(e.model),
-                                                  ],
-                                                )),
-                                            onTap: () {
-                                              controller.addCarModel(e);
-                                              Get.back(result: e);
-                                            },
-                                          ))
-                                    ],
-                                  ),
-                                );
+                                return GetBuilder<CarState>(
+                                    builder: (carState) {
+                                  return Container(
+                                    padding: const EdgeInsets.all(10),
+                                    color: Colors.white,
+                                    child: ListView(
+                                      controller: scrollController,
+                                      children: [
+                                        // Text(
+                                        //   "Your Cars",
+                                        //   style: TS.h2,
+                                        // ),
+                                        const SizedBox(height: 10),
+                                        if (carState.cars.isEmpty)
+                                          Container(
+                                              alignment: Alignment.center,
+                                              child: Column(
+                                                children: [
+                                                  Constants.emptyWidget(
+                                                      "No cars found"),
+                                                  TextButton(
+                                                      style: BS.defaultBtnStyle,
+                                                      onPressed: () {
+                                                        Get.to(() =>
+                                                            const ManageCarView());
+                                                      },
+                                                      child:
+                                                          const Text("Add Car"))
+                                                ],
+                                              )),
+                                        ...carState.cars.values
+                                            .map((e) => ListTile(
+                                                  title: Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 10),
+                                                      child: Row(
+                                                        children: [
+                                                          Text("${e.year} "),
+                                                          Text("${e.make} "),
+                                                          Text(e.model),
+                                                        ],
+                                                      )),
+                                                  onTap: () {
+                                                    controller.addCarModel(e);
+                                                    Get.back(result: e);
+                                                  },
+                                                ))
+                                      ],
+                                    ),
+                                  );
+                                });
                               },
                             ));
                           },
@@ -140,37 +143,43 @@ class CreatePost extends StatelessWidget {
                                     return Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
-                                        SizedBox(
-                                          width: Get.width / divider,
-                                          child: buildDropdownInputAhead(
-                                            "make",
-                                            requireInput: true,
-                                            ctrl: textControllers,
-                                            items: [
-                                              ...controller.getMakeList(),
-                                              // ""
-                                            ],
-                                            (val) {
-                                              controller.model['make'] = val;
-                                              controller.model['model'] = "";
-                                              controller.model.refresh();
-                                              textControllers['make']?.text =
-                                                  val;
-                                              textControllers['model']?.text =
-                                                  "";
+                                        Obx(() => SizedBox(
+                                              key: UniqueKey(),
+                                              width: Get.width / divider,
+                                              child: buildDropdownInput(
+                                                "make",
+                                                requireInput: true,
+                                                ctrl: textControllers,
+                                                items: [
+                                                  ...controller.getMakeList(),
+                                                  // ""
+                                                ],
+                                                (val) {
+                                                  controller.model['make'] =
+                                                      val;
+                                                  controller.model['model'] =
+                                                      "";
+                                                  controller.model.refresh();
+                                                  textControllers['make']
+                                                      ?.text = val;
+                                                  textControllers['model']
+                                                      ?.text = "";
 
-                                              print(val);
-                                            },
-                                            initialValue:
-                                                controller.model['make'] ?? "",
-                                          ),
-                                        ),
+                                                  print(val);
+                                                },
+                                                initialValue:
+                                                    controller.model['make'] ??
+                                                        "",
+                                              ),
+                                            )),
                                         Obx(() {
                                           return SizedBox(
                                             key: UniqueKey(),
                                             width: Get.width / divider,
-                                            child: buildDropdownInputAhead(
+                                            child: buildDropdownInput(
                                               "model",
                                               ctrl: textControllers,
                                               requireInput: true,
@@ -189,34 +198,31 @@ class CreatePost extends StatelessWidget {
                                             ),
                                           );
                                         }),
-                                        SizedBox(
+                                        Obx(() => SizedBox(
                                             width: Get.width / divider,
-                                            child: SizedBox(
-                                              width: Get.width / 2.2,
-                                              child: buildDropdownInputAhead(
-                                                "year",
-                                                (val) {
-                                                  controller.model['year'] =
-                                                      val;
-                                                  controller.model.refresh();
-                                                  textControllers['year']
-                                                      ?.text = val;
-                                                },
-                                                initialValue: controller
-                                                        .model.value['year'] ??
-                                                    "",
-                                                ctrl: textControllers,
-                                                items: [
+                                            child: buildDropdownInput(
+                                              "year",
+                                              (val) {
+                                                controller.model['year'] = val;
+                                                controller.model.refresh();
+                                                textControllers['year']?.text =
+                                                    val;
+                                              },
+                                              requireInput: true,
+                                              initialValue: controller
+                                                      .model.value['year'] ??
                                                   "",
-                                                  ...List.generate(
-                                                      60,
-                                                      (idx) =>
-                                                          (DateTime.now().year -
-                                                                  idx)
-                                                              .toString())
-                                                ],
-                                              ),
-                                            ))
+                                              ctrl: textControllers,
+                                              items: [
+                                                "",
+                                                ...List.generate(
+                                                    60,
+                                                    (idx) =>
+                                                        (DateTime.now().year -
+                                                                idx)
+                                                            .toString())
+                                              ],
+                                            )))
                                       ],
                                     );
                                   }),
@@ -227,22 +233,27 @@ class CreatePost extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(
-                                    child: buildDropdownInputAhead(
-                                      "category",
-                                      (val) {
-                                        controller.model['category'] = val;
-                                        controller.model['sub'] = "";
-                                        controller.model.refresh();
-                                        textControllers['category']?.text = val;
-                                      },
-                                      ctrl: textControllers,
-                                      items: [
-                                        ...controller.getCategoryList(),
-                                        ""
-                                      ],
-                                    ),
-                                  ),
+                                  Obx(() => Expanded(
+                                        key: UniqueKey(),
+                                        child: buildDropdownInputAhead(
+                                          "category",
+                                          (val) {
+                                            controller.model['category'] = val;
+                                            controller.model['sub'] = "";
+                                            controller.model.refresh();
+                                            textControllers['category']?.text =
+                                                val;
+                                          },
+                                          ctrl: textControllers,
+                                          initialValue:
+                                              controller.model["category"] ??
+                                                  "",
+                                          items: [
+                                            ...controller.getCategoryList(),
+                                            ""
+                                          ],
+                                        ),
+                                      )),
                                 ],
                               ),
                             ),
@@ -253,14 +264,11 @@ class CreatePost extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    child: buildInput(
-                                      "mobile",
-                                      (val) {
-                                        controller.model['mobile'] = val;
+                                    child: buildInput("mobile number", (val) {
+                                      controller.model['mobile'] = val;
 
-                                        textControllers['mobile']?.text = val;
-                                      },
-                                    ),
+                                      textControllers['mobile']?.text = val;
+                                    }, formatter: mobileFormatter),
                                   ),
                                 ],
                               ),

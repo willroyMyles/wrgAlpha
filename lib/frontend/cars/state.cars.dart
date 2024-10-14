@@ -10,7 +10,7 @@ import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class CarState extends GetxController with StateMixin {
-  RxList<CarModel> cars = RxList();
+  RxMap<String, CarModel> cars = RxMap({});
   Rx<CarModel> car = Rx(CarModel());
   bool firstRun = true;
 
@@ -29,7 +29,7 @@ class CarState extends GetxController with StateMixin {
     }
     var c = await GF<GE>().cars_getCars();
     cars.clear();
-    cars.addAll(c);
+    cars.addAll({for (var e in c) e.id: e});
 
     if (cars.isEmpty) {
       change("", status: RxStatus.empty());
@@ -101,7 +101,7 @@ class CarState extends GetxController with StateMixin {
     car.value.userEmail = GF<ProfileState>().userModel?.value.email ?? "";
     car.value.userName = GF<ProfileState>().userModel?.value.username ?? "";
     await GF<GE>().cars_addCars(car.value);
-    cars.add(car.value);
+    cars.update(car.value.id, (value) => car.value, ifAbsent: () => car.value);
     change("newState", status: RxStatus.success());
     Get.back();
     SBUtil.showSuccessSnackBar("Created car information");
@@ -112,7 +112,12 @@ class CarState extends GetxController with StateMixin {
   void updateCar() async {
     var res = await GF<GE>().cars_updateCars(car.value);
     if (res) {
+      cars.refresh();
+      Get.back();
       SBUtil.showSuccessSnackBar("Updated car information");
+      cars.update(car.value.id, (v) => car.value);
+      car.value = CarModel();
+      refresh();
     } else {
       SBUtil.showErrorSnackBar("Failed to update car information");
     }
@@ -124,10 +129,13 @@ class CarState extends GetxController with StateMixin {
     if (ans) {
       var res = await GF<GE>().cars_deleteCars(carModel);
       if (res) {
-        cars.remove(car);
+        cars.remove(carModel.id);
         cars.refresh();
         refresh();
         SBUtil.showSuccessSnackBar("Car Successfully Deleted");
+        if (cars.isEmpty) change("", status: RxStatus.empty());
+      } else {
+        SBUtil.showErrorSnackBar("Failed to delete car");
       }
     }
   }

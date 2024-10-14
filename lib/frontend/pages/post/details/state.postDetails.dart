@@ -114,11 +114,6 @@ class PostDetailsState extends GetxController {
   }
 
   sendOffers([OfferModel? offerModel]) async {
-    if (offerString.value.isEmpty) {
-      //throw error
-      return;
-    }
-
     offerModel ??= OfferModel();
 
     offerModel.postId = model.id;
@@ -215,8 +210,13 @@ class PostDetailsState extends GetxController {
   void deletePost() async {
     var res = await Get.find<GE>().posts_deletePost(model.id);
     if (res) {
+      Get.back();
       SBUtil.showSuccessSnackBar("Post deleted");
       Get.back();
+
+      //remove post from list
+      GFI<PostState>()?.removePostById(model.id);
+      GFI<ServiceState>()?.removePostById(model.id);
     } else {
       SBUtil.showErrorSnackBar("Unable to delete post");
     }

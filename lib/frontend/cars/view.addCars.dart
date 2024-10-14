@@ -120,7 +120,7 @@ class ManageCarView extends GetView<CarState> {
                           (v) {
                             controller.car.value.engineNo = v;
                           },
-                          initialValue: controller.car.value.chasisNo,
+                          initialValue: controller.car.value.engineNo,
                           requireInput: true,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -182,7 +182,7 @@ class ManageCarView extends GetView<CarState> {
                         Expanded(
                           child: Obx(() => Container(
                                 key: UniqueKey(),
-                                child: buildDropdownInput("Engine", (v) {
+                                child: buildDropdownInput("Petrol Type", (v) {
                                   controller.setEngineGas(CarType.fromName(v));
                                 },
                                     items: CarType.values

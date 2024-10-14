@@ -56,7 +56,10 @@ class Constants {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset("assets/icons/empty.png"),
+            const Icon(
+              Icons.search,
+              size: 50,
+            ),
             Text(
               str ?? "empty",
               style: TS.h2,

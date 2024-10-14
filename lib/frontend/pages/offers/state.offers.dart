@@ -36,11 +36,11 @@ class OfferState extends GetxController with StateMixin {
 
   String indexName(int index) {
     var str = switch (index) {
-      0 => "Incoming Offers",
-      1 => "Outgoing Offers",
-      2 => "Declined Offers",
-      3 => "Archived Offers",
-      _ => "Unknown Offers",
+      0 => "Incoming",
+      1 => "Outgoing",
+      2 => "Declined",
+      3 => "Archived",
+      _ => "Unknown",
     };
     return str;
   }

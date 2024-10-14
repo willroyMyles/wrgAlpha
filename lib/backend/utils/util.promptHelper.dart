@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
@@ -32,18 +33,23 @@ Future<bool> showBinaryPrompt(String question,
                     title != null
                         ? Text(
                             title,
-                            style: TS.h1,
+                            style: TS.h2,
                           )
                         : const SizedBox(
                             height: 0,
                           ),
-                    IconButton(
-                        onPressed: () {
+                    GestureDetector(
+                        onTap: () {
                           Get.back(result: false);
                         },
-                        icon: Icon(
-                          Icons.close,
-                          color: toc.primaryColor,
+                        child: Container(
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(left: 5),
+                          child: Icon(
+                            CupertinoIcons.xmark_circle,
+                            size: 30,
+                            color: toc.primaryColor,
+                          ),
                         ))
                   ],
                 ),
@@ -53,32 +59,33 @@ Future<bool> showBinaryPrompt(String question,
                 padding: EdgeInsets.all(Constants.cardpadding),
                 child: Text(
                   question,
-                  style: TS.h2,
+                  style: TS.h3,
                 ),
               ),
-              wrgDivider(),
+              // wrgDivider(),
               Constants.verticalSpace,
             ],
           ),
         ),
         actions: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              TextButton(
-                  style: BS.defaultEmpty,
-                  onPressed: () {
-                    Get.back(result: false);
-                  },
-                  child: Text(cancel ?? "no".capitalize!,
-                      style: const TextStyle(fontWeight: FontWeight.w600))),
-              const SizedBox(width: 20),
               TextButton(
                   style: BS.defaultBtnStyle,
                   onPressed: () {
                     Get.back(result: true);
                   },
                   child: Text(confirm ?? "yes".capitalize!,
+                      style: const TextStyle(fontWeight: FontWeight.w600))),
+              const SizedBox(width: 20),
+              TextButton(
+                  style: BS.defaultEmpty,
+                  onPressed: () {
+                    Get.back(result: false);
+                  },
+                  child: Text(cancel ?? "no".capitalize!,
                       style: const TextStyle(fontWeight: FontWeight.w600))),
             ],
           ),

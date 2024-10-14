@@ -3,7 +3,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 extension DteTimeFormat on DateTime {
   String formatDateForPost() {
-    var format = DateFormat('yyyy-MM-dd hh:mm:ss a');
+    var format = DateFormat('yyyy-MM-dd-hh:mm:ss-a');
     return format.format(this);
   }
 }

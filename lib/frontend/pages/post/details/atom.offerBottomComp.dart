@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
+import 'package:wrg2/backend/utils/util.btns.dart';
+import 'package:wrg2/backend/utils/util.formatter.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/pages/post/details/state.postDetails.dart';
@@ -62,15 +65,19 @@ class OfferBottomComp extends GetView<PostDetailsState> {
                     children: [
                       buildInputHorizontal("Offer Price", (val) {
                         offerModel.offerPrice = val;
-                      }),
+                      },
+                          formatter:
+                              CurrencyInputFormatter(leadingSymbol: "\$")),
                       const SizedBox(height: 15),
                       buildInputHorizontal("Mobile number", (val) {
                         offerModel.mobile = val;
-                      }),
+                      }, formatter: mobileFormatter),
                       const SizedBox(height: 8),
-                      buildDropdownInputHorizontal("has part", (val) {
+                      buildDropdownInputHorizontal("availability", (val) {
                         offerModel.hasPart = val;
-                      }, items: ["Yes", "No", "Soon", "Other"], dense: true),
+                      },
+                          items: ["Available", "Not Availble", "Soon", "Other"],
+                          dense: true),
                       buildDropdownInputHorizontal("payment method", (val) {
                         offerModel.paymentMethod = val;
                       },
@@ -93,7 +100,8 @@ class OfferBottomComp extends GetView<PostDetailsState> {
                         "Used 9/10",
                         "Used 10/10",
                         "New",
-                        "Used"
+                        "Used",
+                        "Other"
                       ], dense: true),
                       buildDropdownInputHorizontal("Return Policy", (val) {
                         offerModel.policy = val;
@@ -113,6 +121,7 @@ class OfferBottomComp extends GetView<PostDetailsState> {
                     ],
                   ),
                   TextButton(
+                      style: BS.defaultBtnStyle,
                       onPressed: () {
                         controller.sendOffers(offerModel);
                       },

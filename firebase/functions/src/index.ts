@@ -22,7 +22,7 @@ const appId = "347f29ed-6636-469f-bc56-9feeefe1aaeb";
 
 export const triggerOfferStatusChanged = onRequest({
   concurrency: 500,
-}, async (request, _) => {
+}, async (request, response) => {
   const configuration = OneSignal.createConfiguration({
     restApiKey: restApiKey.value(),
     userAuthKey: userAuthKey.value(),
@@ -46,6 +46,7 @@ export const triggerOfferStatusChanged = onRequest({
     {field: "tag", key: "emailTag", relation: "=", value: request.body.data.ext},
   ];
   const notificationResponse = await client.createNotification(notification);
+  // return response.json();
   return Promise.resolve(notificationResponse.errors ?? true);
 });
 

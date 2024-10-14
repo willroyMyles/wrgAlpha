@@ -1,10 +1,10 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:movements/support/widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
+import 'package:wrg2/backend/service/service.firebaseMessages.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/firebase_options.dart';
@@ -20,7 +20,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseFunctions.instance.useFunctionsEmulator("127.0.0.1", 5001);
+  // FirebaseFunctions.instance.useFunctionsEmulator("127.0.0.1", 5001);
 
   authWorker.init();
   Get.put(ProfileState());
@@ -34,6 +34,7 @@ void main() async {
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize("347f29ed-6636-469f-bc56-9feeefe1aaeb");
   OneSignal.Notifications.requestPermission(true);
+  fbMessagesService.init();
 
   runApp(const MyApp());
 }
@@ -47,10 +48,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: tw.getLightTheme(),
       // darkTheme: tw.getDarkTheme(),
-      home: HomeView(),
       navigatorObservers: [
         MoveObserver(),
       ],
+      getPages: Pages.pages,
+
       onUnknownRoute: (settings) {
         print(settings);
         return null;
@@ -61,4 +63,20 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+}
+
+class Pages {
+  static var pages = [
+    GetPage(name: "/", page: () => HomeView()),
+    GetPage(
+        name: "/:tab",
+        page: () {
+          return HomeView();
+        }),
+    GetPage(
+        name: "/posts/:id",
+        page: () {
+          return HomeView();
+        }),
+  ];
 }

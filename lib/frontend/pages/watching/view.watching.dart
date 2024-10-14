@@ -17,7 +17,27 @@ class WatchingView extends StatelessWidget {
 
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [const WRGAppBar("Posts You've Bookmarked")];
+          return [
+            const WRGAppBar("Posts You've Bookmarked"),
+            SliverToBoxAdapter(
+              child: GetBuilder<WatchingState>(
+                init: controller,
+                initState: (_) {},
+                builder: (_) {
+                  return Row(
+                    children: [
+                      // if (controller.posts.isNotEmpty)
+                      TextButton(
+                          onPressed: () {
+                            controller.clearAll();
+                          },
+                          child: const Text("Clear all bookmarks"))
+                    ],
+                  );
+                },
+              ),
+            )
+          ];
         },
         body: SafeArea(
           child: controller.obx(
@@ -45,7 +65,7 @@ class WatchingView extends StatelessWidget {
                   },
                   keyingFunction: (id) => ValueKey(id)),
             ),
-            onEmpty: Constants.empty,
+            onEmpty: Constants.emptyWidget("No Bookmarks"),
             onLoading: Constants.loading,
           ),
         ),

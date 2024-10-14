@@ -36,10 +36,6 @@ class PostList extends StatelessWidget {
                         color: Colors.transparent,
                         child: PostItem(model: model)),
                   ),
-                  // if (!hasMorePosts && index == _.posts.length - 1)
-                  //   const SizedBox(
-                  //       height: 100,
-                  //       child: Center(child: Text("--- No more posts ---"))),
                 ],
               );
             },

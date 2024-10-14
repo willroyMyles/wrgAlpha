@@ -8,6 +8,17 @@ mixin UserExecutor {
   final _fstore = FirebaseFirestore.instance;
   final String _col = "user";
 
+  Future<void> user_updateToken(String s) async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
+      var userDoc = _fstore.collection("tokens").doc(user.email);
+      await userDoc.set({"token": s, "email": user.email});
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future user_registerUserFromCredentials(UserCredential creds) async {
     try {
       var user = UserInfoModel();
@@ -60,6 +71,21 @@ mixin UserExecutor {
       if (user == null) return false;
       var userDoc = _fstore.collection(_col).doc(user.email);
       await userDoc.update(map);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  //clear watching
+  Future<bool> user_clearWatching() async {
+    try {
+      var user = FirebaseAuth.instance.currentUser;
+      if (user == null) return false;
+      var userDoc = _fstore.collection(_col).doc(user.email);
+      await userDoc.update({"watching": []});
+      GF<ProfileState>().userModel?.value.watching.clear();
+      GF<ProfileState>().userModel?.refresh();
       return true;
     } catch (e) {
       return false;
