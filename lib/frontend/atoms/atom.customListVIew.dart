@@ -1,27 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
-import 'package:wrg2/backend/utils/util.cdnicons.dart';
 
-enum LoadingStates { Loading, LoadingMore, Ready }
+mixin ScrollMixinCustom<T extends StatefulWidget> on State<T> {
+  final ScrollController scroll = ScrollController();
 
-class CustomListView<T> extends StatelessWidget {
+  @override
+  void initState() {
+    super.initState();
+    scroll.addListener(_listener);
+  }
+
+  bool _canFetchBottom = true;
+
+  bool _canFetchTop = true;
+
+  void _listener() {
+    if (scroll.position.atEdge) {
+      _checkIfCanLoadMore();
+    }
+  }
+
+  Future<void> _checkIfCanLoadMore() async {
+    if (scroll.position.pixels == 0) {
+      if (!_canFetchTop) return;
+      _canFetchTop = false;
+      await onTopScroll();
+      _canFetchTop = true;
+    } else {
+      if (!_canFetchBottom) return;
+      _canFetchBottom = false;
+      await onEndScroll();
+      _canFetchBottom = true;
+    }
+  }
+
+  Future<void> onEndScroll();
+
+  Future<void> onTopScroll();
+
+  @override
+  void dispose() {
+    scroll.removeListener(_listener);
+    super.dispose();
+  }
+}
+
+class CustomListView<T> extends StatefulWidget {
   List<T> items;
-  bool hasMorePosts;
   Function? loadMore;
   Function? reset;
   Widget Function(T) builder;
   ScrollController? con;
   Widget? header;
   int limit;
-  TextButton? actionButton;
-  Rx<LoadingStates> state;
   CustomListView(
       {super.key,
       this.items = const [],
-      this.hasMorePosts = false,
-      required this.state,
       required this.loadMore,
       required this.reset,
       required this.builder,
@@ -30,148 +65,166 @@ class CustomListView<T> extends StatelessWidget {
       this.header});
 
   @override
+  State<CustomListView<T>> createState() => _CustomListViewState<T>();
+}
+
+class _CustomListViewState<T> extends State<CustomListView<T>>
+    with ScrollMixinCustom<CustomListView<T>> {
+  // TextButton? actionButton;
+
+  bool hasMorePosts = true;
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    hasMorePosts = widget.items.length > widget.limit;
+    loading = false;
+  }
+
+  Future _onPullToRefresh() async {
+    setState(() {
+      loading = true;
+      hasMorePosts = true;
+      _canFetchBottom = true;
+    });
+    await widget.reset!();
+    await Future.delayed(const Duration(seconds: 3));
+
+    setState(() {
+      loading = false;
+      hasMorePosts = widget.items.length > widget.limit;
+    });
+  }
+
+  Future _onLoadMore() async {
+    print("loading more");
+    setState(() {
+      loading = true;
+    });
+
+    if (widget.loadMore != null) {
+      await widget.loadMore!();
+    }
+    await Future.delayed(const Duration(seconds: 3));
+
+    setState(() {
+      loading = false;
+      hasMorePosts = widget.items.length > widget.limit;
+      _canFetchBottom = hasMorePosts;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
-      child: Obx(() => Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(Constants.cardpadding),
-                child: Row(
-                  children: [
-                    if (header != null) header!,
-                    const Spacer(),
-                    if (reset != null)
-                      TextButton(
-                          onPressed: () async {
-                            if (reset != null) {
-                              await reset!();
-                            }
-                          },
-                          child: const Text("refresh"))
-                  ],
-                ),
-              ),
-              if (items.isNotEmpty)
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.zero,
-                    controller: con,
-                    itemCount: items.length + (items.isEmpty ? 1 : 0),
-                    itemBuilder: (context, index) {
-                      if (items.isEmpty) {
-                        return Container(
-                          height: Get.height,
-                          alignment: Alignment.center,
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "No items found\npull to refresh",
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 300)
-                            ],
-                          ),
-                        );
-                      }
-
-                      var model = items.elementAt(index);
-
-                      if (index == items.length - 1 && !hasMorePosts) {
-                        var noMore = const SizedBox(
-                            height: 300,
-                            child: Column(
-                              children: [
-                                Spacer(),
-                                Text("--- No more items ---"),
-                                Spacer(),
-                                Spacer(),
-                              ],
-                            ));
-
-                        return Column(
-                          children: [
-                            builder(model),
-                            noMore,
-                          ],
-                        );
-                      }
-                      return builder(model);
-                    },
-                  ),
-                ),
-              if (items.isEmpty && state.value == LoadingStates.Ready)
-                InkWell(
-                  splashColor: Colors.transparent,
-                  onTap: () async {
-                    if (reset != null) {
-                      await reset!();
-                    }
-                  },
-                  child: SingleChildScrollView(
-                    child: Container(
-                      height: Get.height * .6,
-                      alignment: Alignment.center,
+      child: LayoutBuilder(builder: (context, sp) {
+        return Column(
+          children: [
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await _onPullToRefresh();
+                },
+                child: ListView.builder(
+                  controller: scroll,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: widget.items.length + _getAdditionalCount(),
+                  itemBuilder: (context, index) {
+                    return AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        key: UniqueKey(),
                         children: [
-                          AssetrService.empty.displayl,
-                          const SizedBox(height: 10),
-                          Text(
-                            "No Items Found",
-                            style: TS.h1,
-                          ),
-                          Opacity(
-                            opacity: .5,
-                            child: Text(
-                              "Tap to refresh",
-                              style: TS.h2,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          if (actionButton != null) actionButton!,
-                          const SizedBox(height: 20),
+                          if (widget.header != null && index == 0)
+                            widget.header!,
+                          Builder(builder: (context) {
+                            if (widget.items.isEmpty && !loading) {
+                              return Container(
+                                height: (sp.maxHeight.isFinite
+                                        ? sp.maxHeight
+                                        : 300) -
+                                    (widget.header != null ? 200 : 0),
+                                alignment: Alignment.center,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Constants.emptyWidget("No Items Found"),
+                                    const Text("Pull To Refresh"),
+                                  ],
+                                ),
+                              );
+                            }
+
+                            if (widget.items.length == index &&
+                                !hasMorePosts &&
+                                !loading) {
+                              return Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 40),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Text(
+                                          "--- No More Items ---",
+                                          style: TS.h3,
+                                        ),
+                                        const Text("Pull To Refresh")
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+
+                            if (index >= widget.items.length && loading) {
+                              return Container(
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                  child: const Text("Loading"));
+                            }
+
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                widget.builder(widget.items.elementAt(index)),
+                              ],
+                            );
+                          }),
                         ],
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
-              if (state.value == LoadingStates.Loading)
-                Container(
-                  height: Get.height * .6,
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // AssetrService.loading.displayl,
-                      const SizedBox(height: 10),
-                      Text(
-                        "Loading...",
-                        style: TS.h1,
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
-                ),
-              if (state.value == LoadingStates.LoadingMore)
-                Container(
-                  height: Get.height * .6,
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // AssetrService.loading.displayl,
-                      const SizedBox(height: 10),
-                      Text(
-                        "Loading More Items...",
-                        style: TS.h1,
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
-                ),
-            ],
-          )),
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
+
+  int _getAdditionalCount() {
+    if (loading) return 3;
+    if (widget.items.isEmpty) {
+      return 1;
+    }
+    if (!hasMorePosts) {
+      return 1;
+    }
+    return 0;
+  }
+
+  @override
+  Future<void> onEndScroll() async {
+    // if (!_canFetchBottom) return;
+    // _canFetchBottom = false;
+    _onLoadMore();
+  }
+
+  @override
+  Future<void> onTopScroll() async {}
 }

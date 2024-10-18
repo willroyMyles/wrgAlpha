@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
+import 'package:wrg2/backend/worker/worker.theme.dart';
 
 class Constants {
   static Duration defaultAnimationSpeed = const Duration(milliseconds: 350);
@@ -56,9 +57,21 @@ class Constants {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.search,
-              size: 50,
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              child: Icon(
+                Icons.search_off,
+                size: 50,
+                color: toc.textColor.withOpacity(.65),
+                shadows: [
+                  BoxShadow(
+                    blurRadius: 10,
+                    spreadRadius: 10,
+                    offset: const Offset(6, 6),
+                    color: Colors.black.withOpacity(.2),
+                  )
+                ],
+              ),
             ),
             Text(
               str ?? "empty",
@@ -69,7 +82,6 @@ class Constants {
                 additional,
                 style: TS.h5,
               ),
-            const SizedBox(height: 20),
           ],
         ),
       );

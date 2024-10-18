@@ -17,17 +17,14 @@ class PostList extends StatelessWidget {
         return CustomListView<PostModel>(
             loadMore: _.loadMore,
             reset: _.setup,
-            state: _.state,
             header: Row(
               children: [
                 Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Text("Parts Needed", style: TS.h1))
+                    child: Text("Parts Requested", style: TS.h1))
               ],
             ),
             builder: (model) {
-              var index = _.list.indexOf(model);
-
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -40,7 +37,6 @@ class PostList extends StatelessWidget {
                 ],
               );
             },
-            hasMorePosts: !_.noMorePosts.value,
             items: _.list,
             con: _.scroll);
       },

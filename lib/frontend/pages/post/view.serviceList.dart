@@ -17,21 +17,18 @@ class ServiceList extends StatelessWidget {
         return CustomListView<PostModel>(
             loadMore: _.loadMore,
             reset: _.setup,
-            state: _.state,
             header: Row(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    "Service Needed",
+                    "Services Requested",
                     style: TS.h1,
                   ),
                 )
               ],
             ),
             builder: (model) {
-              var index = _.list.indexOf(model);
-
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [

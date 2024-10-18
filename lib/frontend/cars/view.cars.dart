@@ -34,7 +34,6 @@ class CarsView extends StatelessWidget {
           ),
         ],
         body: CustomListView<CarModel>(
-          state: controller.state,
           builder: (p0) {
             return CarTile(car: p0);
           },
