@@ -23,7 +23,7 @@ class WRGAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 120,
+      expandedHeight: label.isEmpty ? 60 : 120,
       backgroundColor: toc.scaffoldBackgroundColor.withOpacity(.1),
       titleSpacing: 0,
       centerTitle: false,

@@ -7,11 +7,14 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/store/sotre.data.dart';
 import 'package:wrg2/backend/utils/util.promptHelper.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
+import 'package:wrg2/frontend/atoms/atom.customListVIew.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class CarState extends GetxController with StateMixin {
   RxMap<String, CarModel> cars = RxMap({});
   Rx<CarModel> car = Rx(CarModel());
+  @override
+  Rx<LoadingStates> state = LoadingStates.Ready.obs;
   bool firstRun = true;
 
   final formKey = GlobalKey<FormBuilderState>();
@@ -22,7 +25,8 @@ class CarState extends GetxController with StateMixin {
     setup();
   }
 
-  Future setup() async {
+  setup() async {
+    state.value = LoadingStates.Loading;
     if (firstRun) {
       firstRun = false;
       await Future.delayed(const Duration(seconds: 2));
@@ -36,6 +40,7 @@ class CarState extends GetxController with StateMixin {
     } else {
       change("", status: RxStatus.success());
     }
+    state.value = LoadingStates.Ready;
   }
 
   List<String> getMake() {

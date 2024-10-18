@@ -17,6 +17,7 @@ class ServiceList extends StatelessWidget {
         return CustomListView<PostModel>(
             loadMore: _.loadMore,
             reset: _.setup,
+            state: _.state,
             header: Row(
               children: [
                 Padding(
