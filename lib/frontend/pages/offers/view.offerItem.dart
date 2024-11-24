@@ -140,23 +140,25 @@ class OfferBundle extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Opacity(
-                        opacity: .6,
-                        child: Txt("${models.length} Offers for ")),
-                    Text(
-                      postTitle.capitalizeFirst!,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 16),
-                    )
-                  ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Opacity(
+                          opacity: .6,
+                          child: Txt("${models.length} Offers for ")),
+                      Text(
+                        postTitle.capitalizeFirst!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 16),
+                      )
+                    ],
+                  ),
                 ),
                 TextButton(
                     onPressed: () {
-                      Get.toNamed("posts/${models.first.postId}");
+                      Get.toNamed("/posts/${models.first.postId}");
                     },
                     child: const Text("View Post"))
               ],

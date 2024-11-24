@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:wrg2/backend/extension/color.extension.dart';
-import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.colorGenerator.dart';
 
 ThemeData get toc => Get.context == null ? ThemeData() : Theme.of(Get.context!);
@@ -47,7 +46,7 @@ class ThemeWorker {
   late ThemeData _theme;
 
   ThemeData getDarkTheme() {
-    primaryOrg = const Color.fromARGB(255, 0, 81, 255);
+    primaryOrg = const Color.fromARGB(255, 234, 54, 54);
     var brightness = Brightness.dark;
     var bg = darkBackgroundColor;
     var fg = darkForegrounColor;
@@ -81,7 +80,7 @@ class ThemeWorker {
       ),
       brightness: brightness,
       primaryColor: primaryOrg,
-      scaffoldBackgroundColor: lightBackgroundColor.darkerF(20),
+      scaffoldBackgroundColor: bg,
       cardColor: fg,
       canvasColor: bg,
       bottomNavigationBarTheme: th.bottomNavigationBarTheme.copyWith(
@@ -94,16 +93,30 @@ class ThemeWorker {
         surfaceTintColor: Colors.transparent,
         backgroundColor: fg,
       ),
-
-      popupMenuTheme: th.popupMenuTheme.copyWith(
-          color: fg,
-          elevation: 15,
-          surfaceTintColor: Colors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: Constants.br)),
+      menuTheme: MenuThemeData(
+          style: MenuStyle(
+              backgroundColor: mst(bg),
+              shadowColor: mst(obg.withOpacity(.9)),
+              visualDensity: VisualDensity.comfortable,
+              elevation: mst(10),
+              padding: mst(EdgeInsets.all(10)),
+              shape: mst(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10))))),
+      menuButtonTheme: MenuButtonThemeData(
+          style: ButtonStyle(
+              textStyle:
+                  mst(TextStyle(fontWeight: FontWeight.w600, color: ofg)))),
+      // popupMenuTheme: th.popupMenuTheme.copyWith(
+      //     color: bg,
+      //     elevation: 15,
+      //     surfaceTintColor: Colors.transparent,
+      //     shadowColor: fg.withOpacity(.1),
+      //     shape: RoundedRectangleBorder(borderRadius: Constants.br)),
       listTileTheme: ListTileThemeData(
         textColor: obg,
         style: ListTileStyle.drawer,
         dense: false,
+        iconColor: obg,
         minVerticalPadding: 0,
         horizontalTitleGap: 0,
         contentPadding: EdgeInsets.zero,
@@ -117,6 +130,7 @@ class ThemeWorker {
         displaySmall: th.textTheme.displaySmall?.copyWith(color: obg),
       ),
       iconTheme: th.iconTheme.copyWith(color: obg, size: 20),
+
       cupertinoOverrideTheme: CupertinoThemeData(
         applyThemeToAll: true,
         scaffoldBackgroundColor: lightBackgroundColor,
@@ -130,6 +144,9 @@ class ThemeWorker {
         surfaceTintColor: mst(Colors.transparent),
       ),
       dividerColor: fg,
+      navigationBarTheme: NavigationBarThemeData(
+        backgroundColor: bg,
+      ),
 
       // popupMenuTheme: th.popupMenuTheme.copyWith(color: obg),
       appBarTheme: th.appBarTheme.copyWith(
@@ -141,12 +158,13 @@ class ThemeWorker {
         titleTextStyle: TextStyle(color: obg),
         iconTheme: th.iconTheme.copyWith(color: obg),
         actionsIconTheme: th.iconTheme.copyWith(color: obg),
-        systemOverlayStyle: th.appBarTheme.systemOverlayStyle?.copyWith(
+        systemOverlayStyle: SystemUiOverlayStyle(
           systemNavigationBarContrastEnforced: true,
           systemStatusBarContrastEnforced: true,
           statusBarBrightness:
               Brightness.values.elementAt(brightness.index == 1 ? 0 : 1),
-          statusBarIconBrightness: Brightness.light,
+          statusBarIconBrightness:
+              Brightness.values.elementAt(brightness.index == 1 ? 0 : 1),
           systemNavigationBarColor: fg,
           systemNavigationBarIconBrightness:
               Brightness.values.elementAt(brightness.index == 1 ? 0 : 1),

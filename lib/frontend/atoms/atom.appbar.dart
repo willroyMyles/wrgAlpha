@@ -67,7 +67,8 @@ class WRGAppBar extends StatelessWidget {
                       label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: toc.cStyle.copyWith(fontSize: 20),
+                      style: toc.cStyle
+                          .copyWith(fontSize: 20, color: toc.textColor),
                     ),
                   ),
                 ),

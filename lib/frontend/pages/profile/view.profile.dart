@@ -7,8 +7,10 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
+import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/cars/view.cars.dart';
+import 'package:wrg2/frontend/home/view.home.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/offers/view.offers.dart';
 import 'package:wrg2/frontend/pages/personal/view.personalPosts.dart';
@@ -145,198 +147,209 @@ class ProfileView extends GetView<ProfileState> {
     );
   }
 
+  Widget _themeChanger() {
+    return Container(
+      // margin: EdgeInsets.only(top: 10, bottom: 10)
+      child: _buildTile(
+          () {},
+          Icons.format_paint_outlined,
+          "Theme",
+          false,
+          SizedBox(
+            width: Get.width * .5,
+            child: buildDropdownOnly((v) async {
+              switch (v.toLowerCase()) {
+                case "system":
+                  Get.changeThemeMode(ThemeMode.system);
+                  break;
+                case "light":
+                  Get.changeThemeMode(ThemeMode.light);
+                  break;
+                case "dark":
+                  Get.changeThemeMode(ThemeMode.dark);
+                  break;
+
+                default:
+              }
+
+              await Future.delayed(Duration(milliseconds: 300));
+              // WidgetsBinding.instance.addPostFrameCallback((v) {
+              GF<HomeViewController>().currentIndex.refresh();
+              // });
+            },
+                ThemeMode.values
+                    .map((e) => e.toString().split(".")[1].capitalize!)
+                    .toList()),
+          )),
+    );
+  }
+
   Widget _regularPage(BuildContext context) {
-    if (controller.userModel != null) {
-      return Container(
-        alignment: Alignment.center,
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // if (show)
-              Container(
-                  alignment: Alignment.center,
-                  child: InkWell(
-                    onTap: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 35,
-                          child: Obx(() => Container(
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(100),
-                                    color: Colors.transparent),
-                                child: Image.network(
-                                  controller.userModel!.value.userImageUrl,
-                                  cacheHeight: 80,
-                                  cacheWidth: 80,
-                                ),
-                              )),
-                        ),
-                        if (controller.userModel != null)
-                          Container(
-                              margin: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                controller.userModel!.value.username ?? "",
-                                style: TS.h0,
-                              )),
-                        if (controller.userModel != null)
-                          Opacity(
-                            opacity: .7,
-                            child: Container(
-                                margin: const EdgeInsets.only(bottom: 15),
-                                child: Text(
-                                  controller.userModel!.value.email ?? "",
-                                  style: TS.h3,
-                                )),
-                          ),
-                      ],
-                    ),
-                  )),
-
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     InkWell(
-              //       onTap: () {
-              //         Get.to(() => WatchingView(), arguments: {
-              //           "list": GFI<ProfileState>()?.userModel?.value.watching
-              //         });
-              //       },
-              //       child: AtomBox(
-              //         value: GFI<ProfileState>()
-              //                 ?.userModel
-              //                 ?.value
-              //                 .watching
-              //                 .length ??
-              //             0,
-              //         label: "Bookmarks",
-              //       ),
-              //     ),
-              //     GetBuilder<OfferState>(
-              //       builder: (__) {
-              //         return InkWell(
-              //           onTap: () {
-              //             Get.to(() => const OffersView());
-              //           },
-              //           child: AtomBox(
-              //             value: __.getIncomingOffersLength(),
-              //             label: "Offers",
-              //           ),
-              //         );
-              //       },
-              //     ),
-              //   ],
-              // ),
-              _buildTile(() {
-                Get.to(() => CarsView());
-              }, CupertinoIcons.car_detailed, "Cars", true),
-              // _buildTile(() {
-              //   Get.to(() => MessagesView());
-              // }, CupertinoIcons.chat_bubble_2, "Messages", true),
-              _buildTile(() {
-                Get.to(() => PersonalPosts());
-              }, CupertinoIcons.rectangle_on_rectangle_angled, "Your Posts",
-                  true),
-              _buildTile(() {
-                Get.to(() => const OffersView());
-              },
-                  CupertinoIcons.rectangle_on_rectangle_angled,
-                  "Offers",
-                  false,
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (controller.userModel != null)
+              Column(
+                children: [
                   Container(
-                      padding: const EdgeInsets.all(5),
-                      margin: const EdgeInsets.only(right: 5),
-                      decoration: BoxDecoration(
-                        color: toc.cardColor,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      child: Text(
-                        GFI<OfferState>()
-                                ?.getIncomingOffersLength()
-                                .toString() ??
-                            "",
-                        textScaler: const TextScaler.linear(1.3),
-                        style: TextStyle(
-                            color: toc.textColor, fontWeight: FontWeight.w600),
-                      ))),
-
-              _buildTile(
-                () {
-                  Get.to(() => WatchingView(), arguments: {
-                    // "list": GFI<ProfileState>()?.userModel?.value.watching
-                  });
-                },
-                CupertinoIcons.bookmark,
-                "Bookmarks",
-                false,
-                Container(
-                    margin: const EdgeInsets.only(right: 5),
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: toc.cardColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Obx(() => Text(
-                          GFI<ProfileState>()
-                                  ?.userModel
-                                  ?.value
-                                  .watching
-                                  .length
-                                  .toString() ??
-                              "",
-                          textScaler: const TextScaler.linear(1.3),
-                          style: TextStyle(
-                              color: toc.textColor,
-                              fontWeight: FontWeight.w600),
-                        ))),
-              ),
-
-              _buildTile(() {
-                showFeedback.value = true;
-              }, Icons.subdirectory_arrow_left, "Feedback", true),
-
-              _buildTile(() {
-                GF<GE>().user_logout();
-              }, Icons.exit_to_app, "Log Out", false),
-            ]),
-      );
-    } else {
-      // return const Text("Hello world");
-      return Container(
-        alignment: Alignment.center,
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              TextButton(
-                  style: BS.defaultBtnStyle,
-                  onPressed: () async {
-                    var res = await Get.find<GE>().signInWithGoogle();
-                    if (!res) {
-                      SBUtil.showErrorSnackBar(
-                          "Unable to sign in with google. Please try again later");
-                    }
+                      alignment: Alignment.center,
+                      child: InkWell(
+                        onTap: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                              radius: 35,
+                              child: Obx(() => Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        color: Colors.transparent),
+                                    child: Image.network(
+                                      controller.userModel!.value.userImageUrl,
+                                      cacheHeight: 80,
+                                      cacheWidth: 80,
+                                    ),
+                                  )),
+                            ),
+                            if (controller.userModel != null)
+                              Container(
+                                  margin: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    controller.userModel!.value.username ?? "",
+                                    style: TS.h0,
+                                  )),
+                            if (controller.userModel != null)
+                              Opacity(
+                                opacity: .7,
+                                child: Container(
+                                    margin: const EdgeInsets.only(bottom: 15),
+                                    child: Text(
+                                      controller.userModel!.value.email ?? "",
+                                      style: TS.h3,
+                                    )),
+                              ),
+                          ],
+                        ),
+                      )),
+                  _buildTile(() {
+                    Get.to(() => CarsView());
+                  }, CupertinoIcons.car_detailed, "Cars", true),
+                  // _buildTile(() {
+                  //   Get.to(() => MessagesView());
+                  // }, CupertinoIcons.chat_bubble_2, "Messages", true),
+                  _buildTile(() {
+                    Get.to(() => PersonalPosts());
+                  }, CupertinoIcons.rectangle_on_rectangle_angled, "Your Posts",
+                      true),
+                  _buildTile(() {
+                    Get.to(() => const OffersView());
                   },
-                  child: const Text("Log in")),
-              Hero(
-                tag: "feedback",
-                child: TextButton(
-                    onPressed: () async {
-                      showFeedback.value = true;
+                      CupertinoIcons.rectangle_on_rectangle_angled,
+                      "Offers",
+                      false,
+                      Container(
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(right: 5),
+                          decoration: BoxDecoration(
+                            color: toc.cardColor,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            GFI<OfferState>()
+                                    ?.getIncomingOffersLength()
+                                    .toString() ??
+                                "",
+                            textScaler: const TextScaler.linear(1.3),
+                            style: TextStyle(
+                                color: toc.textColor,
+                                fontWeight: FontWeight.w600),
+                          ))),
+
+                  _buildTile(
+                    () {
+                      Get.to(() => WatchingView(), arguments: {
+                        // "list": GFI<ProfileState>()?.userModel?.value.watching
+                      });
                     },
-                    style: BS.defaultBtnStyle,
-                    child: const Text("Feedback")),
-              ),
-            ],
-          ),
-          // const SizedBox(height: 40),
-        ]),
-      );
-    }
+                    CupertinoIcons.bookmark,
+                    "Bookmarks",
+                    false,
+                    Container(
+                        margin: const EdgeInsets.only(right: 5),
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: toc.cardColor,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Obx(() => Text(
+                              GFI<ProfileState>()
+                                      ?.userModel
+                                      ?.value
+                                      .watching
+                                      .length
+                                      .toString() ??
+                                  "",
+                              textScaler: const TextScaler.linear(1.3),
+                              style: TextStyle(
+                                  color: toc.textColor,
+                                  fontWeight: FontWeight.w600),
+                            ))),
+                  ),
+
+                  _buildTile(() {
+                    showFeedback.value = true;
+                  }, Icons.subdirectory_arrow_left, "Feedback", true),
+                  _themeChanger(),
+
+                  _buildTile(() {
+                    GF<GE>().user_logout();
+                  }, Icons.exit_to_app, "Log Out", false),
+                ],
+              )
+            else
+              Container(
+                alignment: Alignment.center,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _themeChanger(),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton(
+                              style: BS.defaultBtnStyle,
+                              onPressed: () async {
+                                var res =
+                                    await Get.find<GE>().signInWithGoogle();
+                                if (!res) {
+                                  SBUtil.showErrorSnackBar(
+                                      "Unable to sign in with google. Please try again later");
+                                }
+                              },
+                              child: const Text("Log in")),
+                          Hero(
+                            tag: "feedback",
+                            child: TextButton(
+                                onPressed: () async {
+                                  showFeedback.value = true;
+                                },
+                                style: BS.defaultBtnStyle,
+                                child: const Text("Feedback")),
+                          ),
+                        ],
+                      ),
+                      // const SizedBox(height: 40),
+                    ]),
+              )
+          ]),
+    );
   }
 }

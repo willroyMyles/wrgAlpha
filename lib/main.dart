@@ -11,6 +11,7 @@ import 'package:wrg2/firebase_options.dart';
 import 'package:wrg2/frontend/cars/state.cars.dart';
 import 'package:wrg2/frontend/home/view.home.dart';
 import 'package:wrg2/frontend/pages/offers/state.offers.dart';
+import 'package:wrg2/frontend/pages/post/details/view.postDetails.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 import 'package:wrg2/standalone/state.lifecycle.dart';
 
@@ -47,12 +48,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'Flutter Demo',
       theme: tw.getLightTheme(),
-      // darkTheme: tw.getDarkTheme(),
+      darkTheme: tw.getDarkTheme(),
       navigatorObservers: [
         MoveObserver(),
       ],
       getPages: Pages.pages,
-
       onUnknownRoute: (settings) {
         print(settings);
         return null;
@@ -76,7 +76,7 @@ class Pages {
     GetPage(
         name: "/posts/:id",
         page: () {
-          return HomeView();
+          return PostDetails();
         }),
   ];
 }

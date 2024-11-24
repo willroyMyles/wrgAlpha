@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
@@ -10,17 +11,20 @@ import 'package:wrg2/frontend/pages/post/view.postList.dart';
 import 'package:wrg2/frontend/pages/post/view.serviceList.dart';
 import 'package:wrg2/frontend/pages/profile/view.profile.dart';
 
+class HomeViewController extends GetxController {
+  RxInt currentIndex = 0.obs;
+}
+
 class HomeView extends StatelessWidget {
   HomeView({super.key});
   final postState = Get.put(PostState());
   final serviceState = Get.put(ServiceState());
   PageController pg = PageController();
-
-  RxInt currentIndex = 0.obs;
+  final HomeViewController hvc = Get.put(HomeViewController());
 
   _buildIcon(IconData icon, String label, int index) {
     return Obx(() {
-      var selected = currentIndex.value == index;
+      var selected = hvc.currentIndex.value == index;
       var size = selected ? 57.0 : 55.0;
       return Tooltip(
         message: label,
@@ -46,7 +50,7 @@ class HomeView extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(size),
             onTap: () {
-              currentIndex.value = index;
+              hvc.currentIndex.value = index;
               pg.jumpToPage(index);
             },
             child: Column(
@@ -83,32 +87,35 @@ class HomeView extends StatelessWidget {
       ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       extendBody: true,
-      bottomNavigationBar: Obx(() => WrgNavBar(
-            selectedIndex: currentIndex.value,
-            items: [
-              WrgNavBarItem(
-                  title: "Parts",
-                  icon: CupertinoIcons.wrench,
-                  onTap: () {
-                    currentIndex.value = 0;
-                    pg.jumpToPage(0);
-                  }),
-              WrgNavBarItem(
-                  title: "Services",
-                  icon: CupertinoIcons.tray,
-                  onTap: () {
-                    currentIndex.value = 1;
-                    pg.jumpToPage(1);
-                  }),
-              WrgNavBarItem(
-                  title: "Profile",
-                  icon: CupertinoIcons.profile_circled,
-                  onTap: () {
-                    currentIndex.value = 2;
-                    pg.jumpToPage(2);
-                  }),
-            ],
-          )),
+      bottomNavigationBar: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: toc.appBarTheme.systemOverlayStyle!,
+        child: Obx(() => WrgNavBar(
+              selectedIndex: hvc.currentIndex.value,
+              items: [
+                WrgNavBarItem(
+                    title: "Parts",
+                    icon: CupertinoIcons.wrench,
+                    onTap: () {
+                      hvc.currentIndex.value = 0;
+                      pg.jumpToPage(0);
+                    }),
+                WrgNavBarItem(
+                    title: "Services",
+                    icon: CupertinoIcons.tray,
+                    onTap: () {
+                      hvc.currentIndex.value = 1;
+                      pg.jumpToPage(1);
+                    }),
+                WrgNavBarItem(
+                    title: "Profile",
+                    icon: CupertinoIcons.profile_circled,
+                    onTap: () {
+                      hvc.currentIndex.value = 2;
+                      pg.jumpToPage(2);
+                    }),
+              ],
+            )),
+      ),
 
       body: PageView(
         // controller: PageController(),
@@ -116,7 +123,7 @@ class HomeView extends StatelessWidget {
         allowImplicitScrolling: false,
         physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (index) {
-          currentIndex.value = index;
+          hvc.currentIndex.value = index;
         },
         children: [
           const PostList(),

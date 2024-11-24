@@ -95,7 +95,7 @@ class OfferItemAtom extends StatelessWidget {
                                           phone: '${model.mobile}',
                                           text: 'Initial text',
                                         );
-                                      } on Exception catch (e) {}
+                                      } on Exception {}
                                     },
                                     child: const Text("WhatsApp"),
                                   ),

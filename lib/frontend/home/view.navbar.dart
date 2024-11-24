@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
@@ -21,6 +19,7 @@ class WrgNavBar extends StatelessWidget {
   List<WrgNavBarItem> items;
   int selectedIndex;
   RxInt selectedRxIndex = 0.obs;
+  RxBool isOpen = false.obs;
   WrgNavBar({
     super.key,
     this.items = const [],
@@ -29,91 +28,103 @@ class WrgNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var bgc = toc.textColor;
-    var fgc = toc.cardColor;
     return Row(
       children: [
         Expanded(
           child: Container(
-            height: 70,
+            height: 60,
+
             margin: const EdgeInsets.only(left: 10, bottom: 20),
             decoration: BoxDecoration(
-                color: bgc, borderRadius: BorderRadius.circular(110)),
+              color: toc.textColor,
+              borderRadius: BorderRadius.circular(110),
+            ),
             // height: 60,
             // margin: const EdgeInsets.symmetric(horizontal: 10),
             clipBehavior: Clip.antiAlias,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: items.map((e) {
-                  var isSelected = items.indexOf(e) == selectedIndex;
-                  var dur = Constants.fastAnimationSpeed;
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: items.map((e) {
+                var isSelected = items.indexOf(e) == selectedIndex;
+                var dur = Constants.fastAnimationSpeed;
 
-                  return AnimatedOpacity(
-                    duration: Constants.fastAnimationSpeed,
-                    opacity: isSelected ? 1 : .8,
-                    child: AnimatedSize(
-                      duration: dur,
-                      child: AnimatedContainer(
-                        alignment: Alignment.center,
-                        duration: Constants.fastAnimationSpeed,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          color: isSelected
-                              ? toc.cardColor
-                              : toc.cardColor.withOpacity(.0),
-                        ),
-                        margin: const EdgeInsets.symmetric(vertical: 10),
-                        child: GestureDetector(
-                            onTap: () {
-                              e.onTap();
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  e.icon,
-                                  color: isSelected ? bgc : fgc,
-                                  size: 23,
-                                  shadows: [
-                                    if (isSelected)
-                                      BoxShadow(
-                                          color: toc.secondaryHeaderColor
-                                              .darkerF(30)
-                                              .withOpacity(.35),
-                                          blurRadius: 30,
-                                          offset: const Offset(0, 2))
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                AnimatedContainer(
-                                  duration: 150.milliseconds,
-                                  width: isSelected ? null : 0,
-                                  margin:
-                                      EdgeInsets.only(left: isSelected ? 8 : 0),
-                                  child: FittedBox(
-                                      fit: BoxFit.scaleDown,
-                                      child: Text(
-                                        e.title.toUpperCase(),
-                                        style: TS.h4.copyWith(
-                                            color: bgc,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 12.5),
-                                      )),
-                                ),
-                              ],
-                            )),
+                return AnimatedOpacity(
+                  duration: Constants.fastAnimationSpeed,
+                  opacity: 1,
+                  child: AnimatedSize(
+                    duration: dur,
+                    child: AnimatedContainer(
+                      alignment: Alignment.center,
+                      duration: Constants.fastAnimationSpeed,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: isSelected
+                            ? toc.scaffoldBackgroundColor
+                            : toc.cardColor.withOpacity(.0),
                       ),
+                      margin: isSelected
+                          ? const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 5)
+                          : EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                      child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            e.onTap();
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                e.icon,
+                                color: isSelected
+                                    ? toc.textColor
+                                    : toc.scaffoldBackgroundColor,
+                                size: 23,
+
+                                // weight: 1,
+                                shadows: [
+                                  if (isSelected)
+                                    BoxShadow(
+                                        color: toc.scaffoldBackgroundColor
+                                            .darkerF(30)
+                                            .withOpacity(.35),
+                                        blurRadius: 30,
+                                        offset: const Offset(0, 2))
+                                  else
+                                    Shadow(
+                                        color: toc.scaffoldBackgroundColor
+                                            .withOpacity(.0),
+                                        blurRadius: 1,
+                                        offset: const Offset(0, 0))
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              AnimatedContainer(
+                                duration: 150.milliseconds,
+                                width: isSelected ? null : 0,
+                                margin:
+                                    EdgeInsets.only(left: isSelected ? 8 : 0),
+                                child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      e.title.toUpperCase(),
+                                      style: TS.h4.copyWith(
+                                          color: toc.textColor,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12.5),
+                                    )),
+                              ),
+                            ],
+                          )),
                     ),
-                  );
-                }).toList(),
-              ),
+                  ),
+                );
+              }).toList(),
             ),
           ),
         ),
@@ -122,22 +133,27 @@ class WrgNavBar extends StatelessWidget {
           child: InkWell(
             onTap: () {},
             child: Container(
-              height: 70,
-              width: 70,
-              decoration: BoxDecoration(
-                  color: toc.textColor,
-                  borderRadius: BorderRadius.circular(110)),
+              height: 60,
+              width: 60,
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(110)),
               child: SpeedDial(
-                backgroundColor: bgc,
-                foregroundColor: fgc,
-                overlayColor: fgc,
+                backgroundColor: toc.textColor,
+                foregroundColor: toc.scaffoldBackgroundColor,
+                overlayColor: toc.scaffoldBackgroundColor,
                 overlayOpacity: 1,
                 icon: Icons.add,
                 activeIcon: Icons.close,
                 elevation: 0,
                 spaceBetweenChildren: 0,
-                buttonSize: const Size(75, 75),
+                buttonSize: const Size(60, 60),
                 childrenButtonSize: const Size(75, 80),
+                onOpen: () {
+                  isOpen.value = true;
+                },
+                onClose: () {
+                  isOpen.value = false;
+                },
                 children: <SpeedDialChild>[
                   _createChild(() async {
                     if (await guardPrompt()) {
@@ -163,7 +179,8 @@ class WrgNavBar extends StatelessWidget {
     );
   }
 
-  SpeedDialChild _createChild(Function onTap, IconData icon, String text) {
+  SpeedDialChild _createChild(Function onTap, IconData icon, String text,
+      [bool isFirst = false]) {
     return SpeedDialChild(
       foregroundColor: Colors.transparent,
       backgroundColor: Colors.transparent,
@@ -171,11 +188,12 @@ class WrgNavBar extends StatelessWidget {
       child: Container(
         height: 60,
         width: 60,
+        margin: EdgeInsets.only(bottom: isFirst ? 8 : 0),
         decoration: BoxDecoration(
             color: toc.textColor, borderRadius: BorderRadius.circular(100)),
         child: Icon(
           icon,
-          color: toc.cardColor,
+          color: toc.scaffoldBackgroundColor,
         ),
       ),
       labelWidget: Container(

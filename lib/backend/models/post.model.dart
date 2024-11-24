@@ -8,6 +8,7 @@ import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class PostModel extends Model {
   String title = "";
+  @override
   String id = "";
   String content = "";
   String category = "";
@@ -17,6 +18,7 @@ class PostModel extends Model {
   int views = 0;
   int watching = 0;
   int comments = 0;
+  @override
   DateTime? createdAt;
   String userEmail;
   String userName;

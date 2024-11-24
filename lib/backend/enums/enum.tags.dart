@@ -14,5 +14,5 @@ enum Tags {
 }
 
 extension Tag on Tags {
-  String get name => this.toString().replaceAll("_", " ");
+  String get name => toString().replaceAll("_", " ");
 }

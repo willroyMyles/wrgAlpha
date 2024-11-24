@@ -9,15 +9,15 @@ import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 
 TextStyle _style = TextStyle(color: toc.textColor.withOpacity(.9));
-InputDecoration _decoration = InputDecoration(
-    fillColor: Colors.white,
+InputDecoration _decoration() => InputDecoration(
+    fillColor: toc.cardColor,
     filled: true,
     contentPadding: const EdgeInsets.only(left: 8, top: 2),
 
     // labelText: this.labelText,
-    focusedBorder: border,
-    enabledBorder: border,
-    border: border);
+    focusedBorder: border(),
+    enabledBorder: border(),
+    border: border());
 
 Widget buildLargeInput(String label, onChange,
     {bool obscure = false,
@@ -99,7 +99,7 @@ Widget buildInput(String label, onChange,
               style: const TextStyle(
                 color: Colors.black,
               ),
-              decoration: _decoration),
+              decoration: _decoration()),
         ),
       ],
     ),
@@ -148,7 +148,7 @@ Widget buildInputHorizontal(String label, onChange,
               style: const TextStyle(
                 color: Colors.black,
               ),
-              decoration: _decoration),
+              decoration: _decoration()),
         ),
       ],
     ),
@@ -206,7 +206,7 @@ Widget buildDropdownInputAhead(String label, onChange,
                             .contains(searchValue.toLowerCase()))
                         .toList());
                   },
-                  decoration: _decoration,
+                  decoration: _decoration(),
                   progressIndicatorBuilder: Container(),
                   onChanged: (value) {
                     // onChange(value);
@@ -218,6 +218,25 @@ Widget buildDropdownInputAhead(String label, onChange,
               }),
         ),
       ],
+    ),
+  );
+}
+
+Widget buildDropdownOnly(onChange, List<String> items) {
+  return Theme(
+    data: toc,
+    child: DropdownMenu<String>(
+      dropdownMenuEntries: items
+          .map((e) => DropdownMenuEntry(
+                label: e,
+                value: e,
+              ))
+          .toList(),
+      textStyle: TextStyle(color: toc.textColor, fontWeight: FontWeight.w600),
+      onSelected: (value) {
+        onChange(value);
+      },
+      expandedInsets: EdgeInsets.zero,
     ),
   );
 }
@@ -270,7 +289,7 @@ Widget buildDropdownInput(String label, onChange,
                   asyncSuggestions: (searchValue) async {
                     return items;
                   },
-                  decoration: _decoration,
+                  decoration: _decoration(),
                   progressIndicatorBuilder: Container(),
                   onChanged: (value) {
                     // onChange(value);
@@ -377,9 +396,9 @@ Widget buildDropdownInputHorizontal(String label, onChange,
                   contentPadding: const EdgeInsets.only(left: 8, top: 2),
 
                   // labelText: this.labelText,
-                  focusedBorder: border,
-                  enabledBorder: border,
-                  border: border),
+                  focusedBorder: border(),
+                  enabledBorder: border(),
+                  border: border()),
             )),
       ],
     ),
@@ -390,14 +409,14 @@ Widget buildChip(String text, {Color color = Colors.transparent}) {
   return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(.1),
-        border: Border.all(color: color.withOpacity(.6), width: .6),
+        color: color.withOpacity(1),
+        border: Border.all(color: color.withOpacity(1).darker, width: .6),
         borderRadius: Constants.br,
       ),
       child: Text(
         text.toUpperCase(),
         style: TextStyle(
-            color: color.darker,
+            color: Colors.black,
             fontSize: 12,
             fontWeight: FontWeight.w600,
             letterSpacing: 1.2),
@@ -421,6 +440,6 @@ Widget buildPopup(Widget child, List<Widget> children) {
       child: child);
 }
 
-InputBorder border = OutlineInputBorder(
+InputBorder border() => OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
-    borderSide: const BorderSide(color: Colors.white));
+    borderSide: BorderSide(color: toc.cardColor.darker));

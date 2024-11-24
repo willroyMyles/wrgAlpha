@@ -3,26 +3,25 @@ import 'package:shorebird_code_push/shorebird_code_push.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 
 class ShorebirdChecker {
-  final shorebirdCodePush = ShorebirdCodePush();
+  final shorebirdCodePush = ShorebirdUpdater();
 
   ShorebirdChecker() {
     shorebirdCodePush
-        .currentPatchNumber()
+        .checkForUpdate()
         .then((value) => print('current patch number is $value'));
   }
 
   onCheck() async {
-    final isUpdateAvailable =
-        await shorebirdCodePush.isNewPatchAvailableForDownload();
+    final isUpdateAvailable = await shorebirdCodePush.checkForUpdate();
 
-    if (isUpdateAvailable) {
+    if (isUpdateAvailable == UpdateStatus.outdated) {
       // Download the new patch if it's available.
-      await shorebirdCodePush.downloadUpdateIfAvailable();
       //show that update is available
       SBUtil.showInfoSnackBar("Update available, Click to restart",
           extra: GestureDetector(
-            onTap: () {
+            onTap: () async {
               // shorebirdCodePush.();
+              await shorebirdCodePush.update();
             },
             child: const Text(
               "Restart",
