@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
+import 'package:wrg2/backend/service/service.storage.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
@@ -147,7 +148,12 @@ class ProfileView extends GetView<ProfileState> {
     );
   }
 
+  RxString theme = "Light".obs;
+
   Widget _themeChanger() {
+    if (theme.value.isEmpty) {
+      theme.value = Storage.read("themeMode", null) ?? "Light";
+    }
     return Container(
       // margin: EdgeInsets.only(top: 10, bottom: 10)
       child: _buildTile(
@@ -157,29 +163,22 @@ class ProfileView extends GetView<ProfileState> {
           false,
           SizedBox(
             width: Get.width * .5,
-            child: buildDropdownOnly((v) async {
-              switch (v.toLowerCase()) {
-                case "system":
-                  Get.changeThemeMode(ThemeMode.system);
-                  break;
-                case "light":
-                  Get.changeThemeMode(ThemeMode.light);
-                  break;
-                case "dark":
-                  Get.changeThemeMode(ThemeMode.dark);
-                  break;
+            child: Obx(() {
+              return buildDropdownOnly((v) async {
+                tw.changeTheme(v);
 
-                default:
-              }
-
-              await Future.delayed(Duration(milliseconds: 300));
-              // WidgetsBinding.instance.addPostFrameCallback((v) {
-              GF<HomeViewController>().currentIndex.refresh();
-              // });
-            },
-                ThemeMode.values
-                    .map((e) => e.toString().split(".")[1].capitalize!)
-                    .toList()),
+                theme.value = v;
+                Storage.write("themeMode", v);
+                await Future.delayed(Duration(milliseconds: 300));
+                // WidgetsBinding.instance.addPostFrameCallback((v) {
+                GF<HomeViewController>().currentIndex.refresh();
+                // });
+              },
+                  ThemeMode.values
+                      .map((e) => e.toString().split(".")[1].capitalize!)
+                      .toList(),
+                  theme.value);
+            }),
           )),
     );
   }

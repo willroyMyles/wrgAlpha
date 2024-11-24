@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:movements/support/widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/service/service.firebaseMessages.dart';
+import 'package:wrg2/backend/service/service.storage.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/firebase_options.dart';
@@ -20,6 +22,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await GetStorage.init();
+  await Storage.init();
+  tw.restoreTheme();
 
   // FirebaseFunctions.instance.useFunctionsEmulator("127.0.0.1", 5001);
 

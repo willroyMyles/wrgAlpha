@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_popup/flutter_popup.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/extension/color.extension.dart';
+import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
 
@@ -222,21 +223,28 @@ Widget buildDropdownInputAhead(String label, onChange,
   );
 }
 
-Widget buildDropdownOnly(onChange, List<String> items) {
+Widget buildDropdownOnly(onChange, List<String> items, [String? label]) {
   return Theme(
     data: toc,
-    child: DropdownMenu<String>(
-      dropdownMenuEntries: items
-          .map((e) => DropdownMenuEntry(
-                label: e,
+    child: DropdownButton<String>(
+      items: items
+          .map((e) => DropdownMenuItem(
                 value: e,
+                child: Text(
+                  e,
+                  style: TS.h3,
+                ),
               ))
           .toList(),
-      textStyle: TextStyle(color: toc.textColor, fontWeight: FontWeight.w600),
-      onSelected: (value) {
+      value: label,
+
+      // textStyle: TextStyle(color: toc.textColor, fontWeight: FontWeight.w600),
+      onChanged: (value) {
         onChange(value);
       },
-      expandedInsets: EdgeInsets.zero,
+      isDense: false,
+      isExpanded: true,
+      // expandedInsets: EdgeInsets.zero,
     ),
   );
 }

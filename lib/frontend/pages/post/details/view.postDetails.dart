@@ -126,7 +126,7 @@ class PostDetails extends StatelessWidget {
                 },
                 child: Obx(() => Text(controller.postBookmarked.value
                     ? "Undo Bookmark"
-                    : "Boormark"))),
+                    : "Bookmark"))),
             if (!controller.model.amIOwner() &&
                 GF<ProfileState>().isSignedIn.value)
               TextButton(
@@ -213,7 +213,7 @@ class PostDetails extends StatelessWidget {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                        "Viewd ${controller.model.views} times",
+                                        "Viewed ${controller.model.views} times",
                                         style: TS.h6),
                                     const Spacer(),
                                     buildChip(controller.model.status.name,

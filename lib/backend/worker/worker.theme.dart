@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:wrg2/backend/utils/util.colorGenerator.dart';
+import 'package:wrg2/backend/service/service.storage.dart';
 
 ThemeData get toc => Get.context == null ? ThemeData() : Theme.of(Get.context!);
 
@@ -17,36 +17,55 @@ WidgetStateProperty<T> mst<T>(T value) {
 }
 
 class ThemeWorker {
+  restoreTheme() {
+    var theme = Storage.read("themeMode", "Light")!;
+    changeTheme(theme);
+  }
+
+  changeTheme(String v) {
+    // Storage.write("themeMode", v);
+    switch (v.toLowerCase()) {
+      case "system":
+        Get.changeThemeMode(ThemeMode.system);
+        break;
+      case "light":
+        Get.changeThemeMode(ThemeMode.light);
+        break;
+      case "dark":
+        Get.changeThemeMode(ThemeMode.dark);
+        break;
+
+      default:
+    }
+  }
+
   ThemeWorker() {
     _theme = ThemeData(
-      primaryColor: primaryOrg, // Change to your desired primary color
+      primaryColor: primaryColor, // Change to your desired primary color
       scaffoldBackgroundColor: Colors.white,
-      fontFamily: 'Roboto', // Change to your desired font family
+      fontFamily: '', // Change to your desired font family
       appBarTheme: AppBarTheme(
-        color: primaryOrg, // Change to your desired app bar color
+        color: primaryColor, // Change to your desired app bar color
         elevation: 0, // Change elevation as needed
         iconTheme: const IconThemeData(
           color: Colors.white, // Change to your desired app bar icon color
         ),
       ),
       colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromRGBO(239, 236, 233, 1)),
+          seedColor: const Color.fromARGB(255, 255, 255, 255)),
     );
   }
 
-  Color primaryOrg = const Color.fromARGB(255, 220, 217, 212);
-// MaterialColor primarySwatch = generateMaterialColor(color: primaryOrg);
-
-  Color darkBackgroundColor = const Color.fromRGBO(30, 33, 30, 1);
-  Color darkForegrounColor = const Color.fromRGBO(60, 63, 60, 1);
-
-  Color lightBackgroundColor = const Color.fromARGB(255, 250, 247, 242);
-  Color lightForegrounColor = Colors.white;
+  Color get primaryColor => const Color.fromARGB(255, 52, 146, 126);
+  Color get darkBackgroundColor => const Color.fromARGB(255, 0, 0, 0);
+  Color get darkForegrounColor => const Color.fromARGB(255, 39, 39, 39);
+  Color get lightBackgroundColor => const Color.fromARGB(255, 225, 225, 229);
+  Color get lightForegrounColor => const Color.fromARGB(255, 255, 255, 255);
 
   late ThemeData _theme;
 
   ThemeData getDarkTheme() {
-    primaryOrg = const Color.fromARGB(255, 234, 54, 54);
+    // primaryOrg = const Color.fromARGB(255, 234, 54, 54);
     var brightness = Brightness.dark;
     var bg = darkBackgroundColor;
     var fg = darkForegrounColor;
@@ -56,7 +75,7 @@ class ThemeWorker {
   }
 
   ThemeData getLightTheme() {
-    primaryOrg = const Color.fromARGB(255, 234, 54, 54);
+    // primaryOrg = const Color.fromARGB(255, 234, 54, 54);
     var brightness = Brightness.light;
     var bg = lightBackgroundColor;
     var fg = lightForegrounColor;
@@ -65,9 +84,9 @@ class ThemeWorker {
     return getColoredThemeData(brightness, bg, fg, obg, ofg);
   }
 
-  Color getPrimaryColor() {
-    return generateMaterialColor(color: primaryOrg);
-  }
+  // Color getPrimaryColor() {
+  //   // return generateMaterialColor(color: primaryOrg);
+  // }
 
   ThemeData getColoredThemeData(
       Brightness brightness, Color bg, Color fg, obg, ofg) {
@@ -79,10 +98,10 @@ class ThemeWorker {
         endIndent: 10,
       ),
       brightness: brightness,
-      primaryColor: primaryOrg,
+      primaryColor: primaryColor,
       scaffoldBackgroundColor: bg,
-      cardColor: fg,
       canvasColor: bg,
+      cardColor: fg,
       bottomNavigationBarTheme: th.bottomNavigationBarTheme.copyWith(
         backgroundColor: fg,
         unselectedItemColor: obg.withOpacity(.6),
@@ -178,7 +197,7 @@ class ThemeWorker {
         onSecondary: obg,
         onSurface: ofg,
         surface: fg,
-        primary: getPrimaryColor(),
+        primary: primaryColor,
         error: Colors.red,
       ),
     );

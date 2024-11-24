@@ -80,4 +80,18 @@ class OfferState extends GetxController with StateMixin {
               });
     }
   }
+
+  void updateOffer(OfferModel mod) {
+    change("", status: RxStatus.loading());
+
+    var item = models.firstWhereOrNull((e) => e.id == mod.id);
+    var index = models.indexOf(item);
+
+    if (index < 0) return;
+
+    models.replaceRange(index, index, [mod]);
+    offerMap2.clear();
+    _updateMap();
+    change("", status: RxStatus.success());
+  }
 }

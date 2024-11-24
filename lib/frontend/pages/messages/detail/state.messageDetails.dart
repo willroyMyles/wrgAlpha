@@ -11,6 +11,7 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 import 'package:wrg2/frontend/pages/messages/state.messages.dart';
+import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 
 class MessageDetailsState extends GetxController with StateMixin {
   ConversationModel? conversation;
@@ -82,6 +83,8 @@ class MessageDetailsState extends GetxController with StateMixin {
 
     if (res) {
       SBUtil.showSuccessSnackBar("Offer Accepted");
+      initial!.status = OfferStatus.Accepted;
+      _updateParentOffer(initial!);
     } else {
       SBUtil.showErrorSnackBar("Could not accept offer, try again");
     }
@@ -91,9 +94,16 @@ class MessageDetailsState extends GetxController with StateMixin {
     var res = await GF<GE>().offer_declineOffer(initial!);
     if (res) {
       SBUtil.showSuccessSnackBar("Offer Declined");
+      initial!.status = OfferStatus.Declined;
+      _updateParentOffer(initial!);
     } else {
       SBUtil.showErrorSnackBar("Could not decline offer, try again");
     }
+  }
+
+  _updateParentOffer(OfferModel mod) {
+    // Get.back();
+    Get.find<OfferState>().updateOffer(mod);
   }
 
   onSend() async {

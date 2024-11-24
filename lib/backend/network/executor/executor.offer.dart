@@ -81,7 +81,10 @@ mixin offersExecutor {
           .update({"status": OfferStatus.Declined.index});
 
       FBFunctions.function_triggerOfferUpdatedNotification(
-          offerId: model.id, accepted: false, email: model.senderId);
+          offerId: model.id,
+          accepted: false,
+          email: model.senderId,
+          postName: model.postTitle);
       return true;
     } catch (e) {
       print(e);
