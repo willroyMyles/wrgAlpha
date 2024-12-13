@@ -30,104 +30,102 @@ class WrgNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: Container(
-            height: 60,
+        Container(
+          height: 60,
 
-            margin: const EdgeInsets.only(left: 10, bottom: 20),
-            decoration: BoxDecoration(
-              color: toc.textColor,
-              borderRadius: BorderRadius.circular(110),
-            ),
-            // height: 60,
-            // margin: const EdgeInsets.symmetric(horizontal: 10),
-            clipBehavior: Clip.antiAlias,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: items.map((e) {
-                var isSelected = items.indexOf(e) == selectedIndex;
-                var dur = Constants.fastAnimationSpeed;
+          margin: const EdgeInsets.only(left: 10, bottom: 20),
+          decoration: BoxDecoration(
+            color: toc.textColor,
+            borderRadius: BorderRadius.circular(110),
+          ),
+          // height: 60,
+          // margin: const EdgeInsets.symmetric(horizontal: 10),
+          clipBehavior: Clip.antiAlias,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            // mainAxisSize: MainAxisSize.min,
+            children: items.map((e) {
+              var isSelected = items.indexOf(e) == selectedIndex;
+              var dur = Constants.defaultAnimationSpeed;
 
-                return AnimatedOpacity(
-                  duration: Constants.fastAnimationSpeed,
-                  opacity: 1,
-                  child: AnimatedSize(
+              return AnimatedOpacity(
+                duration: dur,
+                opacity: 1,
+                child: AnimatedSize(
+                  duration: dur,
+                  child: AnimatedContainer(
+                    alignment: Alignment.center,
                     duration: dur,
-                    child: AnimatedContainer(
-                      alignment: Alignment.center,
-                      duration: Constants.fastAnimationSpeed,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: isSelected
-                            ? toc.scaffoldBackgroundColor
-                            : toc.cardColor.withOpacity(.0),
-                      ),
-                      margin: isSelected
-                          ? const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 5)
-                          : EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-                      child: GestureDetector(
-                          behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            e.onTap();
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                e.icon,
-                                color: isSelected
-                                    ? toc.textColor
-                                    : toc.scaffoldBackgroundColor,
-                                size: 23,
-
-                                // weight: 1,
-                                shadows: [
-                                  if (isSelected)
-                                    BoxShadow(
-                                        color: toc.scaffoldBackgroundColor
-                                            .darkerF(30)
-                                            .withOpacity(.35),
-                                        blurRadius: 30,
-                                        offset: const Offset(0, 2))
-                                  else
-                                    Shadow(
-                                        color: toc.scaffoldBackgroundColor
-                                            .withOpacity(.0),
-                                        blurRadius: 1,
-                                        offset: const Offset(0, 0))
-                                ],
-                              ),
-                              const SizedBox(height: 5),
-                              AnimatedContainer(
-                                duration: 150.milliseconds,
-                                width: isSelected ? null : 0,
-                                margin:
-                                    EdgeInsets.only(left: isSelected ? 8 : 0),
-                                child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(
-                                      e.title.toUpperCase(),
-                                      style: TS.h4.copyWith(
-                                          color: toc.textColor,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12.5),
-                                    )),
-                              ),
-                            ],
-                          )),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: isSelected
+                          ? toc.scaffoldBackgroundColor
+                          : toc.cardColor.withOpacity(.0),
                     ),
+                    margin: isSelected
+                        ? const EdgeInsets.symmetric(vertical: 5, horizontal: 5)
+                        : EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+                    child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          e.onTap();
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              e.icon,
+                              color: isSelected
+                                  ? toc.textColor
+                                  : toc.scaffoldBackgroundColor,
+                              size: 23,
+
+                              // weight: 1,
+                              shadows: [
+                                if (isSelected)
+                                  BoxShadow(
+                                      color: toc.scaffoldBackgroundColor
+                                          .darkerF(30)
+                                          .withOpacity(.35),
+                                      blurRadius: 30,
+                                      offset: const Offset(0, 2))
+                                else
+                                  Shadow(
+                                      color: toc.scaffoldBackgroundColor
+                                          .withOpacity(.0),
+                                      blurRadius: 1,
+                                      offset: const Offset(0, 0))
+                              ],
+                            ),
+                            const SizedBox(width: 5),
+                            AnimatedContainer(
+                              duration: 150.milliseconds,
+                              width: isSelected ? null : 0,
+                              margin: EdgeInsets.only(left: isSelected ? 8 : 0),
+                              child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    e.title.toUpperCase(),
+                                    textScaler: TextScaler.linear(.9),
+                                    style: TS.h4.copyWith(
+                                      color: toc.textColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        )),
                   ),
-                );
-              }).toList(),
-            ),
+                ),
+              );
+            }).toList(),
           ),
         ),
+        Spacer(),
         Container(
           margin: const EdgeInsets.only(left: 30, right: 10, bottom: 23),
           child: InkWell(

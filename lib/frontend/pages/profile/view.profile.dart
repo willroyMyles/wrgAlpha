@@ -37,7 +37,8 @@ class ProfileView extends GetView<ProfileState> {
                         Get.to(() => EditProfile());
                       },
                       child: const Text("Edit Profile"))
-                  : Container())
+                  : Container()),
+              _themeChanger()
             ],
           ),
           body: SafeArea(
@@ -72,23 +73,34 @@ class ProfileView extends GetView<ProfileState> {
   Widget _buildTile(
       Function onPressed, IconData icon, String title, bool showChev,
       [Widget? append]) {
+    var opacity = .65;
     return ListTile(
-      title: Text(title, style: TS.h3),
-      minLeadingWidth: 50,
-      leading: Icon(
-        icon,
-        size: 30,
-      ),
-      onTap: () {
-        onPressed();
-      },
-      trailing: showChev
-          ? const Icon(
-              Icons.chevron_right,
-              size: 32,
-            )
-          : append,
-    );
+        title: Text(title, style: TS.h3),
+        minLeadingWidth: 50,
+        leading: Opacity(
+          opacity: opacity,
+          child: Icon(
+            icon,
+            size: 30,
+          ),
+        ),
+        onTap: () {
+          onPressed();
+        },
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (append != null) append,
+            if (showChev)
+              Opacity(
+                opacity: opacity,
+                child: const Icon(
+                  Icons.chevron_right,
+                  size: 32,
+                ),
+              ),
+          ],
+        ));
   }
 
   Widget _feedbackPage(BuildContext context) {
@@ -148,12 +160,64 @@ class ProfileView extends GetView<ProfileState> {
     );
   }
 
-  RxString theme = "Light".obs;
+  RxString theme = "".obs;
 
   Widget _themeChanger() {
     if (theme.value.isEmpty) {
       theme.value = Storage.read("themeMode", null) ?? "Light";
     }
+
+    return Obx(() {
+      IconData icon;
+
+      icon = switch (theme.value.toLowerCase()) {
+        "light" => Icons.light_mode_outlined,
+        "dark" => Icons.dark_mode_outlined,
+        "system" => Icons.category_outlined,
+        _ => Icons.light_mode
+      };
+
+      return InkWell(
+        onTap: () {
+          theme.value = theme.value == "light"
+              ? "dark"
+              : theme.value == "dark"
+                  ? "system" // or your custom theme
+                  : "light";
+
+          tw.changeTheme(theme.value);
+          Future.delayed(Duration(milliseconds: 200), () {
+            GF<HomeViewController>().currentIndex.refresh();
+          });
+        },
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 350),
+          margin: EdgeInsets.only(top: 0, right: 5),
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 0),
+          alignment: Alignment.center,
+          // width: Get.width * .3,
+          decoration: BoxDecoration(
+            border: Border.all(width: 3, color: toc.textColor.withOpacity(.5)),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Transform.scale(
+                  scale: 1, child: Icon(icon, color: toc.textColor)),
+              SizedBox(width: 10),
+              Text(
+                "${theme.value} theme".toUpperCase(),
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    });
     return Container(
       // margin: EdgeInsets.only(top: 10, bottom: 10)
       child: _buildTile(
@@ -247,29 +311,30 @@ class ProfileView extends GetView<ProfileState> {
                     Get.to(() => PersonalPosts());
                   }, CupertinoIcons.rectangle_on_rectangle_angled, "Your Posts",
                       true),
-                  _buildTile(() {
-                    Get.to(() => const OffersView());
-                  },
-                      CupertinoIcons.rectangle_on_rectangle_angled,
-                      "Offers",
-                      false,
-                      Container(
-                          padding: const EdgeInsets.all(5),
-                          margin: const EdgeInsets.only(right: 5),
-                          decoration: BoxDecoration(
-                            color: toc.cardColor,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Text(
-                            GFI<OfferState>()
-                                    ?.getIncomingOffersLength()
-                                    .toString() ??
-                                "",
-                            textScaler: const TextScaler.linear(1.3),
-                            style: TextStyle(
-                                color: toc.textColor,
-                                fontWeight: FontWeight.w600),
-                          ))),
+                  _buildTile(
+                    () {
+                      Get.to(() => const OffersView());
+                    },
+                    CupertinoIcons.rectangle_on_rectangle_angled,
+                    "Offers",
+                    true,
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: toc.cardColor,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Text(
+                        GFI<OfferState>()
+                                ?.getIncomingOffersLength()
+                                .toString() ??
+                            "",
+                        textScaler: const TextScaler.linear(1.3),
+                        style: TextStyle(
+                            color: toc.textColor, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
 
                   _buildTile(
                     () {
@@ -279,27 +344,27 @@ class ProfileView extends GetView<ProfileState> {
                     },
                     CupertinoIcons.bookmark,
                     "Bookmarks",
-                    false,
-                    Container(
-                        margin: const EdgeInsets.only(right: 5),
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: toc.cardColor,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Obx(() => Text(
-                              GFI<ProfileState>()
-                                      ?.userModel
-                                      ?.value
-                                      .watching
-                                      .length
-                                      .toString() ??
-                                  "",
-                              textScaler: const TextScaler.linear(1.3),
-                              style: TextStyle(
-                                  color: toc.textColor,
-                                  fontWeight: FontWeight.w600),
-                            ))),
+                    true,
+                    Obx(() => Container(
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            color: toc.cardColor,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Text(
+                            GFI<ProfileState>()
+                                    ?.userModel
+                                    ?.value
+                                    .watching
+                                    .length
+                                    .toString() ??
+                                "",
+                            textScaler: const TextScaler.linear(1.3),
+                            style: TextStyle(
+                                color: toc.textColor,
+                                fontWeight: FontWeight.w600),
+                          ),
+                        )),
                   ),
 
                   _buildTile(() {
@@ -313,42 +378,122 @@ class ProfileView extends GetView<ProfileState> {
                 ],
               )
             else
-              Container(
-                alignment: Alignment.center,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _themeChanger(),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          TextButton(
-                              style: BS.defaultBtnStyle,
-                              onPressed: () async {
-                                var res =
-                                    await Get.find<GE>().signInWithGoogle();
-                                if (!res) {
-                                  SBUtil.showErrorSnackBar(
-                                      "Unable to sign in with google. Please try again later");
-                                }
-                              },
-                              child: const Text("Log in")),
-                          Hero(
-                            tag: "feedback",
-                            child: TextButton(
-                                onPressed: () async {
-                                  showFeedback.value = true;
-                                },
-                                style: BS.defaultBtnStyle,
-                                child: const Text("Feedback")),
-                          ),
-                        ],
-                      ),
-                      // const SizedBox(height: 40),
-                    ]),
-              )
+              _whenUserIsLoggedOutView()
           ]),
+    );
+  }
+
+  Widget _whenUserIsLoggedOutView() {
+    return Container(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 15),
+            child: InkWell(
+              onTap: () async {
+                var res = await Get.find<GE>().signInWithGoogle();
+                if (!res) {
+                  SBUtil.showErrorSnackBar(
+                      "Unable to sign in with google. Please try again later");
+                }
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                alignment: Alignment.center,
+                width: Get.width * .8,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      width: 3, color: toc.textColor.withOpacity(.5)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Transform.scale(
+                        scale: 1.3,
+                        child: Icon(CupertinoIcons.speaker_2,
+                            color: toc.textColor)),
+                    SizedBox(width: 20),
+                    Text(
+                      "Log in with google",
+                      style: TS.h2,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 15),
+            child: InkWell(
+              onTap: () async {
+                showFeedback.value = true;
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                alignment: Alignment.center,
+                width: Get.width * .8,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      width: 3, color: toc.textColor.withOpacity(.5)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Transform.scale(
+                        scale: 1.3,
+                        child: Icon(CupertinoIcons.speaker_2,
+                            color: toc.textColor)),
+                    SizedBox(width: 20),
+                    Text(
+                      "Feedback",
+                      style: TS.h2,
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Container(
+              margin: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
+              alignment: Alignment.center,
+              width: Get.width * .8,
+              child: Wrap(
+                children: [
+                  Text("By signing in, you agree to wrg-autoparts"),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(" privacy policy".toUpperCase(),
+                        style: TextStyle(fontWeight: FontWeight.w500)),
+                  ),
+                  Container(
+                      margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                      child: Text(" and ")),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 3, vertical: 3),
+                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    child: Text(" terms of use".toUpperCase(),
+                        style: TextStyle(fontWeight: FontWeight.w500)),
+                  ),
+                ],
+              )),
+        ],
+      ),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
+import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
@@ -135,6 +136,11 @@ Future<bool> guardPrompt() async {
         title: 'Login Required');
     if (result) {
       // navigate to login page or perform login logic
+      var res = await Get.find<GE>().signInWithGoogle();
+      if (!res) {
+        SBUtil.showErrorSnackBar(
+            "Unable to sign in with google. Please try again later");
+      }
       return false;
     } else {
       SBUtil.showInfoSnackBar("You need to be logged in to continue");

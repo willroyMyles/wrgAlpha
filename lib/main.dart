@@ -5,7 +5,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:movements/support/widget.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
-import 'package:wrg2/backend/service/service.firebaseMessages.dart';
 import 'package:wrg2/backend/service/service.storage.dart';
 import 'package:wrg2/backend/worker/worker.auth.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
@@ -41,7 +40,7 @@ void main() async {
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize("347f29ed-6636-469f-bc56-9feeefe1aaeb");
   OneSignal.Notifications.requestPermission(true);
-  fbMessagesService.init();
+  // fbMessagesService.init();
 
   runApp(const MyApp());
 }

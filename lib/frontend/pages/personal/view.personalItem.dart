@@ -39,10 +39,10 @@ class PersonalProfileItem extends StatelessWidget {
                 name,
                 style: TS.h4,
               ),
-              Text(
-                mobile ?? "--No Contact--",
-                style: TS.h4,
-              ),
+              // Text(
+              //   mobile ?? "--No Contact--",
+              //   style: TS.h4,
+              // ),
             ],
           ),
         ],

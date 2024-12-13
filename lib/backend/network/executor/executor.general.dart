@@ -7,6 +7,7 @@ import 'package:wrg2/backend/network/executor/executor.feedback.dart';
 import 'package:wrg2/backend/network/executor/executor.messages.dart';
 import 'package:wrg2/backend/network/executor/executor.offer.dart';
 import 'package:wrg2/backend/network/executor/executor.post.dart';
+import 'package:wrg2/backend/network/executor/executor.storage.dart';
 import 'package:wrg2/backend/network/executor/executor.user.dart';
 
 class GE extends GetxController
@@ -19,7 +20,8 @@ class GE extends GetxController
         offersExecutor,
         MessagesExecutor,
         ChatExecutor,
-        CarsExecutor {}
+        CarsExecutor,
+        StorageExecutor {}
 
 GE _ge = GE();
 GE get ge => _ge;

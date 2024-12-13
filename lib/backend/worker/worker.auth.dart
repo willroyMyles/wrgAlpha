@@ -9,7 +9,7 @@ class AuthWorker {
   init() {}
 
   AuthWorker() {
-    FirebaseAuth.instance.authStateChanges().listen((User? u) {
+    FirebaseAuth.instance.authStateChanges().listen((User? u) async {
       if (u == null) {
         print('User is currently signed out!');
         Get.find<ProfileState>().remove();
@@ -18,6 +18,7 @@ class AuthWorker {
         user = u.obs;
         user!.refresh();
         Get.find<ProfileState>().setup();
+        await Future.delayed(Duration(seconds: 3));
         OneSignal.login(user!.value.email!);
         OneSignal.User.addTagWithKey("emailTag", user!.value.email!);
       }

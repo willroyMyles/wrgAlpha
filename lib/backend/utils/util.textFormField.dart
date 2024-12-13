@@ -417,17 +417,17 @@ Widget buildChip(String text, {Color color = Colors.transparent}) {
   return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(1),
-        border: Border.all(color: color.withOpacity(1).darker, width: .6),
+        color: color,
+        border: Border.all(color: color.withOpacity(1), width: 1.5),
         borderRadius: Constants.br,
       ),
       child: Text(
         text.toUpperCase(),
         style: TextStyle(
-            color: Colors.black,
+            color: toc.cardColor,
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            letterSpacing: 1.2),
+            letterSpacing: 1.0),
       ));
 }
 

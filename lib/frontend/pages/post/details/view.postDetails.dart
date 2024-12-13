@@ -229,7 +229,15 @@ class PostDetails extends StatelessWidget {
             SizedBox(height: Constants.cardMargin),
             SizedBox(height: Constants.cardMargin),
             SizedBox(height: Constants.cardMargin),
-            Obx(() => _buildOfferSection()),
+            if (controller.model.amIOwner()) Obx(() => _buildOfferSection()),
+            if (controller.model.iAlreadyMadeAnOffer())
+              Container(
+                alignment: Alignment.center,
+                child: Text(
+                  "You've already made an offer on this posts",
+                  style: TS.hint1,
+                ),
+              ),
             const SizedBox(height: 50),
           ],
         ),

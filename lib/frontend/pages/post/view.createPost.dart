@@ -5,6 +5,7 @@ import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
 import 'package:wrg2/backend/utils/util.formatter.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
+import 'package:wrg2/backend/worker/worker.theme.dart';
 import 'package:wrg2/frontend/atoms/atom.appbar.dart';
 import 'package:wrg2/frontend/atoms/atom.bottomSheet.dart';
 import 'package:wrg2/frontend/cars/state.cars.dart';
@@ -276,6 +277,86 @@ class CreatePost extends StatelessWidget {
                           ],
                         ),
                       ),
+                      Obx(() {
+                        var size = 60.0;
+                        return !controller.isService.value
+                            ? Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                height: size + 30,
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text("Attach Sample Image"),
+                                      SizedBox(height: 10),
+                                      Expanded(
+                                        child: ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                controller.pickImages();
+                                              },
+                                              child: Container(
+                                                height: size,
+                                                width: size,
+                                                margin:
+                                                    EdgeInsets.only(right: 10),
+                                                decoration: BoxDecoration(
+                                                  color: toc.cardColor
+                                                      .withOpacity(1),
+                                                  border: Border.all(
+                                                      style: BorderStyle.solid,
+                                                      strokeAlign: .5,
+                                                      width: 0,
+                                                      color: toc
+                                                          .scaffoldBackgroundColor),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Transform.scale(
+                                                  scale: 1.6,
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    opticalSize: 2.2,
+                                                    applyTextScaling: true,
+                                                    weight: .1,
+                                                    color: toc.textColor
+                                                        .withOpacity(.6),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            ...controller.images.map((e) =>
+                                                InkWell(
+                                                  onTap: () {
+                                                    controller.removeImage(e);
+                                                  },
+                                                  child: Container(
+                                                      height: size,
+                                                      width: size,
+                                                      margin: EdgeInsets.only(
+                                                          right: 10),
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Colors.grey),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Image.file(
+                                                        e,
+                                                        fit: BoxFit.cover,
+                                                      )),
+                                                )),
+                                          ],
+                                        ),
+                                      )
+                                    ]),
+                              )
+                            : Container();
+                      }),
                       Container(
                         padding: const EdgeInsets.all(10),
                         margin: const EdgeInsets.only(top: 5),

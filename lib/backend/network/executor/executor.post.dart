@@ -53,6 +53,35 @@ mixin PostExecutor {
     }
   }
 
+  Future<List<PostModel>> posts_getAllPosts({dynamic id, limit = 20}) async {
+    try {
+      QuerySnapshot<Map<String, dynamic>> list;
+      if (id == null) {
+        list = await _fstore
+            .collection(_col)
+            .limit(limit)
+            .orderBy("createdAt", descending: true)
+            .get();
+      } else {
+        list = await _fstore
+            .collection(_col)
+            .limit(limit)
+            .orderBy("createdAt", descending: true)
+            .startAfter([id]).get();
+      }
+
+      if (list.size > 0) {
+        var res = list.docs.map((e) => PostModel.fromMap(e.data())).toList();
+        return res;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
   Future<List<PostModel>> posts_getMyPosts({int? id}) async {
     try {
       QuerySnapshot<Map<String, dynamic>> list;

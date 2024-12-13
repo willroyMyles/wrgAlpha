@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:wrg2/backend/enums/enum.post.dart';
 import 'package:wrg2/backend/mixin/mixin.get.dart';
 import 'package:wrg2/backend/models/model.dart';
+import 'package:wrg2/frontend/pages/offers/state.offers.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 
 class PostModel extends Model {
@@ -23,6 +24,7 @@ class PostModel extends Model {
   String userEmail;
   String userName;
   String userPhotoUrl;
+  List<String> images = [];
   // UserInfoModel? userInfo;
   //enum
   Status status = Status.OPEN;
@@ -45,6 +47,7 @@ class PostModel extends Model {
     this.userPhotoUrl = '',
     this.status = Status.OPEN,
     this.offers = const [],
+    this.images = const [],
     this.isService = false,
   }) {
     // createdAt = DateTime.now();
@@ -69,6 +72,7 @@ class PostModel extends Model {
       'status': status.index,
       'offers': offers,
       'isService': isService,
+      'images': images
     };
   }
 
@@ -78,6 +82,7 @@ class PostModel extends Model {
     return PostModel(
       title: map['title'] ?? '',
       id: map['id'] ?? '',
+      images: List<String>.from(map['images'] ?? []),
       content: map['content'] ?? '',
       category: map['category'] ?? '',
       make: map['make'] ?? '',
@@ -118,6 +123,7 @@ class PostModel extends Model {
       watching: map['watching'],
       status: st,
       createdAt: cat,
+      images: List<String>.from(map['images'] ?? []),
     );
 
     return p;
@@ -139,6 +145,18 @@ class PostModel extends Model {
       return false;
     }
     var ans = userEmail == ps.userModel?.value.email;
+    return ans;
+  }
+
+  bool iAlreadyMadeAnOffer() {
+    var ps = GF<ProfileState>();
+    if (!ps.isSignedIn.value) {
+      return false;
+    }
+
+    var os = GF<OfferState>();
+    var ans = os.models.any((element) => element.postId == id);
+
     return ans;
   }
 }

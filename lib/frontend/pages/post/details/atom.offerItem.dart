@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wrg2/backend/extension/dateTime.extension.dart';
 import 'package:wrg2/backend/mixin/mixin.text.dart';
 import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
@@ -28,7 +29,7 @@ class OfferItemAtom extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               PersonalProfileItem(
-                name: model.snederName ?? "",
+                name: model.snederName,
                 photo: model.senderPhoto,
                 id: model.senderId,
                 mobile: model.mobile,
@@ -114,6 +115,10 @@ class OfferItemAtom extends StatelessWidget {
           ),
           Text(
             model.message,
+            style: TS.h4,
+          ),
+          Text(
+            model.createdAt?.ago ?? "",
             style: TS.h4,
           ),
         ],

@@ -127,11 +127,11 @@ class OfferBundle extends StatelessWidget {
         padding: Constants.ePadding,
         decoration: BoxDecoration(
           border: Border.all(
-            width: 3,
+            width: 0,
             color: toc.scaffoldBackgroundColor.darkerF(20),
           ),
-          // borderRadius: Constants.br * 3,
-          color: toc.scaffoldBackgroundColor.darkerF(20),
+          borderRadius: Constants.br * 2,
+          color: toc.cardColor,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,

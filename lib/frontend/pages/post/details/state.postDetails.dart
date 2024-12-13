@@ -8,8 +8,7 @@ import 'package:wrg2/backend/models/offer.dart';
 import 'package:wrg2/backend/models/post.model.dart';
 import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
-import 'package:wrg2/frontend/pages/post/state.posts.dart';
-import 'package:wrg2/frontend/pages/post/state.service.dart';
+import 'package:wrg2/frontend/pages/post/view.list.dart';
 import 'package:wrg2/frontend/pages/profile/state.profile.dart';
 import 'package:wrg2/standalone/state.listState.dart';
 
@@ -26,9 +25,9 @@ class PostDetailsState extends GetxController {
     Get.find<GE>().posts_incrimentViews(model.id);
     model.views = model.views + 1;
     Future.delayed(const Duration(seconds: 3), () {
-      var idx = Get.find<PostState>().list.indexOf(model);
+      var idx = Get.find<DiscoverState>().list.indexOf(model);
 
-      Get.find<PostState>().list[idx] = model;
+      Get.find<DiscoverState>().list[idx] = model;
     });
   }
 
@@ -52,11 +51,9 @@ class PostDetailsState extends GetxController {
     //add to watching
     if (res) {
       ListState state;
-      if (model.isService) {
-        state = GF<ServiceState>();
-      } else {
-        state = Get.find<PostState>();
-      }
+
+      state = Get.find<DiscoverState>();
+
       if (isWatching) {
         model.watching = model.watching - 1;
         postBookmarked.value = false;
@@ -198,8 +195,10 @@ class PostDetailsState extends GetxController {
         await Get.find<GE>().posts_modifyPost(model.id, {"status": e.index});
     if (res) {
       model.status = e;
-      GF<PostState>().list.firstWhereOrNull((a) => a.id == model.id)?.status =
-          e;
+      GF<DiscoverState>()
+          .list
+          .firstWhereOrNull((a) => a.id == model.id)
+          ?.status = e;
       SBUtil.showSuccessSnackBar("Status updated");
       refresh();
     } else {
@@ -215,8 +214,7 @@ class PostDetailsState extends GetxController {
       Get.back();
 
       //remove post from list
-      GFI<PostState>()?.removePostById(model.id);
-      GFI<ServiceState>()?.removePostById(model.id);
+      GFI<DiscoverState>()?.removePostById(model.id);
     } else {
       SBUtil.showErrorSnackBar("Unable to delete post");
     }

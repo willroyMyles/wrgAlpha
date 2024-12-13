@@ -37,6 +37,8 @@ class ThemeWorker {
 
       default:
     }
+
+    Storage.write("themeMode", v.toLowerCase());
   }
 
   ThemeWorker() {
