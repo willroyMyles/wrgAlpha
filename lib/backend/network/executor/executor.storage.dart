@@ -1,18 +1,20 @@
 import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart';
 
 mixin StorageExecutor {
   Future<List<String>> storage_addPicturesForPost(
       String postId, List<File> list) async {
     try {
-      final storgae = FirebaseStorage.instance;
+      final storage = FirebaseStorage.instance;
 
       List<String> downloadUrls = [];
 
       for (var i = 0; i < list.length; i++) {
-        Reference reference = storgae.ref();
-        var task = await reference.child("images/$postId/$i").putFile(list[i]);
+        var file = list[i];
+        var operation = storage.ref("images/${basename(file.path)}");
+        var task = await operation.putFile(file);
         var durl = await task.ref.getDownloadURL();
         downloadUrls.add(durl);
       }

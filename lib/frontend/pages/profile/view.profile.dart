@@ -7,6 +7,7 @@ import 'package:wrg2/backend/network/executor/executor.general.dart';
 import 'package:wrg2/backend/service/service.storage.dart';
 import 'package:wrg2/backend/utils/Constants.dart';
 import 'package:wrg2/backend/utils/util.btns.dart';
+import 'package:wrg2/backend/utils/util.card.dart';
 import 'package:wrg2/backend/utils/util.snackbars.dart';
 import 'package:wrg2/backend/utils/util.textFormField.dart';
 import 'package:wrg2/backend/worker/worker.theme.dart';
@@ -30,16 +31,7 @@ class ProfileView extends GetView<ProfileState> {
       data: Theme.of(context),
       child: Scaffold(
           appBar: AppBar(
-            actions: [
-              Obx(() => controller.isSignedIn.value
-                  ? TextButton(
-                      onPressed: () {
-                        Get.to(() => EditProfile());
-                      },
-                      child: const Text("Edit Profile"))
-                  : Container()),
-              _themeChanger()
-            ],
+            actions: [Spacer(), _themeChanger()],
           ),
           body: SafeArea(
             child: Container(
@@ -109,9 +101,13 @@ class ProfileView extends GetView<ProfileState> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            "Feedback",
-            style: TS.h1,
+          Hero(
+            key: UniqueKey(),
+            tag: 'feedbackText',
+            child: Text(
+              "Feedback",
+              style: TS.h1,
+            ),
           ),
           // Constants.verticalSpace,
           Text(
@@ -291,12 +287,30 @@ class ProfileView extends GetView<ProfileState> {
                             if (controller.userModel != null)
                               Opacity(
                                 opacity: .7,
-                                child: Container(
-                                    margin: const EdgeInsets.only(bottom: 15),
-                                    child: Text(
-                                      controller.userModel!.value.email ?? "",
-                                      style: TS.h3,
-                                    )),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 15),
+                                        child: Text(
+                                          controller.userModel!.value.email ??
+                                              "",
+                                          style: TS.h3,
+                                        )),
+                                    InkWell(
+                                      onTap: () async {
+                                        Get.to(() => EditProfile());
+                                      },
+                                      child: Container(
+                                          margin: EdgeInsets.only(
+                                              left: 10, bottom: 15),
+                                          child: Transform.scale(
+                                              scale: 1.2,
+                                              child: Icon(Icons.edit))),
+                                    )
+                                  ],
+                                ),
                               ),
                           ],
                         ),
@@ -370,7 +384,6 @@ class ProfileView extends GetView<ProfileState> {
                   _buildTile(() {
                     showFeedback.value = true;
                   }, Icons.subdirectory_arrow_left, "Feedback", true),
-                  _themeChanger(),
 
                   _buildTile(() {
                     GF<GE>().user_logout();
@@ -390,76 +403,49 @@ class ProfileView extends GetView<ProfileState> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 15),
-            child: InkWell(
-              onTap: () async {
-                var res = await Get.find<GE>().signInWithGoogle();
-                if (!res) {
-                  SBUtil.showErrorSnackBar(
-                      "Unable to sign in with google. Please try again later");
-                }
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                alignment: Alignment.center,
-                width: Get.width * .8,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      width: 3, color: toc.textColor.withOpacity(.5)),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Transform.scale(
-                        scale: 1.3,
-                        child: Icon(CupertinoIcons.speaker_2,
-                            color: toc.textColor)),
-                    SizedBox(width: 20),
-                    Text(
-                      "Log in with google",
-                      style: TS.h2,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 15),
-            child: InkWell(
-              onTap: () async {
-                showFeedback.value = true;
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                alignment: Alignment.center,
-                width: Get.width * .8,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      width: 3, color: toc.textColor.withOpacity(.5)),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Transform.scale(
-                        scale: 1.3,
-                        child: Icon(CupertinoIcons.speaker_2,
-                            color: toc.textColor)),
-                    SizedBox(width: 20),
-                    Text(
+          CardWidgetButton(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Transform.scale(
+                      scale: 1.3,
+                      child:
+                          Icon(CupertinoIcons.speaker_2, color: toc.textColor)),
+                  SizedBox(width: 20),
+                  Text(
+                    "Log in with google",
+                    style: TS.h2,
+                  )
+                ],
+              ), () async {
+            var res = await Get.find<GE>().signInWithGoogle();
+            if (!res) {
+              SBUtil.showErrorSnackBar(
+                  "Unable to sign in with google. Please try again later");
+            }
+          }, width: .8),
+          CardWidgetButton(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Transform.scale(
+                      scale: 1.3,
+                      child:
+                          Icon(CupertinoIcons.speaker_2, color: toc.textColor)),
+                  SizedBox(width: 20),
+                  Hero(
+                    tag: "feedbackText",
+                    child: Text(
                       "Feedback",
                       style: TS.h2,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
+                    ),
+                  )
+                ],
+              ), () async {
+            showFeedback.value = true;
+          }, width: .8),
           Container(
               margin: EdgeInsets.symmetric(vertical: 40, horizontal: 10),
               alignment: Alignment.center,

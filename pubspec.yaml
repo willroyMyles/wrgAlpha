@@ -20,7 +20,6 @@ version: 0.0.1+4
 
 environment:
   sdk: '>=3.2.6 <4.0.0'
-
   # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -28,63 +27,53 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter:
-    sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  firebase_auth: ^5.1.4
-  firebase_core: ^3.5.0
+  animated_introduction: ^1.0.4
+  automatic_animated_list: ^1.1.0
+  blurhash_ffi: ^1.2.6
   cloud_firestore: ^5.4.2
   cloud_functions: ^5.1.2
-  firebase_storage: ^12.3.7
+  collection: ^1.18.0
+  csv: ^6.0.0
+  cupertino_icons: ^1.0.2
+  diagonal_decoration: ^1.0.2+3
+  easy_autocomplete: ^1.6.0
+  firebase_auth: ^5.1.4
+  firebase_core: ^3.5.0
+  firebase_pagination: ^4.0.1
+  firebase_storage: ^12.3.0
+  firebase_ui_firestore: null
+  flutter:
+    sdk: flutter
+  flutter_firebase_chat_core: ^1.6.8
+  flutter_form_builder: ^9.3.0
+  flutter_multi_formatter: ^2.13.0
+  flutter_popup: ^3.3.0
+  flutter_speed_dial: ^7.0.0
+  flutter_tilt: ^3.0.1
   get: ^4.6.6
   get_storage: ^2.1.1
   google_sign_in: ^6.2.1
-  nanoid2: ^2.0.1
-  csv: ^6.0.0
-  collection: ^1.18.0
-  automatic_animated_list: ^1.1.0
   http: ^1.2.1
-  intl: ^0.19.0
-  shorebird_code_push: ^2.0.0
-  images_picker: ^1.2.11
-
-  animated_introduction: ^1.0.4
-  blurhash_ffi: ^1.2.6
-  flutter_tilt: ^3.0.1
-  diagonal_decoration: ^1.0.2+3
-  smooth_sheets: ^0.10.2
-  safe_text: ^1.0.7
-  smart_text_flutter: ^0.3.1
-  material_floating_search_bar_2: ^0.5.0
-  redacted: ^1.0.11
-  flutter_popup: ^3.3.0
   iconsax: ^0.0.8
+  images_picker: ^1.2.11
+  intl: ^0.19.0
+  mask_text_input_formatter: ^2.9.0
+  material_floating_search_bar_2: ^0.5.0
+  movements:
+    path: ./movements/
+  nanoid2: ^2.0.1
   onesignal_flutter: ^5.1.2
-  easy_autocomplete: ^1.6.0
+  path: ^1.9.0
+  redacted: ^1.0.11
+  rxdart: ^0.28.0
+  safe_text: ^1.0.7
+  shorebird_code_push: ^2.0.0
+  smart_text_flutter: ^0.3.1
+  smooth_sheets: ^0.10.2
+  timeago: ^3.7.0
   url_launcher: ^6.3.0
 
-  firebase_pagination: ^4.0.1
-  flutter_firebase_chat_core: ^1.6.8
-  firebase_ui_firestore:
-  rxdart: ^0.28.0
-  flutter_speed_dial: ^7.0.0
-  flutter_form_builder: ^9.3.0
-  flutter_multi_formatter: ^2.13.0
-  timeago: ^3.7.0
-
-  movements: 
-    path: "./movements/"
-  mask_text_input_formatter: ^2.9.0
-
-
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  icons_launcher: ^3.0.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -92,11 +81,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
+  icons_launcher: ^3.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
-
 icons_launcher:
   image_path: "assets/images/logo.jpeg"
   platforms:
@@ -117,13 +107,10 @@ flutter:
   assets:
     - assets/icons/
     - shorebird.yaml
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
